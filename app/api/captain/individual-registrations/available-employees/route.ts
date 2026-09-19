@@ -5,6 +5,8 @@ import { connectDB } from "@/lib/mongodb";
 import Employee from "@/models/Employee";
 import IndividualRegistration from "@/models/IndividualRegistration";
 import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
+import Games from "@/models/Games";
+import { getAgeCategory } from "@/lib/getAgeCategory";
 
 export async function GET(req: NextRequest) {
   try {
@@ -36,9 +38,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const query: any = {
-      teamId: captain.teamId,
-    };
+    const game = await Games.findById(gameId).lean();
+
+    if (!game) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Game not found.",
+        },
+        { status: 404 },
+      );
+    }
 
     const registrationsQuery: any = {
       "games.gameId": gameId,
@@ -54,12 +64,36 @@ export async function GET(req: NextRequest) {
 
     const registeredIds = registrations.map((r: any) => r.employee.toString());
 
-    query._id = { $nin: registeredIds };
-
-    const employees = await Employee.find(query)
-      .select("_id employeeName employeeCode team teamId")
+    let employees = await Employee.find({
+      teamId: captain.teamId,
+      _id: { $nin: registeredIds },
+    })
+      .select("_id employeeName employeeCode gender dateOfBirth team teamId")
       .sort({ employeeName: 1 })
       .lean();
+
+    // Apply game filters
+    employees = employees.filter((emp: any) => {
+      // Gender filter
+      if (
+        game.gender &&
+        game.gender !== "Both" &&
+        emp.gender?.toLowerCase() !== game.gender.toLowerCase()
+      ) {
+        return false;
+      }
+
+      // Age category filter
+      if (
+        game.category === "Sports" &&
+        game.ageCategory !== "Open" &&
+        getAgeCategory(emp.dateOfBirth) !== game.ageCategory
+      ) {
+        return false;
+      }
+
+      return true;
+    });
 
     return NextResponse.json({
       success: true,

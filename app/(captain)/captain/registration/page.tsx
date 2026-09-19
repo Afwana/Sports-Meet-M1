@@ -10,8 +10,16 @@ import {
   GroupRegistration,
   IndividualRegistration,
 } from "@/types/registration";
-import { Button, Card, Label, ListBox, Select, Spinner } from "@heroui/react";
-import { Key, useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  Key,
+  Label,
+  ListBox,
+  Select,
+  Spinner,
+} from "@heroui/react";
+import { useEffect, useState } from "react";
 import { FaPlus, FaTrash, FaUser } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { toast } from "sonner";

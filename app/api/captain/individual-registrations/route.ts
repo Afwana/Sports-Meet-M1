@@ -172,6 +172,44 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const categoryLimits = {
+      Stage: 2,
+      "Off Stage": 4,
+    };
+
+    const limit = categoryLimits[game.category as keyof typeof categoryLimits];
+
+    if (limit) {
+      for (const employeeId of participants) {
+        const registrations = await IndividualRegistration.find({
+          employee: employeeId,
+        }).lean();
+
+        const registeredGameIds = registrations.flatMap((r) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          r.games.map((g: any) => g.gameId),
+        );
+
+        const gamesInCategory = await Games.countDocuments({
+          _id: { $in: registeredGameIds },
+          category: game.category,
+        });
+
+        if (gamesInCategory >= limit) {
+          const employee =
+            await Employee.findById(employeeId).select("employeeName");
+
+          return NextResponse.json(
+            {
+              success: false,
+              message: `${employee?.employeeName} has already registered for ${limit} ${game.category} items.`,
+            },
+            { status: 400 },
+          );
+        }
+      }
+    }
+
     const totalRegistered = await IndividualRegistration.countDocuments({
       "games.gameId": game._id,
     });

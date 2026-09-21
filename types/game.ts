@@ -7,8 +7,8 @@ export interface Game {
   ageCategory: "Open" | "Junior" | "Senior";
   icon: string;
   minParticipants: number;
-  maxParticipants: number;
-  maxParticipantsPerTeam: number;
+  maxParticipants?: number | null;
+  maxParticipantsPerTeam?: number | null;
   maxTeamsPerCompetitionTeam: number;
   isActive: boolean;
 }

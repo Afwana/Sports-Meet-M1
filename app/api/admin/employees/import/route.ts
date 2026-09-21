@@ -192,7 +192,7 @@ export async function POST(req: NextRequest) {
 
       if (existing) {
         existing.employeeName = employeeName;
-        existing.dateOfBirth = dateOfBirth;
+        existing.dateOfBirth = DOB;
         existing.gender = gender;
         existing.department = department;
         existing.phoneNumber = phoneNumber;
@@ -209,7 +209,7 @@ export async function POST(req: NextRequest) {
         await Employee.create({
           employeeCode,
           employeeName,
-          dateOfBirth,
+          dateOfBirth: DOB,
           gender,
           department,
           phoneNumber,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Games from "@/models/Games";
+import { MongoServerError } from "mongodb";
 
 export async function PATCH(
   req: NextRequest,
@@ -12,7 +13,7 @@ export async function PATCH(
     const { id } = await params;
     const body = await req.json();
 
-    if (body.category !== "Sports") {
+    if (body.category !== "Sports" && body.category !== "Games") {
       body.ageCategory = "Open";
     }
 
@@ -34,6 +35,17 @@ export async function PATCH(
     return NextResponse.json(game);
   } catch (error) {
     console.error("Game PATCH error:", error);
+
+    if (error instanceof MongoServerError && error.code === 11000) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Another game with the same Name, Category, Type, Gender and Age Category already exists.",
+        },
+        { status: 400 },
+      );
+    }
 
     return NextResponse.json(
       {

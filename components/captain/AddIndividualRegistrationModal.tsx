@@ -20,8 +20,8 @@ interface Game {
   _id: string;
   name: string;
   minParticipants: number;
-  maxParticipants: number;
-  maxParticipantsPerTeam: number;
+  maxParticipants?: number | null;
+  maxParticipantsPerTeam?: number | null;
 }
 
 interface Props {
@@ -83,7 +83,10 @@ export default function AddIndividualRegistrationModal({
       return;
     }
 
-    if (selectedEmployees.length > game.maxParticipantsPerTeam) {
+    if (
+      game.maxParticipantsPerTeam != null &&
+      selectedEmployees.length > game.maxParticipantsPerTeam
+    ) {
       toast.error(
         `Maximum ${game.maxParticipantsPerTeam} participants are allowed from your team.`,
       );

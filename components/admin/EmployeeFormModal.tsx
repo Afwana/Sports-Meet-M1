@@ -130,6 +130,7 @@ export default function EmployeeFormModal({
         employeeCode: formData.employeeCode.trim().toUpperCase(),
         employeeName: formData.employeeName.trim(),
         gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
         teamId: formData.teamId?.trim() || null,
         team: selectedTeam?.name ?? formData.team?.trim() ?? "",
         department: formData.department?.trim() ?? "",

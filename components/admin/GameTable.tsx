@@ -40,6 +40,7 @@ const columns = [
   { id: "category", name: "Category" },
   { id: "gender", name: "Gender" },
   { id: "type", name: "Type" },
+  { id: "ageCategory", name: "Age Category" },
   { id: "active", name: "Active" },
   { id: "actions", name: "Actions" },
 ];
@@ -59,7 +60,10 @@ export default function GameTable({ games }: Props) {
     );
   }, [gameList, search]);
 
-  const totalPages = Math.ceil(filteredGames.length / ROWS_PER_PAGE);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredGames.length / ROWS_PER_PAGE),
+  );
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -148,6 +152,8 @@ export default function GameTable({ games }: Props) {
 
                         <Table.Cell>{game.type}</Table.Cell>
 
+                        <Table.Cell>{game.ageCategory}</Table.Cell>
+
                         <Table.Cell>
                           <Switch isSelected={game.isActive} size="sm">
                             <Switch.Content>
@@ -202,7 +208,7 @@ export default function GameTable({ games }: Props) {
                     </Pagination.Previous>
                   </Pagination.Item>
                   {pages.map((p) => (
-                    <Pagination.Item key={p}>
+                    <Pagination.Item key={`page-${p}`}>
                       <Pagination.Link
                         isActive={p === page}
                         onPress={() => setPage(p)}

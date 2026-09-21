@@ -103,7 +103,7 @@ function GameItem({ game, registrationOpen }: GameItemProps) {
       </div>
 
       <div className="flex items-center gap-1">
-        {game.category === "Sports" && (
+        {(game.category === "Sports" || game.category === "Games") && (
           <p className="text-xs font-medium text-blue-400">
             {game.ageCategory}
           </p>
@@ -211,7 +211,7 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
   // );
 
   const sportsGames = eligibleGames.filter(
-    (game) => game.category === "Sports",
+    (game) => game.category === "Sports" || game.category === "Games",
   );
 
   const offStageGames = eligibleGames.filter(

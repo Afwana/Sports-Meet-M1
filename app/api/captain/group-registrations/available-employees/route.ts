@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
       }
 
       // Age
-      if (game.category === "Sports") {
+      if (game.category === "Sports" || game.category === "Games") {
         const employeeAgeCategory = getAgeCategory(emp.dateOfBirth);
 
         if (

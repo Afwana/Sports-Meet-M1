@@ -117,7 +117,10 @@ export default function CaptainRegistrationPage() {
     if (game.gender !== gender) return false;
 
     // Sports age category must match EXACTLY
-    if (category === "Sports" && game.ageCategory !== ageCategory) {
+    if (
+      (category === "Sports" || category === "Games") &&
+      game.ageCategory !== ageCategory
+    ) {
       return false;
     }
 
@@ -308,7 +311,7 @@ export default function CaptainRegistrationPage() {
             </div>
 
             {/* AGE */}
-            {category === "Sports" && (
+            {(category === "Sports" || category === "Games") && (
               <div>
                 <Label className="mb-2">Age Category</Label>
 
@@ -409,7 +412,7 @@ export default function CaptainRegistrationPage() {
                       </p>
 
                       <p className="text-xl font-bold">
-                        {selectedGame.maxParticipants}
+                        {selectedGame.maxParticipants ?? "Unlimited"}
                       </p>
                     </div>
 

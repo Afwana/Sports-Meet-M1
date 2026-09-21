@@ -68,6 +68,16 @@ export async function PATCH(
       );
     }
 
+    if (Number.isNaN(dateOfBirth.getTime())) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Valid Date of Birth is required.",
+        },
+        { status: 400 },
+      );
+    }
+
     // Check duplicate employee code
     const duplicate = await Employee.findOne({
       employeeCode,
@@ -118,7 +128,7 @@ export async function PATCH(
         phoneNumber,
       },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     );

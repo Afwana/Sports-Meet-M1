@@ -133,7 +133,11 @@ export async function POST(req: NextRequest) {
 
     const uniqueParticipants = [...new Set(participants.map(String))];
 
-    if (uniqueParticipants.length > game.maxParticipantsPerTeam) {
+    if (
+      game.maxParticipantsPerTeam !== null &&
+      game.maxParticipantsPerTeam !== undefined &&
+      uniqueParticipants.length > game.maxParticipantsPerTeam
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -158,7 +162,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (game.category === "Sports" && game.ageCategory !== "Open") {
+    if (
+      (game.category === "Sports" || game.category === "Games") &&
+      game.ageCategory !== "Open"
+    ) {
       for (const emp of employees) {
         if (getAgeCategory(emp.dateOfBirth) !== game.ageCategory) {
           return NextResponse.json(
@@ -175,6 +182,7 @@ export async function POST(req: NextRequest) {
     const categoryLimits = {
       Stage: 2,
       "Off Stage": 4,
+      Sports: 3,
     };
 
     const limit = categoryLimits[game.category as keyof typeof categoryLimits];
@@ -210,18 +218,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const totalRegistered = await IndividualRegistration.countDocuments({
-      "games.gameId": game._id,
-    });
+    if (game.maxParticipants) {
+      const totalRegistered = await IndividualRegistration.countDocuments({
+        "games.gameId": game._id,
+      });
 
-    if (totalRegistered + uniqueParticipants.length > game.maxParticipants) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Game has reached maximum participants.",
-        },
-        { status: 400 },
-      );
+      if (totalRegistered + uniqueParticipants.length > game.maxParticipants) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Game has reached maximum participants.",
+          },
+          { status: 400 },
+        );
+      }
     }
 
     const existing = await IndividualRegistration.find({

@@ -13,8 +13,8 @@ import {
   Spinner,
   Switch,
 } from "@heroui/react";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import IconPicker from "../IconPicker";
 import { IconName } from "@/utils/iconMap";
@@ -29,8 +29,8 @@ const gameSchema = z.object({
   type: z.enum(["Individual", "Group"]),
   icon: z.string().min(1, "Choose an icon."),
   minParticipants: z.number().min(1),
-  maxParticipants: z.number().min(1),
-  maxParticipantsPerTeam: z.number().min(1),
+  maxParticipants: z.union([z.number().min(1), z.null()]),
+  maxParticipantsPerTeam: z.union([z.number().min(1), z.null()]),
   maxTeamsPerCompetitionTeam: z.number().min(1),
   isActive: z.boolean(),
 });
@@ -65,9 +65,9 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
       type: "Individual",
       icon: "Football",
       minParticipants: 1,
-      maxParticipants: 1,
+      maxParticipants: null,
       ageCategory: "Open",
-      maxParticipantsPerTeam: 1,
+      maxParticipantsPerTeam: null,
       maxTeamsPerCompetitionTeam: 1,
       isActive: true,
     },
@@ -111,15 +111,33 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
 
       const method = isEdit ? "PATCH" : "POST";
 
+      const payload = {
+        ...formData,
+        maxParticipants:
+          formData.maxParticipants === null ||
+          Number.isNaN(formData.maxParticipants as number)
+            ? null
+            : formData.maxParticipants,
+
+        maxParticipantsPerTeam:
+          formData.maxParticipantsPerTeam === null ||
+          Number.isNaN(formData.maxParticipantsPerTeam as number)
+            ? null
+            : formData.maxParticipantsPerTeam,
+      };
+
       const res = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({
+        success: false,
+        message: "Unexpected server response.",
+      }));
 
       if (!res.ok) {
         toast.error(data.message || "Failed to save game.");
@@ -150,9 +168,9 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
         gender: game.gender,
         icon: game.icon,
         minParticipants: game.minParticipants ?? 1,
-        maxParticipants: game.maxParticipants ?? 1,
+        maxParticipants: game.maxParticipants ?? null,
         ageCategory: game.ageCategory ?? "Open",
-        maxParticipantsPerTeam: game.maxParticipantsPerTeam ?? 1,
+        maxParticipantsPerTeam: game.maxParticipantsPerTeam ?? null,
         maxTeamsPerCompetitionTeam: game.maxTeamsPerCompetitionTeam ?? 1,
         isActive: game.isActive,
       });
@@ -164,9 +182,9 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
         gender: "Male",
         icon: "FaCircle",
         minParticipants: 1,
-        maxParticipants: 1,
+        maxParticipants: null,
         ageCategory: "Open",
-        maxParticipantsPerTeam: 1,
+        maxParticipantsPerTeam: null,
         maxTeamsPerCompetitionTeam: 1,
         isActive: true,
       });
@@ -313,7 +331,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                   </Select>
                 </div>
 
-                {category === "Sports" && (
+                {(category === "Sports" || category === "Games") && (
                   <div className="flex flex-col gap-1">
                     <Label>Age Category</Label>
 
@@ -375,26 +393,58 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="flex flex-col gap-1">
                           <Label>Maximum Participants</Label>
 
-                          <Input
-                            type="number"
-                            {...register("maxParticipants", {
-                              valueAsNumber: true,
-                            })}
+                          <Controller
+                            control={control}
+                            name="maxParticipants"
+                            render={({ field }) => (
+                              <Input
+                                type="number"
+                                placeholder="Unlimited"
+                                value={
+                                  field.value == null
+                                    ? ""
+                                    : (field.value as string | number)
+                                }
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                  field.onChange(
+                                    e.target.value === ""
+                                      ? null
+                                      : Number(e.target.value),
+                                  )
+                                }
+                              />
+                            )}
                           />
                         </div>
 
                         <div className="flex flex-col gap-1">
                           <Label>Maximum Participants Per Team</Label>
 
-                          <Input
-                            type="number"
-                            {...register("maxParticipantsPerTeam", {
-                              valueAsNumber: true,
-                            })}
+                          <Controller
+                            control={control}
+                            name="maxParticipantsPerTeam"
+                            render={({ field }) => (
+                              <Input
+                                type="number"
+                                placeholder="Unlimited"
+                                value={
+                                  field.value == null
+                                    ? ""
+                                    : (field.value as string | number)
+                                }
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                  field.onChange(
+                                    e.target.value === ""
+                                      ? null
+                                      : Number(e.target.value),
+                                  )
+                                }
+                              />
+                            )}
                           />
                         </div>
                       </div>
@@ -425,11 +475,33 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                       <div className="flex flex-col gap-1">
                         <Label>Maximum Participants Per Group</Label>
 
-                        <Input
+                        {/* <Input
                           type="number"
                           {...register("maxParticipants", {
                             valueAsNumber: true,
                           })}
+                        /> */}
+                        <Controller
+                          control={control}
+                          name="maxParticipants"
+                          render={({ field }) => (
+                            <Input
+                              type="number"
+                              placeholder="Unlimited"
+                              value={
+                                field.value == null
+                                  ? ""
+                                  : (field.value as string | number)
+                              }
+                              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                field.onChange(
+                                  e.target.value === ""
+                                    ? null
+                                    : Number(e.target.value),
+                                )
+                              }
+                            />
+                          )}
                         />
                       </div>
 

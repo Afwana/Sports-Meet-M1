@@ -122,7 +122,10 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      if (game.category === "Sports" && game.ageCategory !== "Open") {
+      if (
+        (game.category === "Sports" || game.category === "Games") &&
+        game.ageCategory !== "Open"
+      ) {
         const employeeCategory = getAgeCategory(employee.dateOfBirth);
 
         if (employeeCategory !== game.ageCategory) {

@@ -87,6 +87,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (Number.isNaN(dateOfBirth.getTime())) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Valid Date of Birth is required.",
+        },
+        { status: 400 },
+      );
+    }
+
     const exists = await Employee.findOne({
       employeeCode,
     });

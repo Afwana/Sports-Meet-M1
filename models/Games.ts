@@ -60,14 +60,12 @@ const GameSchema = new mongoose.Schema(
 
     maxParticipants: {
       type: Number,
-      default: 1,
-      min: 1,
+      default: null,
     },
 
     maxParticipantsPerTeam: {
       type: Number,
-      default: 1,
-      min: 1,
+      default: null,
     },
 
     maxTeamsPerCompetitionTeam: {
@@ -95,10 +93,10 @@ GameSchema.index(
     category: 1,
     type: 1,
     gender: 1,
+    ageCategory: 1,
   },
   {
     unique: true,
-    name: "unique_game_combination",
   },
 );
 

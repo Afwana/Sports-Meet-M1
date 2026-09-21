@@ -133,7 +133,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (participants.length > game.maxParticipants) {
+    if (
+      game.maxParticipants !== null &&
+      participants.length > game.maxParticipants
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -172,7 +175,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (game.category === "Sports" && game.ageCategory !== "Open") {
+    if (
+      (game.category === "Sports" || game.category === "Games") &&
+      game.ageCategory !== "Open"
+    ) {
       for (const emp of employees) {
         if (getAgeCategory(emp.dateOfBirth) !== game.ageCategory) {
           return NextResponse.json(

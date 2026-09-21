@@ -15,6 +15,7 @@ import { useMemo, useState } from "react";
 import { Employee } from "@/types/employee";
 import EmployeeFormModal from "./EmployeeFormModal";
 import DeleteEmployeeModal from "./DeleteEmployeeModal";
+import { getAgeCategory } from "@/lib/getAgeCategory";
 
 interface Props {
   employees: Employee[];
@@ -25,6 +26,7 @@ const newEmployee: Employee = {
   employeeCode: "",
   employeeName: "",
   gender: "Male",
+  dateOfBirth: new Date(),
   role: "Employee",
   team: "",
   teamId: "",
@@ -137,8 +139,13 @@ export default function EmployeesTable({ employees }: Props) {
                         </Table.Cell>
 
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-col gap-1">
                             {employee.employeeName}
+                            <span className="text-slate-300 text-xs font-medium">
+                              {employee.dateOfBirth
+                                ? getAgeCategory(employee.dateOfBirth)
+                                : ""}
+                            </span>
                           </div>
                         </Table.Cell>
 

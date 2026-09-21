@@ -64,7 +64,10 @@ export async function PATCH(
       );
     }
 
-    if (game.category === "Sports" && game.ageCategory !== "Open") {
+    if (
+      (game.category === "Sports" || game.category === "Games") &&
+      game.ageCategory !== "Open"
+    ) {
       if (getAgeCategory(employee.dateOfBirth) !== game.ageCategory) {
         return NextResponse.json(
           {

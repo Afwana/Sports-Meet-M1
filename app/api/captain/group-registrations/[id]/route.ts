@@ -64,7 +64,10 @@ export async function PATCH(
       teamId: captain.teamId,
     });
 
-    if (game.category === "Sports" && game.ageCategory !== "Open") {
+    if (
+      (game.category === "Sports" || game.category === "Games") &&
+      game.ageCategory !== "Open"
+    ) {
       for (const emp of employees) {
         if (getAgeCategory(emp.dateOfBirth) !== game.ageCategory) {
           return NextResponse.json(

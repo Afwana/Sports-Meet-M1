@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Games from "@/models/Games";
+import { MongoServerError } from "mongodb";
 
 export async function GET() {
   await connectDB();
@@ -14,15 +15,38 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const body = await req.json();
+    const body = await req.json();
 
-  if (body.category !== "Sports") {
-    body.ageCategory = "Open";
+    if (body.category !== "Sports" && body.category !== "Games") {
+      body.ageCategory = "Open";
+    }
+
+    const game = await Games.create(body);
+
+    return NextResponse.json(game, { status: 201 });
+  } catch (error) {
+    console.error("CREATE GAME ERROR:", error);
+
+    if (error instanceof MongoServerError && error.code === 11000) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "A game with the same Name, Category, Type, Gender and Age Category already exists.",
+        },
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to create game.",
+      },
+      { status: 500 },
+    );
   }
-
-  const game = await Games.create(body);
-
-  return NextResponse.json(game, { status: 201 });
 }

@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongodb";
 import IndividualResult from "@/models/IndividualResult";
 import GroupResult from "@/models/GroupResult";
 import Teams from "@/models/Teams";
+import MarathonResult from "@/models/MarathonResult";
 
 type TeamPoints = {
   teamId: string;
@@ -36,21 +36,40 @@ export async function GET() {
       });
     }
 
-    const [individualResults, groupResults] = await Promise.all([
-      IndividualResult.find({})
-        .select("positions")
-        .populate({ path: "positions.team", select: "_id name" })
-        .lean(),
+    const [individualResults, groupResults, marathonResults] =
+      await Promise.all([
+        IndividualResult.find({})
+          .select("positions")
+          .populate({ path: "positions.team", select: "_id name" })
+          .lean(),
 
-      GroupResult.find({})
-        .select("positions")
-        .populate({ path: "positions.team", select: "_id name" })
-        .lean(),
-    ]);
+        GroupResult.find({})
+          .select("positions")
+          .populate({ path: "positions.team", select: "_id name" })
+          .lean(),
+        MarathonResult.find({
+          published: true,
+        })
+          .select("teams")
+          .populate({
+            path: "teams.team",
+            select: "_id name",
+          })
+          .lean(),
+      ]);
 
-    const addTeamPoints = (positions: any[] = []) => {
+    const addTeamPoints = (
+      positions: Array<{
+        position: number;
+        team: unknown;
+        points: number;
+      }>,
+    ) => {
       for (const pos of positions) {
-        const team = pos.team as any;
+        const team = pos.team as {
+          _id?: unknown;
+          name?: string;
+        };
 
         if (!team?._id) continue;
 
@@ -77,31 +96,62 @@ export async function GET() {
       }
     };
 
-    individualResults.forEach((r: any) => addTeamPoints(r.positions));
-    groupResults.forEach((r: any) => addTeamPoints(r.positions));
+    for (const result of individualResults) {
+      addTeamPoints(result.positions ?? []);
+    }
 
-    const pointTable = Array.from(teamMap.values())
-      .sort((a, b) => {
-        if (b.totalPoints !== a.totalPoints)
-          return b.totalPoints - a.totalPoints;
-        if (b.first !== a.first) return b.first - a.first;
-        if (b.second !== a.second) return b.second - a.second;
-        return b.third - a.third;
-      })
-      .map((team, index) => ({
-        rank: index + 1,
-        teamId: team.teamId,
-        teamName: team.teamName,
-        first: team.first,
-        second: team.second,
-        third: team.third,
-        totalPoints: team.totalPoints,
-      }));
+    for (const result of groupResults) {
+      addTeamPoints(result.positions ?? []);
+    }
 
-    return NextResponse.json({
-      success: true,
-      pointTable,
+    // Marathon participation points
+    for (const marathon of marathonResults) {
+      for (const row of marathon.teams) {
+        const team = row.team as {
+          _id?: unknown;
+          name?: string;
+        };
+
+        if (!team?._id) continue;
+
+        const teamId = String(team._id);
+
+        if (!teamMap.has(teamId)) {
+          teamMap.set(teamId, {
+            teamId,
+            teamName: team.name ?? row.teamName,
+            first: 0,
+            second: 0,
+            third: 0,
+            totalPoints: 0,
+          });
+        }
+
+        teamMap.get(teamId)!.totalPoints += row.points;
+      }
+    }
+
+    const sortedTeams = Array.from(teamMap.values()).sort((a, b) => {
+      if (b.totalPoints !== a.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+
+      if (b.first !== a.first) {
+        return b.first - a.first;
+      }
+
+      if (b.second !== a.second) {
+        return b.second - a.second;
+      }
+
+      return b.third - a.third;
     });
+
+    const pointTable = sortedTeams.map((team, index) => ({
+      rank: index + 1,
+      ...team,
+    }));
+
     return NextResponse.json({
       success: true,
       pointTable,

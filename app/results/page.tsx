@@ -2,8 +2,9 @@ import { redirect } from "next/navigation";
 
 import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 import IndividualResults from "@/components/IndividualResults";
-import PointsTable from "@/components/PointsTable";
 import { Card } from "@heroui/react";
+import GroupResults from "@/components/GroupResults";
+import PublicPointsTable from "@/components/PublicPointsTable";
 
 export default async function ResultsPage() {
   const employee = await getCurrentEmployee();
@@ -13,8 +14,8 @@ export default async function ResultsPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-104px)] bg-blue-50 dark:bg-black p-5">
-      <Card className="w-full p-5 min-h-[calc(100vh-105px)]">
+    <div className="min-h-screen bg-blue-50 dark:bg-black p-5">
+      <Card className="w-full p-5">
         <Card.Header>
           <div className="mb-3">
             <h1 className="text-2xl font-bold">Results</h1>
@@ -25,10 +26,10 @@ export default async function ResultsPage() {
           </div>
         </Card.Header>
         <Card.Content>
-          <PointsTable />
+          <PublicPointsTable showMedalColumns />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
             <IndividualResults />
-            <IndividualResults />
+            <GroupResults />
           </div>
         </Card.Content>
       </Card>

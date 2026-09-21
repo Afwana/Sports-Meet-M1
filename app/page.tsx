@@ -1,6 +1,7 @@
 "use client";
 
 import Announcements from "@/components/Announcements";
+import PublicPointsTable from "@/components/PublicPointsTable";
 import TeamLogoStrip from "@/components/TeamLogoStrip";
 import { Button, Card } from "@heroui/react";
 import Image from "next/image";
@@ -100,9 +101,9 @@ export default function Home() {
           </div>
 
           {/* Point Table */}
-          {/* <div className="absolute bottom-3 left-3 right-3 z-10">
+          <div className="absolute bottom-3 left-3 right-3 z-10">
             <PublicPointsTable />
-          </div> */}
+          </div>
         </div>
       </div>
 
@@ -132,9 +133,9 @@ export default function Home() {
         </div>
 
         {/* Point Table */}
-        {/* <div className="absolute top-1/2 left-3 right-3 z-10">
+        <div className="absolute top-1/2 left-3 right-3 z-10">
           <PublicPointsTable />
-        </div> */}
+        </div>
 
         {/* Announcements */}
         <Card

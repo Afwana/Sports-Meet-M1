@@ -81,12 +81,45 @@ export default function CaptainRegistrationPage() {
     loadGames();
   }, []);
 
-  const filteredGames = games.filter((game) => {
-    if (game.type !== type) return false;
-    if (game.category !== category) return false;
-    if (game.gender !== gender && game.gender !== "Both") return false;
+  // const filteredGames = games.filter((game) => {
+  //   if (game.type !== type) return false;
+  //   if (game.category !== category) return false;
 
-    if (category === "Sports" && game.ageCategory !== ageCategory) return false;
+  //   // Gender
+  //   if (gender === "Male") {
+  //     if (game.gender !== "Male" && game.gender !== "Both") return false;
+  //   } else if (gender === "Female") {
+  //     if (game.gender !== "Female" && game.gender !== "Both") return false;
+  //   } else if (gender === "Both") {
+  //     if (game.gender !== "Both") return false;
+  //   }
+
+  //   // Age (Sports only)
+  //   if (
+  //     category === "Sports" &&
+  //     ageCategory !== "Open" &&
+  //     game.ageCategory !== ageCategory
+  //   ) {
+  //     return false;
+  //   }
+
+  //   return true;
+  // });
+
+  const filteredGames = games.filter((game) => {
+    // Type must match
+    if (game.type !== type) return false;
+
+    // Category must match
+    if (game.category !== category) return false;
+
+    // Gender must match EXACTLY
+    if (game.gender !== gender) return false;
+
+    // Sports age category must match EXACTLY
+    if (category === "Sports" && game.ageCategory !== ageCategory) {
+      return false;
+    }
 
     return true;
   });
@@ -341,7 +374,13 @@ export default function CaptainRegistrationPage() {
                       id={game._id}
                       textValue={game.name}
                     >
-                      {game.name}
+                      <p className="flex flex-col gap-1">
+                        <span className="font-bold">{game.name}</span>
+                        <span className="flex items-center gap-2 text-gray-400 text-xs">
+                          {game.category} | {game.gender}{" "}
+                          {game.ageCategory ? `| ${game.ageCategory}` : ""}
+                        </span>
+                      </p>
                     </ListBox.Item>
                   ))}
                 </ListBox>
@@ -501,7 +540,10 @@ export default function CaptainRegistrationPage() {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
                       {individualRegistrations.map((registration) => (
-                        <Card key={registration?._id}>
+                        <Card
+                          key={registration._id || registration.employee._id}
+                          id={registration._id}
+                        >
                           <Card.Header>
                             <div className="flex w-full justify-between">
                               <div>

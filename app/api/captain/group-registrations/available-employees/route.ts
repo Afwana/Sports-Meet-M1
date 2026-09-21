@@ -70,21 +70,21 @@ export async function GET(req: NextRequest) {
 
     employees = employees.filter((emp: any) => {
       // Gender
-      if (
-        game.gender &&
-        game.gender !== "Both" &&
-        emp.gender?.toLowerCase() !== game.gender.toLowerCase()
-      ) {
+      if (game.gender && game.gender !== "Both" && emp.gender !== game.gender) {
         return false;
       }
 
-      // Age category
-      if (
-        game.category === "Sports" &&
-        game.ageCategory !== "Open" &&
-        getAgeCategory(emp.dateOfBirth) !== game.ageCategory
-      ) {
-        return false;
+      // Age
+      if (game.category === "Sports") {
+        const employeeAgeCategory = getAgeCategory(emp.dateOfBirth);
+
+        if (
+          game.ageCategory &&
+          game.ageCategory !== "Open" &&
+          employeeAgeCategory !== game.ageCategory
+        ) {
+          return false;
+        }
       }
 
       return true;

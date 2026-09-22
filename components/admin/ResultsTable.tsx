@@ -1,7 +1,8 @@
 "use client";
 
-import { Button, Table } from "@heroui/react";
+import { Button, Input, Pagination, Table } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
 
 type IndividualPosition = {
   employeeId: string;
@@ -94,9 +95,7 @@ function PositionCell({
     return <span className="text-default-400">—</span>;
   }
 
-  /*
-   * INDIVIDUAL RESULT
-   */
+  /* INDIVIDUAL RESULT */
   if (type === "Individual") {
     const individual = result as IndividualPosition;
 
@@ -113,9 +112,7 @@ function PositionCell({
     );
   }
 
-  /*
-   * GROUP RESULT
-   */
+  /* GROUP RESULT */
   const group = result as GroupPosition;
 
   return (
@@ -127,13 +124,57 @@ function PositionCell({
   );
 }
 
+const ROWS_PER_PAGE = 10;
+
 export default function ResultsTable({
   results,
   onEdit,
   onDelete,
 }: ResultsTableProps) {
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const filteredResults = useMemo(() => {
+    return results.filter((result) =>
+      result.gameName.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [results, search]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredResults.length / ROWS_PER_PAGE),
+  );
+
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const paginatedItems = useMemo(() => {
+    const start = (page - 1) * ROWS_PER_PAGE;
+    return filteredResults.slice(start, start + ROWS_PER_PAGE);
+  }, [page, filteredResults]);
+
+  const start =
+    filteredResults.length === 0 ? 0 : (page - 1) * ROWS_PER_PAGE + 1;
+
+  const end = Math.min(page * ROWS_PER_PAGE, filteredResults.length);
+
+  console.log(results, "results");
+  console.log(paginatedItems, "paginated");
+
   return (
     <Table aria-label="Game results table" className="w-full">
+      <div className="m-2">
+        <Input
+          aria-label="Search results"
+          placeholder="Search results..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
+          className="w-full h-10"
+          variant="secondary"
+        />
+      </div>
       <Table.ScrollContainer>
         <Table.Content>
           <Table.Header columns={columns}>
@@ -147,11 +188,11 @@ export default function ResultsTable({
             )}
           </Table.Header>
 
-          <Table.Body items={results}>
+          <Table.Body items={paginatedItems}>
             {(row) => {
-              const index = results.findIndex(
-                (item) => item.gameId === row.gameId,
-              );
+              const index =
+                (page - 1) * ROWS_PER_PAGE +
+                paginatedItems.findIndex((item) => item.gameId === row.gameId);
 
               return (
                 <Table.Row key={row.gameId} id={row.gameId}>
@@ -232,6 +273,41 @@ export default function ResultsTable({
           </Table.Body>
         </Table.Content>
       </Table.ScrollContainer>
+      <Table.Footer>
+        <Pagination size="sm">
+          <Pagination.Summary>
+            {start} to {end} of {filteredResults.length}
+          </Pagination.Summary>
+          <Pagination.Content>
+            <Pagination.Item>
+              <Pagination.Previous
+                isDisabled={page === 1}
+                onPress={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                <Pagination.PreviousIcon />
+              </Pagination.Previous>
+            </Pagination.Item>
+            {pages.map((p) => (
+              <Pagination.Item key={p}>
+                <Pagination.Link
+                  isActive={p === page}
+                  onPress={() => setPage(p)}
+                >
+                  {p}
+                </Pagination.Link>
+              </Pagination.Item>
+            ))}
+            <Pagination.Item>
+              <Pagination.Next
+                isDisabled={page === totalPages}
+                onPress={() => setPage((p) => Math.min(totalPages, p + 1))}
+              >
+                <Pagination.NextIcon />
+              </Pagination.Next>
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination>
+      </Table.Footer>
     </Table>
   );
 }

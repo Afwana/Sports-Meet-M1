@@ -5,6 +5,7 @@ import IndividualResult from "@/models/IndividualResult";
 import GroupResult from "@/models/GroupResult";
 import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 import Teams from "@/models/Teams";
+import MarathonResult from "@/models/MarathonResult";
 
 type TeamPoints = {
   teamId: string;
@@ -52,23 +53,34 @@ export async function GET() {
       });
     }
 
-    const [individualResults, groupResults] = await Promise.all([
-      IndividualResult.find({})
-        .select("positions")
-        .populate({
-          path: "positions.team",
-          select: "_id name",
-        })
-        .lean(),
+    const [individualResults, groupResults, marathonResults] =
+      await Promise.all([
+        IndividualResult.find({})
+          .select("positions")
+          .populate({
+            path: "positions.team",
+            select: "_id name",
+          })
+          .lean(),
 
-      GroupResult.find({})
-        .select("positions")
-        .populate({
-          path: "positions.team",
-          select: "_id name",
+        GroupResult.find({})
+          .select("positions")
+          .populate({
+            path: "positions.team",
+            select: "_id name",
+          })
+          .lean(),
+
+        MarathonResult.find({
+          published: true,
         })
-        .lean(),
-    ]);
+          .select("teams")
+          .populate({
+            path: "teams.team",
+            select: "_id name",
+          })
+          .lean(),
+      ]);
 
     const addTeamPoints = (
       positions: Array<{
@@ -124,6 +136,33 @@ export async function GET() {
 
     for (const result of groupResults) {
       addTeamPoints(result.positions ?? []);
+    }
+
+    // Marathon participation points
+    for (const marathon of marathonResults) {
+      for (const row of marathon.teams) {
+        const team = row.team as {
+          _id?: unknown;
+          name?: string;
+        };
+
+        if (!team?._id) continue;
+
+        const teamId = String(team._id);
+
+        if (!teamMap.has(teamId)) {
+          teamMap.set(teamId, {
+            teamId,
+            teamName: team.name ?? row.teamName,
+            first: 0,
+            second: 0,
+            third: 0,
+            totalPoints: 0,
+          });
+        }
+
+        teamMap.get(teamId)!.totalPoints += row.points;
+      }
     }
 
     const sortedTeams = Array.from(teamMap.values()).sort((a, b) => {

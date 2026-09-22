@@ -3,21 +3,21 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Games from "@/models/Games";
 import Result from "@/models/IndividualResult";
-import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
+// import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 
 export async function GET() {
   try {
-    const employee = await getCurrentEmployee();
+    // const employee = await getCurrentEmployee();
 
-    if (!employee) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized",
-        },
-        { status: 401 },
-      );
-    }
+    // if (!employee) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Unauthorized",
+    //     },
+    //     { status: 401 },
+    //   );
+    // }
 
     await connectDB();
 

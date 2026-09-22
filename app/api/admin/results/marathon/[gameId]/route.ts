@@ -31,41 +31,58 @@ export async function GET(
     );
   }
 
-  const published = await MarathonResult.findOne({
-    game: gameId,
-    published: true,
-  }).lean();
+  // const published = await MarathonResult.findOne({
+  //   game: gameId,
+  //   published: true,
+  // }).lean();
 
   const teams = await Teams.find({ isActive: true }).select("_id name").lean();
 
   const registrations = await IndividualRegistration.find({
     "games.gameId": gameId,
   })
-    .select("teamId")
+    .populate({
+      path: "employee",
+      select: "_id employeeName employeeCode",
+    })
+    .select("teamId employee")
     .lean();
 
-  const counts = new Map<string, number>();
+  const published = await MarathonResult.findOne({
+    game: gameId,
+  }).lean();
 
-  for (const registration of registrations) {
-    const id = String(registration.teamId);
+  const selectedMap = new Map();
 
-    counts.set(id, (counts.get(id) ?? 0) + 1);
+  if (published) {
+    for (const team of published.teams) {
+      selectedMap.set(
+        String(team.team),
+        team.selectedEmployees?.map(String) ?? [],
+      );
+    }
   }
+
+  const teamsData = teams.map((team) => {
+    const employees = registrations
+      .filter((r) => String(r.teamId) === String(team._id))
+      .map((r) => ({
+        id: String(r.employee._id),
+        employeeName: r.employee.employeeName,
+        employeeCode: r.employee.employeeCode,
+      }));
+
+    return {
+      teamId: String(team._id),
+      teamName: team.name,
+      employees,
+      selectedEmployees: selectedMap.get(String(team._id)) ?? [],
+    };
+  });
 
   return NextResponse.json({
     success: true,
-
-    published: !!published,
-
-    teams: teams.map((team) => ({
-      teamId: String(team._id),
-
-      teamName: team.name,
-
-      participants: counts.get(String(team._id)) ?? 0,
-
-      points: counts.get(String(team._id)) ?? 0,
-    })),
+    teams: teamsData,
   });
 }
 
@@ -92,7 +109,7 @@ export async function PUT(
     );
   }
 
-  const teams = await Teams.find({ isActive: true }).select("_id name").lean();
+  // const teams = await Teams.find({ isActive: true }).select("_id name").lean();
 
   const registrations = await IndividualRegistration.find({
     "games.gameId": gameId,
@@ -108,31 +125,27 @@ export async function PUT(
     counts.set(id, (counts.get(id) ?? 0) + 1);
   }
 
-  const teamResults = teams.map((team) => ({
-    team: team._id,
+  const body = await req.json();
 
-    teamName: team.name,
-
-    participants: counts.get(String(team._id)) ?? 0,
-
-    points: counts.get(String(team._id)) ?? 0,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const results = body.teams.map((team: any) => ({
+    team: team.teamId,
+    teamName: team.teamName,
+    selectedEmployees: team.selectedEmployees,
+    participants: team.selectedEmployees.length,
+    points: team.selectedEmployees.length,
   }));
 
   await MarathonResult.findOneAndUpdate(
+    { game: gameId },
     {
       game: gameId,
-    },
-    {
-      game: gameId,
-
       published: true,
-
-      teams: teamResults,
+      teams: results,
     },
     {
       upsert: true,
-
-      returnDocument: "after",
+      new: true,
     },
   );
 

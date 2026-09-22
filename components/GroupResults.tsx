@@ -61,7 +61,7 @@ function PositionCell({ result }: { result: GroupPosition }) {
   );
 }
 
-const ROWS_PER_PAGE = 5;
+const ROWS_PER_PAGE = 6;
 
 export default function GroupResults() {
   const [results, setResults] = useState<GroupResultRow[]>([]);

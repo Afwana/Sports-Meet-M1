@@ -6,12 +6,12 @@ import { Card } from "@heroui/react";
 import GroupResults from "@/components/GroupResults";
 import PublicPointsTable from "@/components/PublicPointsTable";
 
-export default async function ResultsPage() {
-  const employee = await getCurrentEmployee();
+export default function ResultsPage() {
+  // const employee = await getCurrentEmployee();
 
-  if (!employee) {
-    redirect("/register");
-  }
+  // if (!employee) {
+  //   redirect("/register");
+  // }
 
   return (
     <div className="min-h-screen bg-blue-50 dark:bg-black p-5">

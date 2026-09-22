@@ -51,20 +51,28 @@ interface ExistingGroupResult {
   }[];
 }
 
-const positions = [
-  {
-    position: 1,
-    label: "Winner (1st)",
-  },
-  {
-    position: 2,
-    label: "Second (2nd)",
-  },
-  {
-    position: 3,
-    label: "Third (3rd)",
-  },
-];
+// const positions = [
+//   {
+//     position: 1,
+//     label: "Winner (1st)",
+//   },
+//   {
+//     position: 2,
+//     label: "Second (2nd)",
+//   },
+//   {
+//     position: 3,
+//     label: "Third (3rd)",
+//   },
+// ];
+
+type PointConfiguration = {
+  type: "Individual" | "Group";
+  positions: {
+    position: number;
+    points: number;
+  }[];
+};
 
 export default function AdminResultsPage() {
   const router = useRouter();
@@ -77,7 +85,7 @@ export default function AdminResultsPage() {
 
   const [selectedGender, setSelectedGender] = useState<
     "Male" | "Female" | "Both"
-  >("Male");
+  >("Both");
 
   const [selectedAgeCategory, setSelectedAgeCategory] = useState<
     "Open" | "Junior" | "Senior"
@@ -112,6 +120,53 @@ export default function AdminResultsPage() {
     useState<ExistingGroupResult | null>(null);
 
   const [loadingGroups, setLoadingGroups] = useState(false);
+
+  const [configurations, setConfigurations] = useState<PointConfiguration[]>(
+    [],
+  );
+
+  const [loadingPoints, setLoadingPoints] = useState(true);
+
+  useEffect(() => {
+    const loadPointConfiguration = async () => {
+      try {
+        setLoadingPoints(true);
+
+        const res = await fetch("/api/admin/point-configurations");
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast.error(data.message || "Failed to load point configuration.");
+          return;
+        }
+
+        setConfigurations(data.configurations || []);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load point configuration.");
+      } finally {
+        setLoadingPoints(false);
+      }
+    };
+
+    loadPointConfiguration();
+  }, []);
+
+  const positions = useMemo(() => {
+    const config = configurations.find((c) => c.type === selectedType);
+
+    return (config?.positions || []).map((p) => ({
+      position: p.position,
+      label:
+        p.position === 1
+          ? "Winner (1st)"
+          : p.position === 2
+            ? "Second (2nd)"
+            : p.position === 3
+              ? "Third (3rd)"
+              : `${p.position}th`,
+    }));
+  }, [configurations, selectedType]);
 
   useEffect(() => {
     const loadGames = async () => {
@@ -671,16 +726,16 @@ export default function AdminResultsPage() {
 
                     <Select.Popover>
                       <ListBox>
+                        <ListBox.Item id="Both" textValue="Both">
+                          Both
+                        </ListBox.Item>
+
                         <ListBox.Item id="Male" textValue="Male">
                           Male
                         </ListBox.Item>
 
                         <ListBox.Item id="Female" textValue="Female">
                           Female
-                        </ListBox.Item>
-
-                        <ListBox.Item id="Both" textValue="Both">
-                          Both
                         </ListBox.Item>
                       </ListBox>
                     </Select.Popover>
@@ -730,48 +785,6 @@ export default function AdminResultsPage() {
                   </div>
                 )}
               </div>
-
-              {/* <div className="mt-6 max-w-xl">
-                  <Label className="mb-2">Select Game</Label>
-
-                  <Select
-                    aria-label="select game"
-                    value={selectedGameId}
-                    isDisabled={loadingGames}
-                    onChange={(value: Key | null) => {
-                      if (!value) return;
-
-                      loadRegistrationData(String(value));
-                    }}
-                  >
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-
-                    <Select.Popover>
-                      <ListBox>
-                        {filteredGames.map((game) => (
-                          <ListBox.Item
-                            key={game._id}
-                            id={game._id}
-                            textValue={game.name}
-                          >
-                            <p className="flex flex-col gap-1">
-                              <span className="font-bold">{game.name}</span>
-                              <span className="flex items-center gap-2 text-gray-400 text-xs">
-                                {game.category} | {game.gender}{" "}
-                                {game.ageCategory
-                                  ? `| ${game.ageCategory}`
-                                  : ""}
-                              </span>
-                            </p>
-                          </ListBox.Item>
-                        ))}
-                      </ListBox>
-                    </Select.Popover>
-                  </Select>
-                </div> */}
 
               {/* GAME */}
               <div className="space-y-2">
@@ -837,50 +850,56 @@ export default function AdminResultsPage() {
                 ) : (
                   <div className="space-y-5">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                      {positions.map(({ position, label }) => (
-                        <div key={position} className="space-y-2">
-                          <Label>{label}</Label>
-
-                          <Select
-                            value={selectedGroupPositions[position] || ""}
-                            onChange={(value) => {
-                              if (typeof value === "string") {
-                                handleGroupPositionChange(position, value);
-                              }
-                            }}
-                          >
-                            <Select.Trigger>
-                              <Select.Value />
-                              <Select.Indicator />
-                            </Select.Trigger>
-
-                            <Select.Popover>
-                              <ListBox>
-                                {groupItems.map((group) => (
-                                  <ListBox.Item
-                                    key={group.groupId}
-                                    id={group.groupId}
-                                    textValue={`${group.groupName} ${group.teamName}`}
-                                  >
-                                    <div className="flex flex-col">
-                                      <span className="font-medium">
-                                        {group.groupName}
-                                      </span>
-
-                                      <span className="text-xs text-default-500">
-                                        {group.teamName} •{" "}
-                                        {group.participantCount} members
-                                      </span>
-                                    </div>
-
-                                    <ListBox.ItemIndicator />
-                                  </ListBox.Item>
-                                ))}
-                              </ListBox>
-                            </Select.Popover>
-                          </Select>
+                      {loadingPoints ? (
+                        <div className="flex justify-center py-6">
+                          <Spinner />
                         </div>
-                      ))}
+                      ) : (
+                        positions.map(({ position, label }) => (
+                          <div key={position} className="space-y-2">
+                            <Label>{label}</Label>
+
+                            <Select
+                              value={selectedGroupPositions[position] || ""}
+                              onChange={(value) => {
+                                if (typeof value === "string") {
+                                  handleGroupPositionChange(position, value);
+                                }
+                              }}
+                            >
+                              <Select.Trigger>
+                                <Select.Value />
+                                <Select.Indicator />
+                              </Select.Trigger>
+
+                              <Select.Popover>
+                                <ListBox>
+                                  {groupItems.map((group) => (
+                                    <ListBox.Item
+                                      key={group.groupId}
+                                      id={group.groupId}
+                                      textValue={`${group.groupName} ${group.teamName}`}
+                                    >
+                                      <div className="flex flex-col">
+                                        <span className="font-medium">
+                                          {group.groupName}
+                                        </span>
+
+                                        <span className="text-xs text-default-500">
+                                          {group.teamName} •{" "}
+                                          {group.participantCount} members
+                                        </span>
+                                      </div>
+
+                                      <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                  ))}
+                                </ListBox>
+                              </Select.Popover>
+                            </Select>
+                          </div>
+                        ))
+                      )}
                     </div>
 
                     <div className="flex justify-end">
@@ -914,7 +933,7 @@ export default function AdminResultsPage() {
             )}
 
             {/* INDIVIDUAL RESULT */}
-            {selectedType === "Individual" && selectedGameId && (
+            {selectedType === "Individual" && selectedGameId && !isMarathon && (
               <>
                 {loadingParticipants ? (
                   <div className="flex justify-center py-10">
@@ -927,50 +946,56 @@ export default function AdminResultsPage() {
                 ) : (
                   <div className="space-y-5">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                      {positions.map(({ position, label }) => (
-                        <div key={position} className="space-y-2">
-                          <Label>{label}</Label>
-
-                          <Select
-                            value={selectedPositions[position] || ""}
-                            onChange={(value) => {
-                              if (typeof value === "string") {
-                                handlePositionChange(position, value);
-                              }
-                            }}
-                          >
-                            <Select.Trigger>
-                              <Select.Value />
-                              <Select.Indicator />
-                            </Select.Trigger>
-
-                            <Select.Popover>
-                              <ListBox>
-                                {participants.map((employee) => (
-                                  <ListBox.Item
-                                    key={employee.employeeId}
-                                    id={employee.employeeId}
-                                    textValue={`${employee.employeeName} ${employee.employeeCode}`}
-                                  >
-                                    <div className="flex flex-col">
-                                      <span className="font-medium">
-                                        {employee.employeeName}
-                                      </span>
-
-                                      <span className="text-xs text-default-500">
-                                        {employee.employeeCode} •{" "}
-                                        {employee.team}
-                                      </span>
-                                    </div>
-
-                                    <ListBox.ItemIndicator />
-                                  </ListBox.Item>
-                                ))}
-                              </ListBox>
-                            </Select.Popover>
-                          </Select>
+                      {loadingPoints ? (
+                        <div className="flex justify-center py-6">
+                          <Spinner />
                         </div>
-                      ))}
+                      ) : (
+                        positions.map(({ position, label }) => (
+                          <div key={position} className="space-y-2">
+                            <Label>{label}</Label>
+
+                            <Select
+                              value={selectedPositions[position] || ""}
+                              onChange={(value) => {
+                                if (typeof value === "string") {
+                                  handlePositionChange(position, value);
+                                }
+                              }}
+                            >
+                              <Select.Trigger>
+                                <Select.Value />
+                                <Select.Indicator />
+                              </Select.Trigger>
+
+                              <Select.Popover>
+                                <ListBox>
+                                  {participants.map((employee) => (
+                                    <ListBox.Item
+                                      key={employee.employeeId}
+                                      id={employee.employeeId}
+                                      textValue={`${employee.employeeName} ${employee.employeeCode}`}
+                                    >
+                                      <div className="flex flex-col">
+                                        <span className="font-medium">
+                                          {employee.employeeName}
+                                        </span>
+
+                                        <span className="text-xs text-default-500">
+                                          {employee.employeeCode} •{" "}
+                                          {employee.team}
+                                        </span>
+                                      </div>
+
+                                      <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                  ))}
+                                </ListBox>
+                              </Select.Popover>
+                            </Select>
+                          </div>
+                        ))
+                      )}
                     </div>
 
                     <div className="flex justify-end">

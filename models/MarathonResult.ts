@@ -33,6 +33,13 @@ const MarathonResultSchema = new Schema(
           type: Number,
           default: 0,
         },
+
+        selectedEmployees: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Employee",
+          },
+        ],
       },
     ],
   },

@@ -7,17 +7,17 @@ import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 
 export async function GET() {
   try {
-    const employee = await getCurrentEmployee();
+    // const employee = await getCurrentEmployee();
 
-    if (!employee) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized",
-        },
-        { status: 401 },
-      );
-    }
+    // if (!employee) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Unauthorized",
+    //     },
+    //     { status: 401 },
+    //   );
+    // }
 
     await connectDB();
 

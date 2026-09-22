@@ -1,6 +1,3 @@
-import { redirect } from "next/navigation";
-
-import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 import IndividualResults from "@/components/IndividualResults";
 import { Card } from "@heroui/react";
 import GroupResults from "@/components/GroupResults";

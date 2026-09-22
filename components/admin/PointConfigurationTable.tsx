@@ -99,7 +99,7 @@ export default function PointConfigurationTable() {
   };
   return (
     <>
-      <Card className="w-1/2">
+      <Card className="w-full">
         <Card.Header>
           <div className="flex w-full items-center justify-between gap-4">
             <div>

@@ -46,7 +46,7 @@ export default function PublicPointsTable({
   }, []);
 
   return (
-    <div>
+    <div className="w-full">
       {loading ? (
         <div className="flex justify-center py-20">
           <Spinner />

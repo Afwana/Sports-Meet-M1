@@ -9,15 +9,7 @@ export function getAgeCategory(
     return "Unknown";
   }
 
-  const today = new Date();
+  const cutoffDate = new Date("1989-01-01T00:00:00");
 
-  let age = today.getFullYear() - dob.getFullYear();
-
-  const monthDiff = today.getMonth() - dob.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-    age--;
-  }
-
-  return age < 30 ? "Junior" : "Senior";
+  return dob > cutoffDate ? "Junior" : "Senior";
 }

@@ -48,7 +48,7 @@ const columns = [
   { id: "actions", name: "Actions" },
 ];
 
-const ROWS_PER_PAGE = 10;
+const ROWS_PER_PAGE = 30;
 
 export default function EmployeesTable({ employees }: Props) {
   const [search, setSearch] = useState("");

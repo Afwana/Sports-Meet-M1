@@ -154,7 +154,7 @@ export default function ResultsTable({
               );
 
               return (
-                <Table.Row key={row.gameId}>
+                <Table.Row key={row.gameId} id={row.gameId}>
                   {/* SL.NO */}
                   <Table.Cell>{index + 1}</Table.Cell>
 

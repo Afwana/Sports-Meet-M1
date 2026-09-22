@@ -10,21 +10,26 @@ export async function GET() {
 
     const employee = await getCurrentEmployee();
 
-    const registration = await IndividualRegistration.findOne({
+    const registrations = await IndividualRegistration.find({
       employeeCode: employee.employeeCode,
     })
       .select("_id games")
       .lean();
 
+    const games = registrations.flatMap(
+      (registration) => registration.games ?? [],
+    );
+
     return NextResponse.json({
       success: true,
-      registered: !!registration,
-      registration: registration
-        ? {
-            _id: registration._id,
-            games: registration.games,
-          }
-        : null,
+      registered: registrations.length > 0,
+      registration:
+        registrations.length > 0
+          ? {
+              _id: registrations[0]._id,
+              games,
+            }
+          : null,
     });
   } catch (error) {
     console.error("Individual registration status error:", error);

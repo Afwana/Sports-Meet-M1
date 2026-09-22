@@ -27,7 +27,7 @@ import { toast } from "sonner";
 export default function CaptainRegistrationPage() {
   const [type, setType] = useState("Individual");
   const [category, setCategory] = useState("Sports");
-  const [gender, setGender] = useState("Male");
+  const [gender, setGender] = useState("Both");
   const [ageCategory, setAgeCategory] = useState("Open");
 
   const [games, setGames] = useState<Game[]>([]);
@@ -80,31 +80,6 @@ export default function CaptainRegistrationPage() {
 
     loadGames();
   }, []);
-
-  // const filteredGames = games.filter((game) => {
-  //   if (game.type !== type) return false;
-  //   if (game.category !== category) return false;
-
-  //   // Gender
-  //   if (gender === "Male") {
-  //     if (game.gender !== "Male" && game.gender !== "Both") return false;
-  //   } else if (gender === "Female") {
-  //     if (game.gender !== "Female" && game.gender !== "Both") return false;
-  //   } else if (gender === "Both") {
-  //     if (game.gender !== "Both") return false;
-  //   }
-
-  //   // Age (Sports only)
-  //   if (
-  //     category === "Sports" &&
-  //     ageCategory !== "Open" &&
-  //     game.ageCategory !== ageCategory
-  //   ) {
-  //     return false;
-  //   }
-
-  //   return true;
-  // });
 
   const filteredGames = games.filter((game) => {
     // Type must match
@@ -294,16 +269,16 @@ export default function CaptainRegistrationPage() {
 
                 <Select.Popover>
                   <ListBox>
+                    <ListBox.Item id="Both" textValue="Both">
+                      Both
+                    </ListBox.Item>
+
                     <ListBox.Item id="Male" textValue="Male">
                       Male
                     </ListBox.Item>
 
                     <ListBox.Item id="Female" textValue="Female">
                       Female
-                    </ListBox.Item>
-
-                    <ListBox.Item id="Both" textValue="Both">
-                      Both
                     </ListBox.Item>
                   </ListBox>
                 </Select.Popover>
@@ -630,8 +605,8 @@ export default function CaptainRegistrationPage() {
             isOpen={isAddModalOpen}
             onOpenChange={setIsAddModalOpen}
             game={selectedGame}
-            onSaved={(registration: IndividualRegistration) => {
-              setIndividualRegistrations((prev) => [...prev, registration]);
+            onSaved={(registrations: IndividualRegistration[]) => {
+              setIndividualRegistrations((prev) => [...prev, ...registrations]);
             }}
           />
 

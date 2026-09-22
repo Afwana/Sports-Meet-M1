@@ -1,6 +1,7 @@
 import KPICards from "@/components/captain/KPICards";
 import IndividualGames from "@/components/IndividualGames";
 import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
+import { getTeamRank } from "@/lib/getTeamRank";
 import { connectDB } from "@/lib/mongodb";
 import Employee from "@/models/Employee";
 import GroupRegistration from "@/models/GroupRegistration";
@@ -25,17 +26,13 @@ export default async function CaptainPage() {
     );
   }
 
-  const members = await Employee.countDocuments({
-    teamId: captain.teamId,
-  });
-
-  const individualRegistrations = await IndividualRegistration.countDocuments({
-    team: captain.teamId,
-  });
-
-  const groupRegistrations = await GroupRegistration.countDocuments({
-    team: captain.teamId,
-  });
+  const [members, individualRegistrations, groupRegistrations, teamPosition] =
+    await Promise.all([
+      Employee.countDocuments({ teamId: captain.teamId }),
+      IndividualRegistration.countDocuments({ teamId: captain.teamId }),
+      GroupRegistration.countDocuments({ team: captain.teamId }),
+      getTeamRank(captain.teamId),
+    ]);
 
   return (
     <div className="min-h-[calc(100vh-110px)] bg-blue-50 dark:bg-black p-6">
@@ -63,7 +60,7 @@ export default async function CaptainPage() {
             members={members}
             individualRegistrations={individualRegistrations}
             groupRegistrations={groupRegistrations}
-            teamPosition={null}
+            teamPosition={teamPosition}
           />
           <hr className="my-5" />
           <div className="flex flex-col">

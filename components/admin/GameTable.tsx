@@ -131,7 +131,7 @@ export default function GameTable({ games }: Props) {
                     const Icon = iconMap[game.icon as keyof typeof iconMap];
 
                     return (
-                      <Table.Row key={game._id}>
+                      <Table.Row key={game._id} id={game._id}>
                         <Table.Cell>
                           <div className="flex items-center gap-3">
                             {Icon ? (

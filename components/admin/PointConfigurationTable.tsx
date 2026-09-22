@@ -143,7 +143,10 @@ export default function PointConfigurationTable() {
                       );
 
                       return (
-                        <Table.Row key={configuration._id}>
+                        <Table.Row
+                          key={configuration._id}
+                          id={configuration._id}
+                        >
                           <Table.Cell>{index + 1}</Table.Cell>
 
                           <Table.Cell>

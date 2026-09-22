@@ -115,7 +115,7 @@ export default function TeamsTable({ teams }: Props) {
                 <Table.Body items={paginatedItems} className="rounded-none">
                   {(team) => {
                     return (
-                      <Table.Row key={team._id}>
+                      <Table.Row key={team._id} id={team._id}>
                         <Table.Cell>
                           <div className="flex items-center gap-3">
                             {team.logo ? (

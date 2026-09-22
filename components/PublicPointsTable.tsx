@@ -79,14 +79,14 @@ export default function PublicPointsTable({
                 className={`grid ${
                   showMedalColumns ? "grid-cols-6" : "grid-cols-3"
                 } items-center rounded-2xl transition-all duration-200 ${
-                  team.rank === 1
+                  team.rank === 1 && team.totalPoints > 0
                     ? "bg-linear-to-r from-blue-700 to-blue-600 text-white shadow-lg px-6 py-5"
                     : "px-3 py-2 border border-gray-200 bg-white hover:bg-gray-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 }`}
               >
                 {/* Rank */}
                 <div className="flex items-center gap-3 font-bold">
-                  {team.rank <= 3 ? (
+                  {team.totalPoints > 0 && team.rank <= 3 ? (
                     team.rank === 1 ? (
                       <GiTrophy className="text-4xl text-yellow-400" />
                     ) : (
@@ -106,7 +106,7 @@ export default function PublicPointsTable({
                 {/* Team */}
                 <div
                   className={`font-semibold ${
-                    team.rank === 1
+                    team.rank === 1 && team.totalPoints > 0
                       ? "text-white"
                       : "text-gray-800 dark:text-white"
                   }`}
@@ -131,7 +131,7 @@ export default function PublicPointsTable({
                 {/* Points */}
                 <div
                   className={`text-right text-xl font-bold ${
-                    team.rank === 1
+                    team.rank === 1 && team.totalPoints > 0
                       ? "text-white"
                       : "text-gray-800 dark:text-white"
                   }`}

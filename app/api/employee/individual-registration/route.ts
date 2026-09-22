@@ -145,7 +145,6 @@ export async function POST(req: NextRequest) {
       employeeCode: employee.employeeCode,
       employeeName: employee.employeeName,
       teamId: employee.teamId,
-      team: employee.team,
       games,
     });
 

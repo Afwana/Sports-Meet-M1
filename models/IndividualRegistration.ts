@@ -27,11 +27,11 @@ const IndividualRegistrationSchema = new mongoose.Schema(
       required: true,
     },
 
-    team: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    // team: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    // },
 
     games: [
       {

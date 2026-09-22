@@ -131,7 +131,7 @@ export default function EmployeesTable({ employees }: Props) {
                 <Table.Body items={paginatedItems} className="rounded-none">
                   {(employee) => {
                     return (
-                      <Table.Row key={employee._id}>
+                      <Table.Row key={employee._id} id={employee._id}>
                         <Table.Cell>
                           <div className="flex items-center gap-3">
                             {employee.employeeCode}

@@ -104,7 +104,7 @@ export default function MarathonPointsCard({
 
             <Table.Body>
               {teams.map((team) => (
-                <Table.Row key={team.teamId}>
+                <Table.Row key={team.teamId} id={team.teamId}>
                   <Table.Cell>{team.teamName}</Table.Cell>
                   <Table.Cell>{team.participantCount}</Table.Cell>
                   <Table.Cell>{team.participantCount}</Table.Cell>

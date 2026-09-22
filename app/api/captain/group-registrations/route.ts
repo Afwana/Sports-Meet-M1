@@ -8,6 +8,7 @@ import Games from "@/models/Games";
 import Settings from "@/models/Settings";
 import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 import { getAgeCategory } from "@/lib/getAgeCategory";
+import IndividualRegistration from "@/models/IndividualRegistration";
 
 function getGroupNumber(groupName: string) {
   const match = groupName.match(/Group\s+([A-Z]+)$/i);
@@ -185,6 +186,63 @@ export async function POST(req: NextRequest) {
             {
               success: false,
               message: `${emp.employeeName} is not eligible.`,
+            },
+            { status: 400 },
+          );
+        }
+      }
+    }
+
+    // Category participation limits (Individual + Group combined)
+    const categoryLimits = {
+      Stage: 2,
+      "Off Stage": 4,
+      Sports: 3,
+    };
+
+    const limit = categoryLimits[game.category as keyof typeof categoryLimits];
+
+    if (limit) {
+      for (const employeeId of unique) {
+        // Individual registrations
+        const individualRegistrations = await IndividualRegistration.find({
+          employee: employeeId,
+        }).lean();
+
+        const individualGameIds = individualRegistrations.flatMap(
+          (registration) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            registration.games.map((g: any) => g.gameId),
+        );
+
+        // Group registrations
+        const groupRegistrations = await GroupRegistration.find({
+          participants: employeeId,
+        })
+          .select("game")
+          .lean();
+
+        const groupGameIds = groupRegistrations.map(
+          (registration) => registration.game,
+        );
+
+        // Combine all registered game IDs
+        const allGameIds = [...individualGameIds, ...groupGameIds];
+
+        // Count games in the same category
+        const gamesInCategory = await Games.countDocuments({
+          _id: { $in: allGameIds },
+          category: game.category,
+        });
+
+        if (gamesInCategory >= limit) {
+          const employee =
+            await Employee.findById(employeeId).select("employeeName");
+
+          return NextResponse.json(
+            {
+              success: false,
+              message: `${employee?.employeeName} has already registered for ${limit} ${game.category} items.`,
             },
             { status: 400 },
           );

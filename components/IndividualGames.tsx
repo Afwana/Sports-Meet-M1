@@ -324,10 +324,11 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
                     </span>
                   </p>
                 ) : (
-                  <p className="mt-1 px-1 text-xs text-default-400 flex items-center justify-between gap-5">
-                    <span>Max Participants : {game.maxParticipants}</span>
+                  <p className="mt-1 px-1 text-xs text-default-400 flex items-center justify-end gap-5">
+                    {/* <span>Max Participants : {game.maxParticipants}</span> */}
                     <span>
-                      Max Participants per Team : {game.maxParticipantsPerTeam}
+                      Max Participants per Team :{" "}
+                      {game.maxParticipantsPerTeam ?? "-"}
                     </span>
                   </p>
                 ))}
@@ -436,7 +437,7 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
                     Select the games and team members to register.
                   </p>
                 </div>
-                <Button onPress={() => router.push("/captain/groups")}>
+                <Button onPress={() => router.push("/captain/registration")}>
                   Register Now
                 </Button>
               </div>

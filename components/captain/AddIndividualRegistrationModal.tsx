@@ -28,7 +28,7 @@ interface Props {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   game: Game | null;
-  onSaved: (registration: IndividualRegistration) => void;
+  onSaved: (registrations: IndividualRegistration[]) => void;
 }
 
 export default function AddIndividualRegistrationModal({
@@ -116,7 +116,7 @@ export default function AddIndividualRegistrationModal({
 
       toast.success("Registration created successfully.");
 
-      onSaved(data.registration);
+      onSaved(data.registrations || []);
 
       setSelectedEmployees([]);
       onOpenChange(false);

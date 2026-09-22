@@ -249,13 +249,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const registrations = await IndividualRegistration.insertMany(
+    const inserted = await IndividualRegistration.insertMany(
       employees.map((emp) => ({
         employee: emp._id,
         employeeCode: emp.employeeCode,
         employeeName: emp.employeeName,
         teamId: captain.teamId,
-        team: captain.team,
+        // team: captain.team,
         games: [
           {
             gameId: game._id,
@@ -264,6 +264,11 @@ export async function POST(req: NextRequest) {
         ],
       })),
     );
+
+    const registrations = await IndividualRegistration.populate(inserted, {
+      path: "employee",
+      select: "employeeName employeeCode",
+    });
 
     return NextResponse.json(
       {

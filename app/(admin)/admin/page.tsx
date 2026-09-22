@@ -1,7 +1,6 @@
 import AdminDataManagement from "@/components/admin/AdminDataManagement";
 import AdminKPICards from "@/components/admin/AdminKPICards";
 import PointConfigurationTable from "@/components/admin/PointConfigurationTable";
-import PointsTable from "@/components/PointsTable";
 import PublicPointsTable from "@/components/PublicPointsTable";
 import { connectDB } from "@/lib/mongodb";
 import Employee from "@/models/Employee";

@@ -4,15 +4,7 @@ import MarathonPointsCard from "@/components/admin/MarathonPointsCard";
 import ResultsTable, { type ResultRow } from "@/components/admin/ResultsTable";
 import { Game } from "@/types/game";
 
-import {
-  Button,
-  Card,
-  Key,
-  Label,
-  ListBox,
-  Select,
-  Spinner,
-} from "@heroui/react";
+import { Button, Card, Label, ListBox, Select, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";

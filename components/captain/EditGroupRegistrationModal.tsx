@@ -91,7 +91,10 @@ export default function EditGroupRegistrationModal({
         return;
       }
 
-      if (selectedEmployees.length > game.maxParticipants) {
+      if (
+        game.maxParticipants != null &&
+        selectedEmployees.length > game.maxParticipants
+      ) {
         toast.error(
           `Maximum ${game.maxParticipants} participants are allowed.`,
         );
@@ -103,7 +106,10 @@ export default function EditGroupRegistrationModal({
         return;
       }
 
-      if (selectedEmployees.length > game.maxParticipantsPerTeam) {
+      if (
+        game.maxParticipantsPerTeam != null &&
+        selectedEmployees.length > game.maxParticipantsPerTeam
+      ) {
         toast.error(
           `Maximum ${game.maxParticipantsPerTeam} participants are allowed from your team.`,
         );

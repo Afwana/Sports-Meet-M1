@@ -1,24 +1,22 @@
 "use client";
 
+import MarathonPointsCard from "@/components/admin/MarathonPointsCard";
 import ResultsTable, { type ResultRow } from "@/components/admin/ResultsTable";
+import { Game } from "@/types/game";
 
-import { Button, Card, Label, ListBox, Select, Spinner } from "@heroui/react";
+import {
+  Button,
+  Card,
+  Key,
+  Label,
+  ListBox,
+  Select,
+  Spinner,
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-interface Game {
-  _id: string;
-  name: string;
-  category: "Sports" | "Arts";
-  type: "Individual" | "Group";
-  icon: string;
-  minParticipants?: number;
-  maxParticipants?: number;
-  maxTeamsPerCompetitionTeam?: number;
-  isActive: boolean;
-}
 
 interface Participant {
   employeeId: string;
@@ -40,8 +38,6 @@ interface ExistingResult {
   game: string;
   positions: ResultPosition[];
 }
-
-type ResultCategory = "Individual" | "Group";
 
 type GroupItem = {
   groupId: string;
@@ -80,7 +76,20 @@ const positions = [
 
 export default function AdminResultsPage() {
   const router = useRouter();
-  const [category, setCategory] = useState<ResultCategory>("Individual");
+  const [selectedType, setSelectedType] = useState<"Individual" | "Group">(
+    "Individual",
+  );
+  const [selectedCategory, setSelectedCategory] = useState<
+    "Sports" | "Off Stage" | "Stage" | "Games"
+  >("Sports");
+
+  const [selectedGender, setSelectedGender] = useState<
+    "Male" | "Female" | "Both"
+  >("Male");
+
+  const [selectedAgeCategory, setSelectedAgeCategory] = useState<
+    "Open" | "Junior" | "Senior"
+  >("Open");
 
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGameId, setSelectedGameId] = useState("");
@@ -142,10 +151,38 @@ export default function AdminResultsPage() {
   }, []);
 
   const filteredGames = useMemo(() => {
-    return games.filter(
-      (game) => game.type === category && game.isActive === true,
-    );
-  }, [games, category]);
+    return games.filter((game) => {
+      if (!game.isActive) return false;
+
+      if (game.type !== selectedType) return false;
+
+      if (game.category !== selectedCategory) return false;
+
+      if (game.gender !== selectedGender) return false;
+
+      if (
+        (selectedCategory === "Sports" || selectedCategory === "Games") &&
+        game.ageCategory !== selectedAgeCategory
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [
+    games,
+    selectedType,
+    selectedCategory,
+    selectedGender,
+    selectedAgeCategory,
+  ]);
+
+  const selectedGame = games.find((g) => g._id === selectedGameId);
+
+  const isMarathon =
+    selectedGame?.name.toLowerCase() === "marathon" &&
+    selectedGame?.type === "Individual" &&
+    selectedGame?.category === "Games";
 
   /* Load participants and existing result for game */
   const loadGameParticipants = async (gameId: string) => {
@@ -242,9 +279,9 @@ export default function AdminResultsPage() {
   const handleGameChange = (value: string) => {
     setSelectedGameId(value);
 
-    if (category === "Individual") {
+    if (selectedType === "Individual") {
       loadGameParticipants(value);
-    } else if (category === "Group") {
+    } else if (selectedType === "Group") {
       loadGameGroups(value);
     } else {
       setParticipants([]);
@@ -432,7 +469,7 @@ export default function AdminResultsPage() {
   }, []);
 
   const handleEdit = (row: ResultRow) => {
-    setCategory(row.type);
+    setSelectedType(row.type);
     setSelectedGameId(row.gameId);
 
     if (row.type === "Individual") {
@@ -542,16 +579,18 @@ export default function AdminResultsPage() {
           <div className="space-y-8">
             {/* RESULT FORM */}
             <div className="space-y-6">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {/* CATEGORY */}
-                <div className="space-y-2">
-                  <Label>Select Category</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {/* TYPE */}
+                <div>
+                  <Label className="mb-2">Game Type</Label>
 
                   <Select
-                    value={category}
+                    aria-label="select type"
+                    value={selectedType}
                     onChange={(value) => {
                       if (typeof value === "string") {
-                        setCategory(value as ResultCategory);
+                        setSelectedType(value as "Individual" | "Group");
+                        setSelectedGameId("");
                       }
                     }}
                   >
@@ -564,40 +603,114 @@ export default function AdminResultsPage() {
                       <ListBox>
                         <ListBox.Item id="Individual" textValue="Individual">
                           Individual
-                          <ListBox.ItemIndicator />
                         </ListBox.Item>
 
                         <ListBox.Item id="Group" textValue="Group">
                           Group
-                          <ListBox.ItemIndicator />
                         </ListBox.Item>
                       </ListBox>
                     </Select.Popover>
                   </Select>
                 </div>
 
-                {/* GAME */}
-                <div className="space-y-2">
-                  <Label>Select {category} Game</Label>
+                {/* CATEGORY */}
+                <div>
+                  <Label className="mb-2">Category</Label>
 
-                  {loadingGames ? (
-                    <div className="flex items-center gap-2 py-2">
-                      <Spinner size="sm" />
+                  <Select
+                    aria-label="select category"
+                    value={selectedCategory}
+                    onChange={(value) => {
+                      if (typeof value === "string") {
+                        setSelectedCategory(
+                          value as "Sports" | "Off Stage" | "Stage" | "Games",
+                        );
 
-                      <span className="text-sm text-default-500">
-                        Loading games...
-                      </span>
-                    </div>
-                  ) : filteredGames.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-default-300 p-5 text-sm text-default-500">
-                      No active {category.toLowerCase()} games found.
-                    </div>
-                  ) : (
+                        setSelectedGameId("");
+                      }
+                    }}
+                  >
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+
+                    <Select.Popover>
+                      <ListBox>
+                        <ListBox.Item id="Sports" textValue="Sports">
+                          Sports
+                        </ListBox.Item>
+
+                        <ListBox.Item id="Stage" textValue="Stage">
+                          Stage
+                        </ListBox.Item>
+
+                        <ListBox.Item id="Off Stage" textValue="Off Stage">
+                          Off Stage
+                        </ListBox.Item>
+
+                        <ListBox.Item id="Games" textValue="Games">
+                          Games
+                        </ListBox.Item>
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </div>
+
+                {/* GENDER */}
+                <div>
+                  <Label className="mb-2">Gender</Label>
+
+                  <Select
+                    aria-label="select gender"
+                    value={selectedGender}
+                    onChange={(value) => {
+                      if (typeof value === "string") {
+                        setSelectedGender(value as "Male" | "Female" | "Both");
+
+                        setSelectedGameId("");
+                      }
+                    }}
+                  >
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+
+                    <Select.Popover>
+                      <ListBox>
+                        <ListBox.Item id="Male" textValue="Male">
+                          Male
+                        </ListBox.Item>
+
+                        <ListBox.Item id="Female" textValue="Female">
+                          Female
+                        </ListBox.Item>
+
+                        <ListBox.Item id="Both" textValue="Both">
+                          Both
+                        </ListBox.Item>
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </div>
+
+                {/* AGE */}
+                {(selectedCategory === "Sports" ||
+                  selectedCategory === "Games") && (
+                  <div>
+                    <Label className="mb-2">Age Category</Label>
+
                     <Select
-                      value={selectedGameId}
+                      aria-label="select category"
+                      value={selectedAgeCategory}
                       onChange={(value) => {
                         if (typeof value === "string") {
-                          handleGameChange(value);
+                          setSelectedAgeCategory(
+                            value as "Open" | "Junior" | "Senior",
+                          );
+
+                          setSelectedGameId("");
                         }
                       }}
                     >
@@ -608,205 +721,307 @@ export default function AdminResultsPage() {
 
                       <Select.Popover>
                         <ListBox>
-                          {filteredGames.map((game) => (
-                            <ListBox.Item
-                              key={game._id}
-                              id={game._id}
-                              textValue={game.name}
-                            >
-                              {game.name}
+                          <ListBox.Item id="Open" textValue="Open">
+                            Open
+                          </ListBox.Item>
 
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
-                          ))}
+                          <ListBox.Item id="Junior" textValue="Junior">
+                            Junior
+                          </ListBox.Item>
+
+                          <ListBox.Item id="Senior" textValue="Senior">
+                            Senior
+                          </ListBox.Item>
                         </ListBox>
                       </Select.Popover>
                     </Select>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
 
-              {/* GROUP */}
-              {category === "Group" && selectedGameId && (
-                <>
-                  {loadingGroups ? (
-                    <div className="flex justify-center py-10">
-                      <Spinner />
-                    </div>
-                  ) : groupItems.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
-                      No groups are registered for this game.
-                    </div>
-                  ) : (
-                    <div className="space-y-5">
-                      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {positions.map(({ position, label }) => (
-                          <div key={position} className="space-y-2">
-                            <Label>{label}</Label>
+              {/* <div className="mt-6 max-w-xl">
+                  <Label className="mb-2">Select Game</Label>
 
-                            <Select
-                              value={selectedGroupPositions[position] || ""}
-                              onChange={(value) => {
-                                if (typeof value === "string") {
-                                  handleGroupPositionChange(position, value);
-                                }
-                              }}
-                            >
-                              <Select.Trigger>
-                                <Select.Value />
-                                <Select.Indicator />
-                              </Select.Trigger>
+                  <Select
+                    aria-label="select game"
+                    value={selectedGameId}
+                    isDisabled={loadingGames}
+                    onChange={(value: Key | null) => {
+                      if (!value) return;
 
-                              <Select.Popover>
-                                <ListBox>
-                                  {groupItems.map((group) => (
-                                    <ListBox.Item
-                                      key={group.groupId}
-                                      id={group.groupId}
-                                      textValue={`${group.groupName} ${group.teamName}`}
-                                    >
-                                      <div className="flex flex-col">
-                                        <span className="font-medium">
-                                          {group.groupName}
-                                        </span>
+                      loadRegistrationData(String(value));
+                    }}
+                  >
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
 
-                                        <span className="text-xs text-default-500">
-                                          {group.teamName} •{" "}
-                                          {group.participantCount} members
-                                        </span>
-                                      </div>
-
-                                      <ListBox.ItemIndicator />
-                                    </ListBox.Item>
-                                  ))}
-                                </ListBox>
-                              </Select.Popover>
-                            </Select>
-                          </div>
+                    <Select.Popover>
+                      <ListBox>
+                        {filteredGames.map((game) => (
+                          <ListBox.Item
+                            key={game._id}
+                            id={game._id}
+                            textValue={game.name}
+                          >
+                            <p className="flex flex-col gap-1">
+                              <span className="font-bold">{game.name}</span>
+                              <span className="flex items-center gap-2 text-gray-400 text-xs">
+                                {game.category} | {game.gender}{" "}
+                                {game.ageCategory
+                                  ? `| ${game.ageCategory}`
+                                  : ""}
+                              </span>
+                            </p>
+                          </ListBox.Item>
                         ))}
-                      </div>
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </div> */}
 
-                      <div className="flex justify-end">
-                        <Button onPress={saveGroupResult} isDisabled={saving}>
-                          {saving ? (
-                            <>
-                              <Spinner size="sm" />
-                              {loadedGroupResult ? "Updating..." : "Saving..."}
-                            </>
-                          ) : loadedGroupResult ? (
-                            "Update Result"
-                          ) : (
-                            "Save Result"
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
+              {/* GAME */}
+              <div className="space-y-2">
+                <Label>Select {selectedType} Game</Label>
 
-              {/* INDIVIDUAL RESULT */}
-              {category === "Individual" && selectedGameId && (
-                <>
-                  {loadingParticipants ? (
-                    <div className="flex justify-center py-10">
-                      <Spinner />
-                    </div>
-                  ) : participants.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
-                      No employees are registered for this game.
-                    </div>
-                  ) : (
-                    <div className="space-y-5">
-                      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {positions.map(({ position, label }) => (
-                          <div key={position} className="space-y-2">
-                            <Label>{label}</Label>
+                {loadingGames ? (
+                  <div className="flex items-center gap-2 py-2">
+                    <Spinner size="sm" />
 
-                            <Select
-                              value={selectedPositions[position] || ""}
-                              onChange={(value) => {
-                                if (typeof value === "string") {
-                                  handlePositionChange(position, value);
-                                }
-                              }}
-                            >
-                              <Select.Trigger>
-                                <Select.Value />
-                                <Select.Indicator />
-                              </Select.Trigger>
+                    <span className="text-sm text-default-500">
+                      Loading games...
+                    </span>
+                  </div>
+                ) : filteredGames.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-default-300 p-5 text-sm text-default-500">
+                    No active {selectedType.toLowerCase()} games found.
+                  </div>
+                ) : (
+                  <Select
+                    value={selectedGameId}
+                    onChange={(value) => {
+                      if (typeof value === "string") {
+                        handleGameChange(value);
+                      }
+                    }}
+                  >
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
 
-                              <Select.Popover>
-                                <ListBox>
-                                  {participants.map((employee) => (
-                                    <ListBox.Item
-                                      key={employee.employeeId}
-                                      id={employee.employeeId}
-                                      textValue={`${employee.employeeName} ${employee.employeeCode}`}
-                                    >
-                                      <div className="flex flex-col">
-                                        <span className="font-medium">
-                                          {employee.employeeName}
-                                        </span>
+                    <Select.Popover>
+                      <ListBox>
+                        {filteredGames.map((game) => (
+                          <ListBox.Item
+                            key={game._id}
+                            id={game._id}
+                            textValue={game.name}
+                          >
+                            {game.name}
 
-                                        <span className="text-xs text-default-500">
-                                          {employee.employeeCode} •{" "}
-                                          {employee.team}
-                                        </span>
-                                      </div>
-
-                                      <ListBox.ItemIndicator />
-                                    </ListBox.Item>
-                                  ))}
-                                </ListBox>
-                              </Select.Popover>
-                            </Select>
-                          </div>
+                            <ListBox.ItemIndicator />
+                          </ListBox.Item>
                         ))}
-                      </div>
-
-                      <div className="flex justify-end">
-                        <Button onPress={saveResult} isDisabled={saving}>
-                          {saving ? (
-                            <>
-                              <Spinner size="sm" />
-                              {loadedResult ? "Updating..." : "Saving..."}
-                            </>
-                          ) : loadedResult ? (
-                            "Update Result"
-                          ) : (
-                            "Save Result"
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* ALL RESULTS TABLE */}
-            <div className="border-t border-default-200 pt-6">
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold">All Results</h2>
-
-                <p className="text-sm text-default-500">
-                  Manage results of all games.
-                </p>
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                )}
               </div>
-
-              {loadingResults ? (
-                <div className="flex justify-center py-12">
-                  <Spinner />
-                </div>
-              ) : (
-                <ResultsTable
-                  results={results}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              )}
             </div>
+
+            {/* GROUP */}
+            {selectedType === "Group" && selectedGameId && (
+              <>
+                {loadingGroups ? (
+                  <div className="flex justify-center py-10">
+                    <Spinner />
+                  </div>
+                ) : groupItems.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                    No groups are registered for this game.
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                      {positions.map(({ position, label }) => (
+                        <div key={position} className="space-y-2">
+                          <Label>{label}</Label>
+
+                          <Select
+                            value={selectedGroupPositions[position] || ""}
+                            onChange={(value) => {
+                              if (typeof value === "string") {
+                                handleGroupPositionChange(position, value);
+                              }
+                            }}
+                          >
+                            <Select.Trigger>
+                              <Select.Value />
+                              <Select.Indicator />
+                            </Select.Trigger>
+
+                            <Select.Popover>
+                              <ListBox>
+                                {groupItems.map((group) => (
+                                  <ListBox.Item
+                                    key={group.groupId}
+                                    id={group.groupId}
+                                    textValue={`${group.groupName} ${group.teamName}`}
+                                  >
+                                    <div className="flex flex-col">
+                                      <span className="font-medium">
+                                        {group.groupName}
+                                      </span>
+
+                                      <span className="text-xs text-default-500">
+                                        {group.teamName} •{" "}
+                                        {group.participantCount} members
+                                      </span>
+                                    </div>
+
+                                    <ListBox.ItemIndicator />
+                                  </ListBox.Item>
+                                ))}
+                              </ListBox>
+                            </Select.Popover>
+                          </Select>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-end">
+                      <Button onPress={saveGroupResult} isDisabled={saving}>
+                        {saving ? (
+                          <>
+                            <Spinner size="sm" />
+                            {loadedGroupResult ? "Updating..." : "Saving..."}
+                          </>
+                        ) : loadedGroupResult ? (
+                          "Update Result"
+                        ) : (
+                          "Save Result"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* MARATHON RESULT */}
+            {selectedType === "Individual" && selectedGameId && isMarathon && (
+              <MarathonPointsCard
+                gameId={selectedGameId}
+                onCompleted={async () => {
+                  await loadResults();
+                  router.refresh();
+                }}
+              />
+            )}
+
+            {/* INDIVIDUAL RESULT */}
+            {selectedType === "Individual" && selectedGameId && (
+              <>
+                {loadingParticipants ? (
+                  <div className="flex justify-center py-10">
+                    <Spinner />
+                  </div>
+                ) : participants.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                    No employees are registered for this game.
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                      {positions.map(({ position, label }) => (
+                        <div key={position} className="space-y-2">
+                          <Label>{label}</Label>
+
+                          <Select
+                            value={selectedPositions[position] || ""}
+                            onChange={(value) => {
+                              if (typeof value === "string") {
+                                handlePositionChange(position, value);
+                              }
+                            }}
+                          >
+                            <Select.Trigger>
+                              <Select.Value />
+                              <Select.Indicator />
+                            </Select.Trigger>
+
+                            <Select.Popover>
+                              <ListBox>
+                                {participants.map((employee) => (
+                                  <ListBox.Item
+                                    key={employee.employeeId}
+                                    id={employee.employeeId}
+                                    textValue={`${employee.employeeName} ${employee.employeeCode}`}
+                                  >
+                                    <div className="flex flex-col">
+                                      <span className="font-medium">
+                                        {employee.employeeName}
+                                      </span>
+
+                                      <span className="text-xs text-default-500">
+                                        {employee.employeeCode} •{" "}
+                                        {employee.team}
+                                      </span>
+                                    </div>
+
+                                    <ListBox.ItemIndicator />
+                                  </ListBox.Item>
+                                ))}
+                              </ListBox>
+                            </Select.Popover>
+                          </Select>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-end">
+                      <Button onPress={saveResult} isDisabled={saving}>
+                        {saving ? (
+                          <>
+                            <Spinner size="sm" />
+                            {loadedResult ? "Updating..." : "Saving..."}
+                          </>
+                        ) : loadedResult ? (
+                          "Update Result"
+                        ) : (
+                          "Save Result"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* ALL RESULTS TABLE */}
+          <div className="border-t border-default-200 pt-6">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">All Results</h2>
+
+              <p className="text-sm text-default-500">
+                Manage results of all games.
+              </p>
+            </div>
+
+            {loadingResults ? (
+              <div className="flex justify-center py-12">
+                <Spinner />
+              </div>
+            ) : (
+              <ResultsTable
+                results={results}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            )}
           </div>
         </Card.Content>
       </Card>

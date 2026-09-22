@@ -94,10 +94,6 @@ export function RegisterCard() {
         `/api/employee/check?employeeCode=${encodeURIComponent(employeeCode)}`,
         {
           method: "GET",
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
-          // body: JSON.stringify({ employeeCode }),
           cache: "no-store",
         },
       );
@@ -131,10 +127,11 @@ export function RegisterCard() {
 
   const teamId = useWatch({ control, name: "teamId" });
 
-  const onSubmit = async (formData: RegisterFormData) => {
+  const onSubmit = async () => {
     if (!employee) return;
 
     setSubmitting(true);
+    setEmployeeError("");
 
     try {
       const res = await fetch("/api/employee/register", {
@@ -144,24 +141,28 @@ export function RegisterCard() {
         },
         body: JSON.stringify({
           employeeCode: employee.employeeCode,
-          teamId: formData.teamId,
         }),
       });
 
       const data = await res.json();
 
-      if (data.success) {
-        toast.success("Registration completed successfully.");
-
-        setEmployee({
-          ...employee,
-          team: formData.team as string,
-          isRegistered: true,
-        });
-        router.refresh();
-      } else {
-        toast.error(data.message);
+      if (!res.ok || !data.success) {
+        toast.error(data.message || "Registration failed.");
+        return;
       }
+
+      toast.success("Registration completed successfully.");
+
+      setEmployee((prev) =>
+        prev
+          ? {
+              ...prev,
+              isRegistered: true,
+            }
+          : prev,
+      );
+
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong. Please try again!");

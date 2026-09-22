@@ -1,28 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Employee from "@/models/Employee";
-import { z } from "zod";
-import Teams from "@/models/Teams";
-
-// const RegisterSchema = z.object({
-//   employeeCode: z.string().min(1),
-//   team: z.string().min(1),
-//   teamId: z.string().optional(),
-// });
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
-    const body = await req.json();
+    const { employeeCode } = await req.json();
 
-    const { employeeCode, teamId } = body;
-
-    if (!employeeCode || !teamId) {
+    if (!employeeCode) {
       return NextResponse.json(
         {
           success: false,
-          message: "Employee code and team are required.",
+          message: "Employee code is required.",
         },
         { status: 400 },
       );
@@ -52,25 +42,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const team = await Teams.findOne({
-      _id: teamId,
-      isActive: true,
-    });
-
-    if (!team) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Selected team is not available.",
-        },
-        { status: 400 },
-      );
-    }
-
-    employee.team = team.name;
-    employee.teamId = team._id;
     employee.isRegistered = true;
-
     await employee.save();
 
     return NextResponse.json({
@@ -78,7 +50,7 @@ export async function POST(req: NextRequest) {
       employee,
     });
   } catch (error) {
-    console.error("Employee registration error:", error);
+    console.error("Registration error:", error);
 
     return NextResponse.json(
       {

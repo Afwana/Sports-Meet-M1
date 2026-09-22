@@ -18,7 +18,7 @@ const MarathonResultSchema = new Schema(
       {
         team: {
           type: Schema.Types.ObjectId,
-          ref: "Teams",
+          ref: "CompetitionTeam",
           required: true,
         },
 

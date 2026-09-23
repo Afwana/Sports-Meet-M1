@@ -51,21 +51,6 @@ interface ExistingGroupResult {
   }[];
 }
 
-// const positions = [
-//   {
-//     position: 1,
-//     label: "Winner (1st)",
-//   },
-//   {
-//     position: 2,
-//     label: "Second (2nd)",
-//   },
-//   {
-//     position: 3,
-//     label: "Third (3rd)",
-//   },
-// ];
-
 type PointConfiguration = {
   type: "Individual" | "Group";
   positions: {
@@ -804,6 +789,7 @@ export default function AdminResultsPage() {
                   </div>
                 ) : (
                   <Select
+                    aria-label="select game"
                     value={selectedGameId}
                     onChange={(value) => {
                       if (typeof value === "string") {
@@ -854,12 +840,17 @@ export default function AdminResultsPage() {
                         <div className="flex justify-center py-6">
                           <Spinner />
                         </div>
+                      ) : positions.length === 0 ? (
+                        <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                          Please add point configuration to game types!.
+                        </div>
                       ) : (
                         positions.map(({ position, label }) => (
                           <div key={position} className="space-y-2">
                             <Label>{label}</Label>
 
                             <Select
+                              aria-label={`select group for ${label}`}
                               value={selectedGroupPositions[position] || ""}
                               onChange={(value) => {
                                 if (typeof value === "string") {
@@ -950,12 +941,17 @@ export default function AdminResultsPage() {
                         <div className="flex justify-center py-6">
                           <Spinner />
                         </div>
+                      ) : positions.length === 0 ? (
+                        <div className="w-full rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                          Please add point configuration to game types!.
+                        </div>
                       ) : (
                         positions.map(({ position, label }) => (
                           <div key={position} className="space-y-2">
                             <Label>{label}</Label>
 
                             <Select
+                              aria-label={`select participant for ${label}`}
                               value={selectedPositions[position] || ""}
                               onChange={(value) => {
                                 if (typeof value === "string") {

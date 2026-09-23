@@ -1,5 +1,6 @@
 "use client";
 
+import { getPageRange } from "@/lib/getPageRange";
 import { Button, Input, Pagination, Table } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -20,7 +21,10 @@ type GroupPosition = {
 type IndividualResultRow = {
   gameId: string;
   gameName: string;
+  category: "Sports" | "Off Stage" | "Stage" | "Games";
   type: "Individual";
+  gender: "Male" | "Female" | "Both";
+  ageCategory: "Open" | "Junior" | "Senior";
   resultId: string | null;
 
   positions: {
@@ -33,9 +37,11 @@ type IndividualResultRow = {
 type GroupResultRow = {
   gameId: string;
   gameName: string;
+  category: "Sports" | "Off Stage" | "Stage" | "Games";
   type: "Group";
+  gender: "Male" | "Female" | "Both";
+  ageCategory: "Open" | "Junior" | "Senior";
   resultId: string | null;
-
   positions: {
     first: GroupPosition | null;
     second: GroupPosition | null;
@@ -145,7 +151,7 @@ export default function ResultsTable({
     Math.ceil(filteredResults.length / ROWS_PER_PAGE),
   );
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
@@ -157,8 +163,10 @@ export default function ResultsTable({
 
   const end = Math.min(page * ROWS_PER_PAGE, filteredResults.length);
 
-  console.log(results, "results");
-  console.log(paginatedItems, "paginated");
+  const pageRange = useMemo(
+    () => getPageRange(page, totalPages),
+    [page, totalPages],
+  );
 
   return (
     <Table aria-label="Game results table" className="w-full">
@@ -176,7 +184,7 @@ export default function ResultsTable({
         />
       </div>
       <Table.ScrollContainer>
-        <Table.Content>
+        <Table.Content aria-label="label">
           <Table.Header columns={columns}>
             {(column) => (
               <Table.Column
@@ -201,7 +209,13 @@ export default function ResultsTable({
 
                   {/* GAME */}
                   <Table.Cell>
-                    <span className="font-medium">{row.gameName}</span>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{row.gameName}</span>
+
+                      <span className="text-xs text-default-500">
+                        {row.category} | {row.gender} | {row.ageCategory}
+                      </span>
+                    </div>
                   </Table.Cell>
 
                   {/* TYPE */}
@@ -273,7 +287,7 @@ export default function ResultsTable({
           </Table.Body>
         </Table.Content>
       </Table.ScrollContainer>
-      <Table.Footer>
+      <Table.Footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-between">
         <Pagination size="sm">
           <Pagination.Summary>
             {start} to {end} of {filteredResults.length}
@@ -287,16 +301,22 @@ export default function ResultsTable({
                 <Pagination.PreviousIcon />
               </Pagination.Previous>
             </Pagination.Item>
-            {pages.map((p) => (
-              <Pagination.Item key={p}>
-                <Pagination.Link
-                  isActive={p === page}
-                  onPress={() => setPage(p)}
-                >
-                  {p}
-                </Pagination.Link>
-              </Pagination.Item>
-            ))}
+            {pageRange.map((p, idx) =>
+              typeof p === "number" ? (
+                <Pagination.Item key={p}>
+                  <Pagination.Link
+                    isActive={p === page}
+                    onPress={() => setPage(p)}
+                  >
+                    {p}
+                  </Pagination.Link>
+                </Pagination.Item>
+              ) : (
+                <Pagination.Item key={`${p}-${idx}`}>
+                  <span className="px-2 text-default-400 select-none">…</span>
+                </Pagination.Item>
+              ),
+            )}
             <Pagination.Item>
               <Pagination.Next
                 isDisabled={page === totalPages}

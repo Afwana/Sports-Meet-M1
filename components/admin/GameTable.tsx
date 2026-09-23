@@ -15,6 +15,7 @@ import { useMemo, useState } from "react";
 import GameFormModal from "./GameFormModal";
 import { iconMap } from "@/utils/iconMap";
 import DeleteGameModal from "./DeleteGameModal";
+import { getPageRange } from "@/lib/getPageRange";
 
 interface Props {
   games: Game[];
@@ -65,7 +66,7 @@ export default function GameTable({ games }: Props) {
     Math.ceil(filteredGames.length / ROWS_PER_PAGE),
   );
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
@@ -75,6 +76,11 @@ export default function GameTable({ games }: Props) {
   const start = (page - 1) * ROWS_PER_PAGE + 1;
 
   const end = Math.min(page * ROWS_PER_PAGE, filteredGames.length);
+
+  const pageRange = useMemo(
+    () => getPageRange(page, totalPages),
+    [page, totalPages],
+  );
 
   return (
     <div>
@@ -193,7 +199,7 @@ export default function GameTable({ games }: Props) {
                 </Table.Body>
               </Table.Content>
             </Table.ScrollContainer>
-            <Table.Footer>
+            <Table.Footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-between">
               <Pagination size="sm">
                 <Pagination.Summary>
                   {start} to {end} of {filteredGames.length} results
@@ -207,16 +213,24 @@ export default function GameTable({ games }: Props) {
                       <Pagination.PreviousIcon />
                     </Pagination.Previous>
                   </Pagination.Item>
-                  {pages.map((p) => (
-                    <Pagination.Item key={`page-${p}`}>
-                      <Pagination.Link
-                        isActive={p === page}
-                        onPress={() => setPage(p)}
-                      >
-                        {p}
-                      </Pagination.Link>
-                    </Pagination.Item>
-                  ))}
+                  {pageRange.map((p, idx) =>
+                    typeof p === "number" ? (
+                      <Pagination.Item key={p}>
+                        <Pagination.Link
+                          isActive={p === page}
+                          onPress={() => setPage(p)}
+                        >
+                          {p}
+                        </Pagination.Link>
+                      </Pagination.Item>
+                    ) : (
+                      <Pagination.Item key={`${p}-${idx}`}>
+                        <span className="px-2 text-default-400 select-none">
+                          …
+                        </span>
+                      </Pagination.Item>
+                    ),
+                  )}
                   <Pagination.Item>
                     <Pagination.Next
                       isDisabled={page === totalPages}

@@ -7,11 +7,6 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { toast } from "sonner";
 
-// const controlClassName = "bg-success-soft before:bg-success";
-
-// const indicatorClassName =
-//   "**:data-[slot=checkbox-default-indicator--checkmark]:text-success-foreground";
-
 interface Game {
   _id: string;
   name: string;
@@ -47,47 +42,12 @@ function GameItem({ game, registrationOpen }: GameItemProps) {
 
   console.log(registrationOpen);
 
-  // if (!registrationOpen) {
-  //   return (
-  //     <div
-  //       className="
-  //         flex items-center justify-between gap-3
-  //         rounded-lg border border-default-200
-  //         bg-default-50 p-4
-  //       "
-  //     >
-  //       <div className="flex flex-col w-full gap-1">
-  //         <div className="flex min-w-0 items-center gap-3">
-  //           {Icon ? (
-  //             <Icon className="shrink-0 text-2xl text-blue-600" />
-  //           ) : (
-  //             <FaCircle className="shrink-0 text-default-400" />
-  //           )}
-
-  //           <p className="truncate font-medium">{game.name}</p>
-  //         </div>
-  //       </div>
-
-  //       <div className="flex items-center gap-1">
-  //         {game.category === "Sports" && (
-  //           <p className="text-xs font-medium text-blue-400">
-  //             {game.ageCategory}
-  //           </p>
-  //         )}
-  //         <span className="shrink-0 rounded-full bg-default-100 px-2 py-1 text-xs text-default-500">
-  //           {game.type}
-  //         </span>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div
       className="
-          flex items-center justify-between gap-3
+          flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3
           rounded-lg border border-default-200
-          bg-default-50 p-4
+          bg-default-50 p-2 md:p-4
         "
     >
       <div className="flex flex-col w-full gap-1">
@@ -120,14 +80,9 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
   const router = useRouter();
 
   const [games, setGames] = useState<Game[]>([]);
-  // const [selectedGames, setSelectedGames] = useState<string[]>([]);
-
   const [registeredGames, setRegisteredGames] = useState<RegisteredGame[]>([]);
-
   const [loading, setLoading] = useState(true);
-  // const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
   const [registrationOpen, setRegistrationOpen] = useState(false);
 
   useEffect(() => {
@@ -187,8 +142,6 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
 
           setSubmitted(true);
           setRegisteredGames(existingGames);
-
-          // setSelectedGames(existingGames.map((game) => String(game.gameId)));
         }
       } catch (error) {
         console.error("Failed to load individual registration:", error);
@@ -206,10 +159,6 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
     (game) => game.gender === employeeGender || game.gender === "Both",
   );
 
-  // const registrationGames = eligibleGames.filter(
-  //   (game) => game.type === "Individual",
-  // );
-
   const sportsGames = eligibleGames.filter(
     (game) => game.category === "Sports" || game.category === "Games",
   );
@@ -221,78 +170,6 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
   const stageGames = eligibleGames.filter((game) => game.category === "Stage");
 
   const gamesItems = eligibleGames.filter((game) => game.category === "Games");
-
-  // const registrationSportsGames = registrationGames.filter(
-  //   (game) => game.category === "Sports",
-  // );
-
-  // const registrationOffStageGames = registrationGames.filter(
-  //   (game) => game.category === "Off Stage",
-  // );
-
-  // const registrationStageGames = registrationGames.filter(
-  //   (game) => game.category === "Stage",
-  // );
-
-  // const registrationGamesItems = registrationGames.filter(
-  //   (game) => game.category === "Games",
-  // );
-
-  // const submitRegistration = async () => {
-  //   if (!registrationOpen) {
-  //     toast.error("Individual registration is currently closed.");
-  //     return;
-  //   }
-
-  //   const selectedGameObjects = registrationGames
-  //     .filter((game) => selectedGames.includes(game._id))
-  //     .map((game) => ({
-  //       gameId: game._id,
-  //       gameName: game.name,
-  //     }));
-
-  //   if (selectedGameObjects.length === 0) {
-  //     toast.error("Please select at least one individual game.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setSubmitting(true);
-
-  //     const res = await fetch("/api/employee/individual-registration", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         games: selectedGameObjects,
-  //       }),
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (!res.ok) {
-  //       toast.error(data.message || "Failed to submit registration.");
-  //       return;
-  //     }
-
-  //     const savedGames: RegisteredGame[] =
-  //       data.registration?.games || selectedGameObjects;
-
-  //     setRegisteredGames(savedGames);
-  //     setSubmitted(true);
-
-  //     toast.success("Individual registration submitted successfully.");
-
-  //     router.refresh();
-  //   } catch (error) {
-  //     console.error("Individual registration error:", error);
-
-  //     toast.error("Failed to submit registration.");
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
 
   const renderCategory = (
     title: string,
@@ -346,8 +223,8 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
           <Spinner size="md">Loading Games...</Spinner>
         </div>
       ) : submitted ? (
-        <div className="px-5">
-          <div className="rounded-lg border border-success-200 bg-success-50 p-5">
+        <div className="px-3 md:px-5">
+          <div className="rounded-lg border border-success-200 bg-success-50 p-3 md:p-5">
             <div className="flex items-center gap-3">
               <FaCheckCircle className="text-xl text-success" />
 
@@ -411,10 +288,10 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-5 px-5">
+        <div className="flex flex-col gap-5 px-3 md:px-5">
           {isCaptain ? (
             !registrationOpen ? (
-              <div className="rounded-lg border border-warning-200 bg-warning-50 px-4 py-3 flex w-full items-start justify-between">
+              <div className="rounded-lg border border-warning-200 bg-warning-50 p-2 md:px-4 md:py-3 flex w-full items-start justify-between">
                 <div>
                   <p className="font-medium text-warning-700">
                     Registration is not available Now!.
@@ -427,7 +304,7 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
                 </div>
               </div>
             ) : (
-              <div className="rounded-lg border border-success-200 bg-success-50 px-4 py-3 flex w-full items-start justify-between">
+              <div className="rounded-lg border border-success-200 bg-success-50 p-2 md:px-4 md:py-3 flex flex-col md:flex-row w-full items-start justify-between gap-2">
                 <div>
                   <p className="font-medium text-success-700">
                     Registration is now open.
@@ -443,7 +320,7 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
               </div>
             )
           ) : (
-            <div className="rounded-lg border border-warning-200 bg-warning-50 px-4 py-3 flex w-full items-start justify-between">
+            <div className="rounded-lg border border-warning-200 bg-warning-50 p-2 md:px-4 md:py-3 flex w-full items-start justify-between">
               <div>
                 <p className="font-medium text-warning-700">
                   Registration is handled by your Team Captain.
@@ -456,25 +333,6 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
               </div>
             </div>
           )}
-          {/* {registrationOpen && (
-            <div className="rounded-lg border border-success-200 bg-success-50 px-4 py-3 flex w-full items-start justify-between">
-              <div>
-                <p className="font-medium text-success-700">
-                  Individual registration is now open.
-                </p>
-
-                <p className="mt-1 text-sm text-success-600">
-                  Select the individual games you would like to participate in.
-                </p>
-              </div>
-              <Button
-                onPress={submitRegistration}
-                isDisabled={submitting || selectedGames.length === 0}
-              >
-                {submitting ? "Submitting..." : "Submit Registration"}
-              </Button>
-            </div>
-          )} */}
           {eligibleGames.length === 0 ? (
             <div className="rounded-lg border border-default-200 bg-default-50 p-6 text-center">
               <p className="font-medium">No games available.</p>
@@ -484,57 +342,6 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
               </p>
             </div>
           ) : (
-            // : registrationOpen ? (
-            //   <>
-            //     {registrationGames.length === 0 ? (
-            //       <div className="rounded-lg border border-default-200 bg-default-50 p-6 text-center">
-            //         <p className="font-medium">No individual games available.</p>
-
-            //         <p className="mt-1 text-sm text-default-500">
-            //           There are currently no individual games available for your
-            //           gender.
-            //         </p>
-            //       </div>
-            //     ) : (
-            //       <CheckboxGroup
-            //         className="w-full gap-8"
-            //         name="games"
-            //         value={selectedGames}
-            //         onChange={setSelectedGames}
-            //       >
-            //         {renderCategory("Sports Items", registrationSportsGames)}
-
-            //         {renderCategory("Off Stage Items", registrationOffStageGames)}
-
-            //         {renderCategory("Stage Items", registrationStageGames)}
-
-            //         {renderCategory("Games", registrationGamesItems)}
-            //       </CheckboxGroup>
-            //     )}
-
-            //     {/* Selected Games + Submit */}
-            //     {registrationGames.length > 0 && (
-            //       <div className="mt-5 flex w-full flex-col justify-between gap-5 lg:flex-row lg:items-center">
-            //         <Label className="my-4 text-sm text-muted">
-            //           <span className="font-medium">Selected:</span>{" "}
-            //           {selectedGames.length > 0
-            //             ? registrationGames
-            //                 .filter((game) => selectedGames.includes(game._id))
-            //                 .map((game) => game.name)
-            //                 .join(", ")
-            //             : "None"}
-            //         </Label>
-
-            //         <Button
-            //           onPress={submitRegistration}
-            //           isDisabled={submitting || selectedGames.length === 0}
-            //         >
-            //           {submitting ? "Submitting..." : "Submit Registration"}
-            //         </Button>
-            //       </div>
-            //     )}
-            //   </>
-            // )
             <div className="flex flex-col gap-8">
               {renderCategory("Off Stage Items", offStageGames, true)}
 

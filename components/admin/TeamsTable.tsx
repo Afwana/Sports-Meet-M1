@@ -15,6 +15,7 @@ import { Team } from "@/types/team";
 import TeamFormModal from "./TeamFormModal";
 import DeleteTeamModal from "./DeleteTeamModal";
 import Image from "next/image";
+import { getPageRange } from "@/lib/getPageRange";
 
 interface Props {
   teams: Team[];
@@ -53,7 +54,7 @@ export default function TeamsTable({ teams }: Props) {
 
   const totalPages = Math.ceil(filteredTeams.length / ROWS_PER_PAGE);
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
@@ -63,6 +64,11 @@ export default function TeamsTable({ teams }: Props) {
   const start = (page - 1) * ROWS_PER_PAGE + 1;
 
   const end = Math.min(page * ROWS_PER_PAGE, filteredTeams.length);
+
+  const pageRange = useMemo(
+    () => getPageRange(page, totalPages),
+    [page, totalPages],
+  );
 
   return (
     <div>
@@ -117,7 +123,7 @@ export default function TeamsTable({ teams }: Props) {
                     return (
                       <Table.Row key={team._id} id={team._id}>
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-col md:flex-row md:items-center gap-3">
                             {team.logo ? (
                               <Image
                                 src={team.logo}
@@ -192,7 +198,7 @@ export default function TeamsTable({ teams }: Props) {
                 </Table.Body>
               </Table.Content>
             </Table.ScrollContainer>
-            <Table.Footer>
+            <Table.Footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-between">
               <Pagination size="sm">
                 <Pagination.Summary>
                   {start} to {end} of {filteredTeams.length} results
@@ -206,16 +212,24 @@ export default function TeamsTable({ teams }: Props) {
                       <Pagination.PreviousIcon />
                     </Pagination.Previous>
                   </Pagination.Item>
-                  {pages.map((p) => (
-                    <Pagination.Item key={p}>
-                      <Pagination.Link
-                        isActive={p === page}
-                        onPress={() => setPage(p)}
-                      >
-                        {p}
-                      </Pagination.Link>
-                    </Pagination.Item>
-                  ))}
+                  {pageRange.map((p, idx) =>
+                    typeof p === "number" ? (
+                      <Pagination.Item key={p}>
+                        <Pagination.Link
+                          isActive={p === page}
+                          onPress={() => setPage(p)}
+                        >
+                          {p}
+                        </Pagination.Link>
+                      </Pagination.Item>
+                    ) : (
+                      <Pagination.Item key={`${p}-${idx}`}>
+                        <span className="px-2 text-default-400 select-none">
+                          …
+                        </span>
+                      </Pagination.Item>
+                    ),
+                  )}
                   <Pagination.Item>
                     <Pagination.Next
                       isDisabled={page === totalPages}

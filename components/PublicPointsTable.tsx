@@ -86,7 +86,7 @@ export default function PublicPointsTable({
               >
                 {/* Rank */}
                 <div
-                  className={`flex items-center gap-3 font-bold ${team.rank === 1 && team.totalPoints > 0 ? "text-wihte" : "text-gray-800 dark:text-white"}`}
+                  className={`flex items-center gap-3 font-bold ${team.rank === 1 && team.totalPoints > 0 ? "text-wihte" : "text-gray-800"}`}
                 >
                   {team.totalPoints > 0 && team.rank <= 3 ? (
                     team.rank === 1 ? (
@@ -109,7 +109,7 @@ export default function PublicPointsTable({
                   className={`font-semibold ${
                     team.rank === 1 && team.totalPoints > 0
                       ? "text-white"
-                      : "text-gray-800 dark:text-white"
+                      : "text-gray-800"
                   }`}
                 >
                   {team.teamName}
@@ -134,7 +134,7 @@ export default function PublicPointsTable({
                   className={`text-right text-xl font-bold ${
                     team.rank === 1 && team.totalPoints > 0
                       ? "text-white"
-                      : "text-gray-800 dark:text-white"
+                      : "text-gray-800"
                   }`}
                 >
                   {team.totalPoints}

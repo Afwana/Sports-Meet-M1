@@ -37,7 +37,7 @@ export default async function AdminDashboard() {
         />
 
         <AdminDataManagement />
-        <div className="flex justify-between gap-5">
+        <div className="flex flex-col md:flex-row justify-between gap-5">
           <PointConfigurationTable />
           <PublicPointsTable />
         </div>

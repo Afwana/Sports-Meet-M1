@@ -16,6 +16,7 @@ import AnnouncementFormModal from "./AnnouncementFormModal";
 import DeleteAnnouncementModal from "./DeleteAnnouncementModal";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { getPageRange } from "@/lib/getPageRange";
 
 interface Announcement {
   _id: string;
@@ -75,7 +76,7 @@ export default function AnnouncementTable({
 
   const totalPages = Math.ceil(filteredAnnouncements.length / ROWS_PER_PAGE);
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
@@ -85,6 +86,11 @@ export default function AnnouncementTable({
   const start = (page - 1) * ROWS_PER_PAGE + 1;
 
   const end = Math.min(page * ROWS_PER_PAGE, filteredAnnouncements.length);
+
+  const pageRange = useMemo(
+    () => getPageRange(page, totalPages),
+    [page, totalPages],
+  );
 
   const handleCreated = (announcement: Announcement) => {
     setAnnouncements((current) => [announcement, ...current]);
@@ -259,7 +265,7 @@ export default function AnnouncementTable({
                   </Table.Body>
                 </Table.Content>
               </Table.ScrollContainer>
-              <Table.Footer>
+              <Table.Footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-between">
                 <Pagination size="sm">
                   <Pagination.Summary>
                     {start} to {end} of {filteredAnnouncements.length} results
@@ -273,16 +279,24 @@ export default function AnnouncementTable({
                         <Pagination.PreviousIcon />
                       </Pagination.Previous>
                     </Pagination.Item>
-                    {pages.map((p) => (
-                      <Pagination.Item key={p}>
-                        <Pagination.Link
-                          isActive={p === page}
-                          onPress={() => setPage(p)}
-                        >
-                          {p}
-                        </Pagination.Link>
-                      </Pagination.Item>
-                    ))}
+                    {pageRange.map((p, idx) =>
+                      typeof p === "number" ? (
+                        <Pagination.Item key={p}>
+                          <Pagination.Link
+                            isActive={p === page}
+                            onPress={() => setPage(p)}
+                          >
+                            {p}
+                          </Pagination.Link>
+                        </Pagination.Item>
+                      ) : (
+                        <Pagination.Item key={`${p}-${idx}`}>
+                          <span className="px-2 text-default-400 select-none">
+                            …
+                          </span>
+                        </Pagination.Item>
+                      ),
+                    )}
                     <Pagination.Item>
                       <Pagination.Next
                         isDisabled={page === totalPages}

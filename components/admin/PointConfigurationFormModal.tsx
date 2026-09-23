@@ -354,7 +354,12 @@ export default function PointConfigurationFormModal({
 
                 {/* Active */}
                 <Switch isSelected={isActive} onChange={setIsActive}>
-                  Active
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    Active
+                  </Switch.Content>
                 </Switch>
               </div>
             </Modal.Body>

@@ -23,7 +23,10 @@ export async function GET(req: NextRequest) {
     }
 
     const employee = await Employee.findOne({
-      employeeCode: code,
+      $or: [
+        { employeeCode: code }, // MB/TC/1378
+        { employeeCode: { $regex: `/${code}$`, $options: "i" } }, // 1378
+      ],
     })
       .select(
         "_id employeeCode employeeName team teamId role isCaptain isRegistered department phoneNumber",

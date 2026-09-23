@@ -101,7 +101,7 @@ export default function PointConfigurationTable() {
     <>
       <Card className="w-full">
         <Card.Header>
-          <div className="flex w-full items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row w-full md:items-center justify-between gap-4">
             <div>
               <Card.Title>Point Configuration</Card.Title>
 
@@ -124,7 +124,7 @@ export default function PointConfigurationTable() {
           ) : (
             <Table aria-label="Point configurations">
               <Table.ScrollContainer>
-                <Table.Content>
+                <Table.Content aria-label="label">
                   <Table.Header columns={columns}>
                     {(column) => (
                       <Table.Column

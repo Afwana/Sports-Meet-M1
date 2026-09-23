@@ -8,8 +8,13 @@ export async function POST(req: NextRequest) {
 
   const { employeeCode } = await req.json();
 
+  const code = employeeCode.trim().toUpperCase();
+
   const employee = await Employee.findOne({
-    employeeCode: employeeCode.trim().toUpperCase(),
+    $or: [
+      { employeeCode: code },
+      { employeeCode: { $regex: `/${code}$`, $options: "i" } },
+    ],
   });
 
   if (!employee) {

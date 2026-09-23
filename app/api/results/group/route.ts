@@ -15,7 +15,7 @@ export async function GET() {
       type: "Group",
       isActive: true,
     })
-      .select("_id name category")
+      .select("_id name category type gender ageCategory")
       .sort({ name: 1 })
       .lean();
 
@@ -97,7 +97,10 @@ export async function GET() {
       return {
         gameId: String(game._id),
         gameName: game.name,
+        type: game.type,
         category: game.category,
+        gender: game.gender,
+        ageCategory: game.ageCategory,
         hasResult: Boolean(result),
         positions,
       };

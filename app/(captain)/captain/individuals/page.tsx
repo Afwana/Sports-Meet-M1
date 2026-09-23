@@ -1,5 +1,6 @@
 "use client";
 
+import { getPageRange } from "@/lib/getPageRange";
 import { IndividualRegistration } from "@/types/registration";
 import { Card, Input, Pagination, Spinner, Table } from "@heroui/react";
 import { useEffect, useMemo, useState } from "react";
@@ -20,12 +21,6 @@ export default function CaptainIndividualsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-
-  // const [editingRegistration, setEditingRegistration] =
-  //   useState<IndividualRegistration | null>(null);
-
-  // const [deletingRegistration, setDeletingRegistration] =
-  //   useState<IndividualRegistration | null>(null);
 
   const loadRegistrations = async () => {
     try {
@@ -99,7 +94,7 @@ export default function CaptainIndividualsPage() {
     Math.ceil(groupedRegistrations.length / ROWS_PER_PAGE),
   );
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
@@ -110,7 +105,12 @@ export default function CaptainIndividualsPage() {
     groupedRegistrations.length === 0 ? 0 : (page - 1) * ROWS_PER_PAGE + 1;
 
   const end = Math.min(page * ROWS_PER_PAGE, groupedRegistrations.length);
-  console.log(registrations);
+
+  const pageRange = useMemo(
+    () => getPageRange(page, totalPages),
+    [page, totalPages],
+  );
+
   return (
     <>
       <div className="min-h-[calc(100vh-104px)] bg-blue-50 dark:bg-black p-5">
@@ -187,34 +187,6 @@ export default function CaptainIndividualsPage() {
                               ))}
                             </div>
                           </Table.Cell>
-
-                          {/* <Table.Cell>
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onPress={() =>
-                                  setEditingRegistration(
-                                    registration.participants[0],
-                                  )
-                                }
-                              >
-                                <FaPencil />
-                              </Button>
-
-                              <Button
-                                size="sm"
-                                variant="danger"
-                                onPress={() =>
-                                  setDeletingRegistration(
-                                    registration.participants[0],
-                                  )
-                                }
-                              >
-                                <FaTrash />
-                              </Button>
-                            </div>
-                          </Table.Cell> */}
                         </Table.Row>
                       )}
                     </Table.Body>
@@ -234,16 +206,24 @@ export default function CaptainIndividualsPage() {
                           <Pagination.PreviousIcon />
                         </Pagination.Previous>
                       </Pagination.Item>
-                      {pages.map((p) => (
-                        <Pagination.Item key={p}>
-                          <Pagination.Link
-                            isActive={p === page}
-                            onPress={() => setPage(p)}
-                          >
-                            {p}
-                          </Pagination.Link>
-                        </Pagination.Item>
-                      ))}
+                      {pageRange.map((p, idx) =>
+                        typeof p === "number" ? (
+                          <Pagination.Item key={p}>
+                            <Pagination.Link
+                              isActive={p === page}
+                              onPress={() => setPage(p)}
+                            >
+                              {p}
+                            </Pagination.Link>
+                          </Pagination.Item>
+                        ) : (
+                          <Pagination.Item key={`${p}-${idx}`}>
+                            <span className="px-2 text-default-400 select-none">
+                              …
+                            </span>
+                          </Pagination.Item>
+                        ),
+                      )}
                       <Pagination.Item>
                         <Pagination.Next
                           isDisabled={page === totalPages}
@@ -261,41 +241,6 @@ export default function CaptainIndividualsPage() {
             )}
           </Card.Content>
         </Card>
-        {/* <EditIndividualRegistrationModal
-          isOpen={editingRegistration !== null}
-          game={
-            editingRegistration
-              ? {
-                  _id: editingRegistration.games[0].gameId,
-                  name: editingRegistration.games[0].gameName,
-                  type: "Individual",
-                }
-              : null
-          }
-          onOpenChange={(open) => {
-            if (!open) setEditingRegistration(null);
-          }}
-          registration={editingRegistration}
-          onSaved={loadRegistrations}
-        />
-
-        <DeleteGroupRegistrationModal
-          isOpen={deletingRegistration !== null}
-          game={
-            deletingRegistration
-              ? {
-                  _id: deletingRegistration.games[0].gameId,
-                  name: deletingRegistration.games[0].gameName,
-                  type: "Individual",
-                }
-              : null
-          }
-          onOpenChange={(open) => {
-            if (!open) setDeletingRegistration(null);
-          }}
-          registration={deletingRegistration}
-          onDeleted={loadRegistrations}
-        /> */}
       </div>
     </>
   );

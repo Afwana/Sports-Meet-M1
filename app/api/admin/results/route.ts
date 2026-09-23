@@ -38,7 +38,7 @@ export async function GET() {
     const games = await Games.find({
       isActive: true,
     })
-      .select("_id name type")
+      .select("_id name type category gender ageCategory")
       .sort({ name: 1 })
       .lean();
 
@@ -127,13 +127,12 @@ export async function GET() {
 
         return {
           gameId: String(game._id),
-
           gameName: game.name,
-
           type: "Individual" as const,
-
+          category: game.category,
+          gender: game.gender,
+          ageCategory: game.ageCategory,
           resultId: result ? String(result._id) : null,
-
           positions,
         };
       }
@@ -179,13 +178,12 @@ export async function GET() {
 
       return {
         gameId: String(game._id),
-
         gameName: game.name,
-
         type: "Group" as const,
-
+        category: game.category,
+        gender: game.gender,
+        ageCategory: game.ageCategory,
         resultId: result ? String(result._id) : null,
-
         positions,
       };
     });

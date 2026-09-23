@@ -1,5 +1,6 @@
 "use client";
 
+import { getPageRange } from "@/lib/getPageRange";
 import { GroupRegistration } from "@/types/registration";
 import { Card, Input, Pagination, Spinner, Table } from "@heroui/react";
 import { useEffect, useMemo, useState } from "react";
@@ -20,19 +21,11 @@ const columns = [
 
 const ROWS_PER_PAGE = 10;
 
-export default function CaptainIndividualsPage() {
+export default function CaptainGroupsPage() {
   const [registrations, setRegistrations] = useState<GroupRegistration[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-
-  // const [editingGroup, setEditingGroup] = useState<GroupRegistration | null>(
-  //   null,
-  // );
-
-  // const [deletingGroup, setDeletingGroup] = useState<GroupRegistration | null>(
-  //   null,
-  // );
 
   const loadRegistrations = async () => {
     try {
@@ -117,6 +110,11 @@ export default function CaptainIndividualsPage() {
 
   const start = groupedGames.length === 0 ? 0 : (page - 1) * ROWS_PER_PAGE + 1;
   const end = Math.min(page * ROWS_PER_PAGE, groupedGames.length);
+
+  const pageRange = useMemo(
+    () => getPageRange(page, totalPages),
+    [page, totalPages],
+  );
 
   return (
     <>
@@ -203,34 +201,12 @@ export default function CaptainIndividualsPage() {
                               ))}
                             </div>
                           </Table.Cell>
-
-                          {/* <Table.Cell>
-                            <div className="flex gap-2">
-                              <Button
-                                isIconOnly
-                                size="sm"
-                                variant="outline"
-                                onPress={() => setEditingGroup(registration)}
-                              >
-                                <FaPencil />
-                              </Button>
-
-                              <Button
-                                isIconOnly
-                                size="sm"
-                                variant="danger"
-                                onPress={() => setDeletingGroup(registration)}
-                              >
-                                <FaTrash />
-                              </Button>
-                            </div>
-                          </Table.Cell> */}
                         </Table.Row>
                       )}
                     </Table.Body>
                   </Table.Content>
                 </Table.ScrollContainer>
-                <Table.Footer>
+                <Table.Footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-between">
                   <Pagination size="sm">
                     <Pagination.Summary>
                       {start} to {end} of {groupedGames.length}
@@ -244,8 +220,8 @@ export default function CaptainIndividualsPage() {
                           <Pagination.PreviousIcon />
                         </Pagination.Previous>
                       </Pagination.Item>
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                        (p) => (
+                      {pageRange.map((p, idx) =>
+                        typeof p === "number" ? (
                           <Pagination.Item key={p}>
                             <Pagination.Link
                               isActive={p === page}
@@ -253,6 +229,12 @@ export default function CaptainIndividualsPage() {
                             >
                               {p}
                             </Pagination.Link>
+                          </Pagination.Item>
+                        ) : (
+                          <Pagination.Item key={`${p}-${idx}`}>
+                            <span className="px-2 text-default-400 select-none">
+                              …
+                            </span>
                           </Pagination.Item>
                         ),
                       )}
@@ -273,47 +255,6 @@ export default function CaptainIndividualsPage() {
             )}
           </Card.Content>
         </Card>
-        {/* <EditGroupRegistrationModal
-          isOpen={editingGroup !== null}
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditingGroup(null);
-            }
-          }}
-          game={editingGroup?.game ?? null}
-          group={editingGroup}
-          onSaved={(updatedGroup) => {
-            setRegistrations((prev) =>
-              prev.map((g) => (g._id === updatedGroup._id ? updatedGroup : g)),
-            );
-
-            setEditingGroup(null);
-          }}
-        />
-
-        <DeleteGroupRegistrationModal
-          isOpen={deletingGroup !== null}
-          onOpenChange={(open) => {
-            if (!open) {
-              setDeletingGroup(null);
-            }
-          }}
-          game={
-            deletingGroup
-              ? {
-                  _id: deletingGroup.game._id,
-                  name: deletingGroup.game.name,
-                  maxParticipants: deletingGroup.game.maxParticipants,
-                  type: "Group",
-                }
-              : null
-          }
-          registration={deletingGroup}
-          onDeleted={(id) => {
-            setRegistrations((prev) => prev.filter((g) => g._id !== id));
-            setDeletingGroup(null);
-          }}
-        /> */}
       </div>
     </>
   );

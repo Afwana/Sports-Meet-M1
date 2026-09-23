@@ -2,7 +2,7 @@
 
 import { getAgeCategory } from "@/lib/getAgeCategory";
 import { iconMap } from "@/utils/iconMap";
-import { Card, Label, Spinner } from "@heroui/react";
+import { Card, Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { toast } from "sonner";

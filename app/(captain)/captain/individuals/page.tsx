@@ -9,7 +9,6 @@ const columns = [
   { id: "slNo", name: "SL. NO" },
   { id: "game", name: "GAME NAME" },
   { id: "participants", name: "PARTICIPANTS" },
-  // { id: "actions", name: "ACTIONS" },
 ];
 
 const ROWS_PER_PAGE = 10;
@@ -93,8 +92,6 @@ export default function CaptainIndividualsPage() {
     1,
     Math.ceil(groupedRegistrations.length / ROWS_PER_PAGE),
   );
-
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;

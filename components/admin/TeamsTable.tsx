@@ -54,8 +54,6 @@ export default function TeamsTable({ teams }: Props) {
 
   const totalPages = Math.ceil(filteredTeams.length / ROWS_PER_PAGE);
 
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     return filteredTeams.slice(start, start + ROWS_PER_PAGE);
@@ -156,8 +154,6 @@ export default function TeamsTable({ teams }: Props) {
                             "-"
                           )}
                         </Table.Cell>
-
-                        {/* <Table.Cell>{team.color}</Table.Cell> */}
 
                         <Table.Cell>
                           <Switch isSelected={team.isActive} size="sm">

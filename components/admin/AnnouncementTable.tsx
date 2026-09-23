@@ -76,8 +76,6 @@ export default function AnnouncementTable({
 
   const totalPages = Math.ceil(filteredAnnouncements.length / ROWS_PER_PAGE);
 
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     return filteredAnnouncements.slice(start, start + ROWS_PER_PAGE);

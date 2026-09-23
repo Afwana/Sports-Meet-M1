@@ -6,8 +6,8 @@ export function findEmployeeByCode(input: string) {
 
   return Employee.findOne({
     $or: [
-      { employeeCode: code }, // MB/CN/0947
-      { employeeCode: { $regex: `/${code}$`, $options: "i" } }, // 0947
+      { employeeCode: code },
+      { employeeCode: { $regex: `/${code}$`, $options: "i" } },
       ...(numericCode
         ? [
             {

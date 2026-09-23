@@ -195,8 +195,6 @@ export default function AddIndividualRegistrationModal({
                             if (!selectedEmployees.includes(value)) {
                               setSelectedEmployees((prev) => [...prev, value]);
                             }
-
-                            // Clear after selecting
                             setSelectedEmployeeKey("");
                           }}
                           placeholder="Search employee..."

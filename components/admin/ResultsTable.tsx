@@ -151,8 +151,6 @@ export default function ResultsTable({
     Math.ceil(filteredResults.length / ROWS_PER_PAGE),
   );
 
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     return filteredResults.slice(start, start + ROWS_PER_PAGE);

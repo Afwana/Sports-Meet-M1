@@ -33,8 +33,6 @@ export default function CaptainMembersPage() {
 
   const totalPages = Math.ceil(filteredMembers.length / ROWS_PER_PAGE);
 
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     return filteredMembers.slice(start, start + ROWS_PER_PAGE);

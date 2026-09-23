@@ -233,8 +233,6 @@ export default function AddGroupRegistrationModal({
                             if (!selectedEmployees.includes(value)) {
                               setSelectedEmployees((prev) => [...prev, value]);
                             }
-
-                            // Clear autocomplete after selection
                             setSelectedEmployeeKey("");
                           }}
                         >

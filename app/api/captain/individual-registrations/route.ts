@@ -255,7 +255,6 @@ export async function POST(req: NextRequest) {
         employeeCode: emp.employeeCode,
         employeeName: emp.employeeName,
         teamId: captain.teamId,
-        // team: captain.team,
         games: [
           {
             gameId: game._id,

@@ -66,8 +66,6 @@ export default function GameTable({ games }: Props) {
     Math.ceil(filteredGames.length / ROWS_PER_PAGE),
   );
 
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     return filteredGames.slice(start, start + ROWS_PER_PAGE);

@@ -54,7 +54,6 @@ export default function TeamLogoStrip({
           : "absolute left-1/2 top-6 z-20 w-full -translate-x-1/2 px-5"
       }
     >
-      {/* <div className="mx-auto flex w-max min-w-full items-start justify-center gap-4 overflow-x-auto py-2"> */}
       <div className="grid grid-cols-2 md:grid-cols-4 mx-auto gap-4 overflow-x-auto py-2">
         {teams.map((team) => (
           <div

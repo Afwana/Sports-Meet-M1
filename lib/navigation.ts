@@ -26,9 +26,4 @@ export const navigation = {
     { label: "Group Registrations", href: "/captain/groups", icon: MdGames },
     { label: "Results", href: "/captain/results", icon: FaMedal },
   ],
-
-  // employee: [
-  //   { label: "Games", href: "/games", icon: IoGameController },
-  //   { label: "Results", href: "/results", icon: FaMedal },
-  // ],
 };

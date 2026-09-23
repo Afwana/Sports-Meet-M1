@@ -19,7 +19,6 @@ export interface IndividualRegistration {
     gameId: string;
     gameName: string;
   }[];
-  // team: string;
   teamId: string;
 }
 

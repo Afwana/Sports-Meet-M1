@@ -16,7 +16,6 @@ const columns = [
   { id: "game", name: "GAME NAME" },
   { id: "groupName", name: "GROUP NAME" },
   { id: "participants", name: "PARTICIPANTS" },
-  // { id: "actions", name: "ACTIONS" },
 ];
 
 const ROWS_PER_PAGE = 10;

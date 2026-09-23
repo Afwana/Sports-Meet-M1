@@ -475,12 +475,6 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                       <div className="flex flex-col gap-1">
                         <Label>Maximum Participants Per Group</Label>
 
-                        {/* <Input
-                          type="number"
-                          {...register("maxParticipants", {
-                            valueAsNumber: true,
-                          })}
-                        /> */}
                         <Controller
                           control={control}
                           name="maxParticipants"
@@ -550,12 +544,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                 Cancel
               </Button>
               <ButtonGroup>
-                <Button
-                  variant="primary"
-                  // isLoading={loading}
-                  type="submit"
-                  form="game-form"
-                >
+                <Button variant="primary" type="submit" form="game-form">
                   {isEdit ? "Update" : "Create"}
                 </Button>
                 {loading && (

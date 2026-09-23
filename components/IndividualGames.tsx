@@ -202,7 +202,6 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
                   </p>
                 ) : (
                   <p className="mt-1 px-1 text-xs text-default-400 flex items-center justify-end gap-5">
-                    {/* <span>Max Participants : {game.maxParticipants}</span> */}
                     <span>
                       Max Participants per Team :{" "}
                       {game.maxParticipantsPerTeam ?? "-"}

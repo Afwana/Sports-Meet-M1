@@ -68,8 +68,6 @@ export default function EmployeesTable({ employees }: Props) {
 
   const totalPages = Math.ceil(filteredEmployees.length / ROWS_PER_PAGE);
 
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     return filteredEmployees.slice(start, start + ROWS_PER_PAGE);

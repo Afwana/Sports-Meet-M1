@@ -58,6 +58,7 @@ export function RegisterCard() {
     handleSubmit,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -123,7 +124,20 @@ export function RegisterCard() {
     }
   };
 
-  // const team = useWatch({ control, name: "team" });
+  const handleCancel = () => {
+    reset({
+      employeeCode: "",
+      team: "",
+      teamId: "",
+    });
+
+    setEmployee(null);
+    setEmployeeError("");
+    setLoading(false);
+    setSubmitting(false);
+
+    router.refresh();
+  };
 
   const teamId = useWatch({ control, name: "teamId" });
 
@@ -332,7 +346,11 @@ export function RegisterCard() {
                 </Checkbox.Content>
               </Checkbox>
               <div className="flex items-center justify-between gap-2">
-                <Button variant="outline" className="w-32">
+                <Button
+                  variant="outline"
+                  className="w-32"
+                  onPress={handleCancel}
+                >
                   Cancel
                 </Button>
                 {canLogin ? (

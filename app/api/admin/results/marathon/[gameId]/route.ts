@@ -31,11 +31,6 @@ export async function GET(
     );
   }
 
-  // const published = await MarathonResult.findOne({
-  //   game: gameId,
-  //   published: true,
-  // }).lean();
-
   const teams = await Teams.find({ isActive: true }).select("_id name").lean();
 
   const registrations = await IndividualRegistration.find({
@@ -108,8 +103,6 @@ export async function PUT(
       { status: 404 },
     );
   }
-
-  // const teams = await Teams.find({ isActive: true }).select("_id name").lean();
 
   const registrations = await IndividualRegistration.find({
     "games.gameId": gameId,

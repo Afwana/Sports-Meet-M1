@@ -113,6 +113,7 @@ export async function PATCH(
       await Employee.findByIdAndUpdate(newCaptainId, {
         role: "Captain",
         isCaptain: true,
+        isRegistered: true,
         team: team.name,
         teamId: team._id,
       });

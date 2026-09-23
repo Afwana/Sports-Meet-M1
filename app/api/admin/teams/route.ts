@@ -98,6 +98,7 @@ export async function POST(req: NextRequest) {
       await Employee.findByIdAndUpdate(captain, {
         role: "Captain",
         isCaptain: true,
+        isRegistered: true,
         team: team.name,
         teamId: team._id,
       });

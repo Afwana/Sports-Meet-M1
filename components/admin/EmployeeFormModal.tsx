@@ -472,7 +472,11 @@ export default function EmployeeFormModal({
                   {isEdit ? "Update" : "Create"}
                 </Button>
                 {loading && (
-                  <Button isIconOnly aria-label="More options">
+                  <Button
+                    isIconOnly
+                    aria-label="More options"
+                    variant="primary"
+                  >
                     <ButtonGroup.Separator />
                     <Spinner size="md" className="text-white" />
                   </Button>

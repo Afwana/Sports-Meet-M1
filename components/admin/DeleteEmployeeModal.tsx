@@ -86,7 +86,7 @@ export default function DeleteEmployeeModal({
                   Delete
                 </Button>
                 {loading && (
-                  <Button isIconOnly aria-label="More options">
+                  <Button isIconOnly aria-label="More options" variant="danger">
                     <ButtonGroup.Separator />
                     <Spinner size="md" className="text-white" />
                   </Button>

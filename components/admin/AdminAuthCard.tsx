@@ -190,7 +190,11 @@ export default function AdminAuthCard() {
                       Login
                     </Button>
                     {loading && (
-                      <Button isIconOnly aria-label="More options">
+                      <Button
+                        isIconOnly
+                        aria-label="More options"
+                        variant="primary"
+                      >
                         <ButtonGroup.Separator />
                         <Spinner size="md" className="text-white p-1" />
                       </Button>

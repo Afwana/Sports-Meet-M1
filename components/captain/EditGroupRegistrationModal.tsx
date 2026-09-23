@@ -12,7 +12,6 @@ import {
   ListBox,
   Modal,
   SearchField,
-  Select,
   Spinner,
   useFilter,
 } from "@heroui/react";

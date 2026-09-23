@@ -6,7 +6,6 @@ import {
   Button,
   Modal,
   Spinner,
-  Select,
   ListBox,
   Label,
   Key,

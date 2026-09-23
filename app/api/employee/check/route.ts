@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongodb";
-import Employee from "@/models/Employee";
+import { findEmployeeByCode } from "@/lib/findEmployeeByCode";
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,12 +22,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const employee = await Employee.findOne({
-      $or: [
-        { employeeCode: code }, // MB/TC/1378
-        { employeeCode: { $regex: `/${code}$`, $options: "i" } }, // 1378
-      ],
-    })
+    const employee = await findEmployeeByCode(code)
       .select(
         "_id employeeCode employeeName team teamId role isCaptain isRegistered department phoneNumber",
       )

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
-import Employee from "@/models/Employee";
 import { createToken } from "@/lib/auth";
+import { findEmployeeByCode } from "@/lib/findEmployeeByCode";
 
 export async function POST(req: NextRequest) {
   await connectDB();
@@ -10,12 +10,7 @@ export async function POST(req: NextRequest) {
 
   const code = employeeCode.trim().toUpperCase();
 
-  const employee = await Employee.findOne({
-    $or: [
-      { employeeCode: code },
-      { employeeCode: { $regex: `/${code}$`, $options: "i" } },
-    ],
-  });
+  const employee = await findEmployeeByCode(code);
 
   if (!employee) {
     return NextResponse.json(

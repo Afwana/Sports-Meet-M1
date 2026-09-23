@@ -184,17 +184,26 @@ export default function AdminAuthCard() {
                   )}
                 </div>
 
-                <ButtonGroup>
-                  <Button type="submit" variant="primary" className="w-full">
-                    Login
-                  </Button>
-                  {loading && (
-                    <Button isIconOnly aria-label="More options">
-                      <ButtonGroup.Separator />
-                      <Spinner size="md" className="text-white p-1" />
+                <div className="flex items-center justify-between gap-5">
+                  <ButtonGroup className="w-full">
+                    <Button type="submit" variant="primary" className="w-full">
+                      Login
                     </Button>
-                  )}
-                </ButtonGroup>
+                    {loading && (
+                      <Button isIconOnly aria-label="More options">
+                        <ButtonGroup.Separator />
+                        <Spinner size="md" className="text-white p-1" />
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                  <Button
+                    onPress={() => router.push("/")}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Home
+                  </Button>
+                </div>
               </form>
             </Tabs.Panel>
             <Tabs.Panel className="pt-4" id="register">
@@ -264,17 +273,26 @@ export default function AdminAuthCard() {
                   )}
                 </div>
 
-                <ButtonGroup>
-                  <Button type="submit" variant="primary" className="w-full">
-                    Create Admin Account
-                  </Button>
-                  {loading && (
-                    <Button isIconOnly aria-label="More options">
-                      <ButtonGroup.Separator />
-                      <Spinner size="md" className="text-white p-1" />
+                <div className="flex items-center justify-between gap-5">
+                  <ButtonGroup className="w-full">
+                    <Button type="submit" variant="primary" className="w-full">
+                      Create Admin Account
                     </Button>
-                  )}
-                </ButtonGroup>
+                    {loading && (
+                      <Button isIconOnly aria-label="More options">
+                        <ButtonGroup.Separator />
+                        <Spinner size="md" className="text-white p-1" />
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                  <Button
+                    onPress={() => router.push("/")}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Home
+                  </Button>
+                </div>
               </form>
             </Tabs.Panel>
           </Tabs>

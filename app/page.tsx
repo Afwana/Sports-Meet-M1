@@ -84,9 +84,11 @@ export default function Home() {
 
           {/* Main Content */}
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-6 text-center text-white">
-            <h1 className="text-3xl font-bold md:text-5xl">Sports Meet 2026</h1>
+            <h1 className="text-lg md:text-3xl font-bold lg:text-5xl">
+              Sports Meet 2026
+            </h1>
 
-            <p className="mt-3 text-sm text-gray-200 md:text-lg">
+            <p className="mt-3 text-xs md:text-sm text-gray-200 lg:text-lg">
               Welcome to the Media One Sports Meet Portal
             </p>
 

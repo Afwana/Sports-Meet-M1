@@ -52,7 +52,17 @@ export default function TeamLogoStrip() {
               alt={team.name}
               width={250}
               height={250}
-              className="rounded-full border-4 object-cover"
+              className="hidden lg:block rounded-full border-4 object-cover"
+              style={{
+                borderColor: team.color,
+              }}
+            />
+            <Image
+              src={team.logo}
+              alt={team.name}
+              width={200}
+              height={200}
+              className="block lg:hidden rounded-full border-4 object-cover"
               style={{
                 borderColor: team.color,
               }}

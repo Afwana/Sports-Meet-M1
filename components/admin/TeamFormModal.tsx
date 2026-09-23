@@ -11,8 +11,12 @@ import {
   Select,
   Spinner,
   Switch,
+  Autocomplete,
+  SearchField,
+  EmptyState,
+  useFilter,
 } from "@heroui/react";
-import { useCallback, useEffect, useState } from "react";
+import { Key, useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -56,6 +60,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState<EmployeeOption[]>([]);
   const [loadingEmployees, setLoadingEmployees] = useState(true);
+  const { contains } = useFilter({ sensitivity: "base" });
 
   const loadEmployees = useCallback(async () => {
     try {
@@ -238,7 +243,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
 
                 {/* Captain */}
 
-                <div className="flex flex-col gap-1">
+                {/* <div className="flex flex-col gap-1">
                   <Label>Captain</Label>
 
                   <Select
@@ -288,6 +293,80 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                       </ListBox>
                     </Select.Popover>
                   </Select>
+                </div> */}
+                <div className="flex flex-col gap-1">
+                  <Autocomplete
+                    className="w-full"
+                    placeholder="Select captain"
+                    value={captain}
+                    onChange={(value: Key | null) => {
+                      if (value) {
+                        setValue("captain", value as string, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }
+                    }}
+                  >
+                    <Label>Captain</Label>
+
+                    <Autocomplete.Trigger>
+                      <Autocomplete.Value />
+                      <Autocomplete.Indicator />
+                    </Autocomplete.Trigger>
+
+                    <Autocomplete.Popover>
+                      <Autocomplete.Filter filter={contains}>
+                        <SearchField
+                          autoFocus
+                          aria-label="Search employees"
+                          name="search"
+                          variant="secondary"
+                        >
+                          <SearchField.Group>
+                            <SearchField.SearchIcon />
+                            <SearchField.Input placeholder="Search captain..." />
+                            <SearchField.ClearButton />
+                          </SearchField.Group>
+                        </SearchField>
+
+                        <ListBox
+                          renderEmptyState={() => (
+                            <EmptyState>No employees found</EmptyState>
+                          )}
+                        >
+                          {loadingEmployees ? (
+                            <ListBox.Item id="loading" isDisabled>
+                              Loading employees...
+                            </ListBox.Item>
+                          ) : (
+                            employees
+                              .filter(
+                                (employee) =>
+                                  employee.role === "Employee" ||
+                                  employee._id === team?.captain?._id,
+                              )
+                              .map((employee) => (
+                                <ListBox.Item
+                                  key={employee._id}
+                                  id={employee._id}
+                                  textValue={`${employee.employeeName} ${employee.employeeCode}`}
+                                >
+                                  <div className="flex flex-col">
+                                    <span>{employee.employeeName}</span>
+                                    <span className="text-xs text-default-500">
+                                      {employee.employeeCode}
+                                    </span>
+                                  </div>
+
+                                  <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                              ))
+                          )}
+                        </ListBox>
+                      </Autocomplete.Filter>
+                    </Autocomplete.Popover>
+                  </Autocomplete>
                 </div>
 
                 {/* Logo Image upload */}

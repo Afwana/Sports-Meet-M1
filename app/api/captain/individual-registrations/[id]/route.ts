@@ -100,6 +100,7 @@ export async function PATCH(
     registration.employeeCode = employee.employeeCode;
 
     await registration.save();
+    await registration.populate("employee");
 
     return NextResponse.json({
       success: true,

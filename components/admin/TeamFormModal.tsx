@@ -8,7 +8,6 @@ import {
   Label,
   ListBox,
   Modal,
-  Select,
   Spinner,
   Switch,
   Autocomplete,
@@ -242,58 +241,6 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                 </div>
 
                 {/* Captain */}
-
-                {/* <div className="flex flex-col gap-1">
-                  <Label>Captain</Label>
-
-                  <Select
-                    aria-label="Captain"
-                    value={captain}
-                    onChange={(value) => {
-                      if (value) {
-                        setValue("captain", value as string, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }
-                    }}
-                  >
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-
-                    <Select.Popover>
-                      <ListBox>
-                        {loadingEmployees ? (
-                          <ListBox.Item id="loading" isDisabled>
-                            Loading employees...
-                          </ListBox.Item>
-                        ) : (
-                          employees
-                            .filter(
-                              (employee) =>
-                                employee.role === "Employee" ||
-                                employee._id === team?.captain?._id,
-                            )
-                            .map((employee) => (
-                              <ListBox.Item
-                                key={employee._id}
-                                id={employee._id}
-                              >
-                                <div className="flex flex-col">
-                                  <span>{employee.employeeName}</span>
-                                  <span className="text-xs text-default-500">
-                                    {employee.employeeCode}
-                                  </span>
-                                </div>
-                              </ListBox.Item>
-                            ))
-                        )}
-                      </ListBox>
-                    </Select.Popover>
-                  </Select>
-                </div> */}
                 <div className="flex flex-col gap-1">
                   <Autocomplete
                     className="w-full"

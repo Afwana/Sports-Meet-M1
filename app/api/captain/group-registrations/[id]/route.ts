@@ -50,7 +50,10 @@ export async function PATCH(
       );
     }
 
-    if (participants.length > game.maxParticipants) {
+    if (
+      game.maxParticipants !== null &&
+      participants.length > game.maxParticipants
+    ) {
       return NextResponse.json(
         { success: false, message: "Maximum exceeded." },
         { status: 400 },

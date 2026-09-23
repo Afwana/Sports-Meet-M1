@@ -11,7 +11,12 @@ import {
   ListBox,
   Label,
   Key,
+  useFilter,
+  Autocomplete,
+  SearchField,
+  EmptyState,
 } from "@heroui/react";
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaUser, FaXmark } from "react-icons/fa6";
@@ -37,7 +42,9 @@ export default function EditIndividualRegistrationModal({
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Key[]>([]);
   const [loadingEmployees, setLoadingEmployees] = useState(false);
+  const [selectedEmployeeKey, setSelectedEmployeeKey] = useState("");
   const [saving, setSaving] = useState(false);
+  const { contains } = useFilter({ sensitivity: "base" });
 
   useEffect(() => {
     if (!isOpen || !game || !registration) return;
@@ -96,7 +103,7 @@ export default function EditIndividualRegistrationModal({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            participants: selectedEmployees,
+            employeeId: selectedEmployees[0],
           }),
         },
       );
@@ -171,71 +178,103 @@ export default function EditIndividualRegistrationModal({
                     <>
                       <div className="space-y-2">
                         <Label>Select Employees</Label>
+                        <Autocomplete
+                          value={selectedEmployeeKey}
+                          onChange={(value) => {
+                            if (typeof value !== "string" || !value) return;
 
-                        <Select
-                          selectionMode="multiple"
-                          value={selectedEmployees}
-                          onChange={(value) =>
-                            setSelectedEmployees(
-                              Array.isArray(value) ? value : [],
-                            )
-                          }
+                            if (!selectedEmployees.includes(value)) {
+                              setSelectedEmployees((prev) => [...prev, value]);
+                            }
+
+                            // Clear after selecting
+                            setSelectedEmployeeKey("");
+                          }}
+                          placeholder="Search employee..."
+                          className="w-full"
                         >
-                          <Select.Trigger className="min-h-11">
-                            <Select.Value>
-                              {() => {
-                                if (selectedEmployees.length === 0) {
-                                  return (
-                                    <span className="text-default-500">
-                                      Select employees
-                                    </span>
-                                  );
-                                }
+                          <Autocomplete.Trigger className="min-h-11">
+                            <Autocomplete.Value />
+                            <Autocomplete.ClearButton />
+                            <Autocomplete.Indicator />
+                          </Autocomplete.Trigger>
 
-                                return (
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {employees
-                                      .filter((emp) =>
-                                        selectedEmployees.includes(emp._id),
-                                      )
-                                      .map((emp) => (
-                                        <span
-                                          key={emp._id}
-                                          className="rounded-md bg-default-100 px-2 py-1 text-xs"
-                                        >
-                                          {emp.employeeName}
+                          <Autocomplete.Popover>
+                            <Autocomplete.Filter filter={contains}>
+                              <SearchField
+                                autoFocus
+                                aria-label="Search employees"
+                                name="search"
+                                variant="secondary"
+                              >
+                                <SearchField.Group>
+                                  <SearchField.SearchIcon />
+                                  <SearchField.Input placeholder="Search by name or code..." />
+                                  <SearchField.ClearButton />
+                                </SearchField.Group>
+                              </SearchField>
+
+                              <ListBox
+                                renderEmptyState={() => (
+                                  <EmptyState>No employees found</EmptyState>
+                                )}
+                              >
+                                {employees
+                                  .filter(
+                                    (emp) =>
+                                      !selectedEmployees.includes(emp._id),
+                                  )
+                                  .map((emp) => (
+                                    <ListBox.Item
+                                      key={emp._id}
+                                      id={emp._id}
+                                      textValue={`${emp.employeeName} ${emp.employeeCode}`}
+                                    >
+                                      <div className="flex flex-col">
+                                        <span>{emp.employeeName}</span>
+                                        <span className="text-xs text-default-500">
+                                          {emp.employeeCode}
                                         </span>
-                                      ))}
-                                  </div>
-                                );
-                              }}
-                            </Select.Value>
+                                      </div>
 
-                            <Select.Indicator />
-                          </Select.Trigger>
+                                      <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                  ))}
+                              </ListBox>
+                            </Autocomplete.Filter>
+                          </Autocomplete.Popover>
+                        </Autocomplete>
 
-                          <Select.Popover>
-                            <ListBox>
-                              {employees.map((emp) => (
-                                <ListBox.Item
-                                  key={emp._id}
-                                  id={emp._id}
-                                  textValue={`${emp.employeeName} ${emp.employeeCode}`}
+                        {/* Selected Employees */}
+                        {selectedEmployees.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-2">
+                            {selectedEmployees.map((id) => {
+                              const emp = employees.find((e) => e._id === id);
+                              if (!emp) return null;
+
+                              return (
+                                <div
+                                  key={id}
+                                  className="flex items-center gap-1 rounded-md bg-default-100 px-2 py-1 text-xs"
                                 >
-                                  <div className="flex flex-col">
-                                    <span>{emp.employeeName}</span>
+                                  <span>{emp.employeeName}</span>
 
-                                    <span className="text-xs text-default-500">
-                                      {emp.employeeCode}
-                                    </span>
-                                  </div>
-
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
-                              ))}
-                            </ListBox>
-                          </Select.Popover>
-                        </Select>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setSelectedEmployees((prev) =>
+                                        prev.filter((item) => item !== id),
+                                      )
+                                    }
+                                    className="rounded-full p-0.5 hover:bg-default-200"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex justify-between text-sm">

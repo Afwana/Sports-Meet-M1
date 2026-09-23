@@ -1,5 +1,5 @@
+import GamesRegister from "@/components/captain/GamesRegister";
 import KPICards from "@/components/captain/KPICards";
-import IndividualGames from "@/components/IndividualGames";
 import { getCurrentEmployee } from "@/lib/getCurrentEmployee";
 import { getTeamRank } from "@/lib/getTeamRank";
 import { connectDB } from "@/lib/mongodb";
@@ -64,15 +64,10 @@ export default async function CaptainPage() {
           />
           <hr className="my-5" />
           <div className="flex flex-col">
-            <h2 className="text-lg font-bold">Individual Items for Captain</h2>
-            <p className="text-sm">
-              Choose your items for participate Individual games
-            </p>
+            <h2 className="text-lg font-bold">Games</h2>
+            <p className="text-sm">Choose items for register</p>
           </div>
-          <IndividualGames
-            employeeGender={captain.gender}
-            isCaptain={captain.isCaptain}
-          />
+          <GamesRegister />
         </Card.Content>
       </Card>
     </div>

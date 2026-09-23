@@ -153,7 +153,10 @@ export default function CaptainIndividualsPage() {
                     </Table.Header>
                     <Table.Body items={paginatedItems} className="rounded-none">
                       {(registration) => (
-                        <Table.Row key={registration.gameId}>
+                        <Table.Row
+                          key={registration.gameId}
+                          id={registration.gameId}
+                        >
                           <Table.Cell>
                             {groupedRegistrations.findIndex(
                               (item) => item.gameId === registration.gameId,

@@ -161,7 +161,7 @@ export default function CaptainGroupsPage() {
 
                     <Table.Body items={paginatedItems} className="rounded-none">
                       {(registration) => (
-                        <Table.Row key={registration._id}>
+                        <Table.Row key={registration._id} id={registration._id}>
                           <Table.Cell>
                             {registration.showGame ? registration.slNo : ""}
                           </Table.Cell>

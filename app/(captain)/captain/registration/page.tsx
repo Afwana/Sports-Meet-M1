@@ -19,16 +19,23 @@ import {
   Select,
   Spinner,
 } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { FaPlus, FaTrash, FaUser } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { toast } from "sonner";
 
-export default function CaptainRegistrationPage() {
-  const [type, setType] = useState("Individual");
-  const [category, setCategory] = useState("Sports");
-  const [gender, setGender] = useState("Both");
-  const [ageCategory, setAgeCategory] = useState("Open");
+function CaptainRegistrationPageContent() {
+  const searchParams = useSearchParams();
+  const initialGameId = searchParams.get("gameId") || "";
+  const [type, setType] = useState(searchParams.get("type") || "Individual");
+  const [category, setCategory] = useState(
+    searchParams.get("category") || "Sports",
+  );
+  const [gender, setGender] = useState(searchParams.get("gender") || "Both");
+  const [ageCategory, setAgeCategory] = useState(
+    searchParams.get("ageCategory") || "Open",
+  );
 
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGameId, setSelectedGameId] = useState("");
@@ -70,6 +77,15 @@ export default function CaptainRegistrationPage() {
         }
 
         setGames(data);
+
+        if (initialGameId) {
+          // eslint-disable-next-line react-hooks/immutability
+          loadRegistrationData(
+            initialGameId,
+            data,
+            searchParams.get("type") || "Individual",
+          );
+        }
       } catch (error) {
         console.error(error);
         toast.error("Failed to load games.");
@@ -102,8 +118,13 @@ export default function CaptainRegistrationPage() {
     return true;
   });
 
-  const loadRegistrationData = async (gameId: string) => {
-    const game = games.find((g) => g._id === gameId) || null;
+  const loadRegistrationData = async (
+    gameId: string,
+    gamesList: Game[] = games,
+    typeOverride: string = type,
+  ) => {
+    // const game = games.find((g) => g._id === gameId) || null;
+    const game = gamesList.find((g) => g._id === gameId) || null;
 
     setSelectedGame(game);
     setSelectedGameId(gameId);
@@ -115,7 +136,7 @@ export default function CaptainRegistrationPage() {
       setLoadingRegistrations(true);
 
       const endpoint =
-        type === "Group"
+        typeOverride === "Group"
           ? `/api/captain/group-registrations?gameId=${gameId}`
           : `/api/captain/individual-registrations?gameId=${gameId}`;
 
@@ -127,7 +148,7 @@ export default function CaptainRegistrationPage() {
         return;
       }
 
-      if (type === "Group") {
+      if (typeOverride === "Group") {
         setGroupRegistrations(data.registrations || []);
       } else {
         setIndividualRegistrations(data.registrations || []);
@@ -650,5 +671,19 @@ export default function CaptainRegistrationPage() {
         }}
       />
     </div>
+  );
+}
+
+export default function CaptainRegistrationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[calc(100vh-104px)] items-center justify-center">
+          <Spinner size="md">Loading...</Spinner>
+        </div>
+      }
+    >
+      <CaptainRegistrationPageContent />
+    </Suspense>
   );
 }

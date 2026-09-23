@@ -1,8 +1,8 @@
 "use client";
 
+import { getAgeCategory } from "@/lib/getAgeCategory";
 import { iconMap } from "@/utils/iconMap";
-import { Button, Label, Spinner } from "@heroui/react";
-import { useRouter } from "next/navigation";
+import { Card, Label, Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { toast } from "sonner";
@@ -22,35 +22,22 @@ interface Game {
   isActive: boolean;
 }
 
-interface RegisteredGame {
-  gameId: string;
-  gameName: string;
-}
-
 interface Props {
   employeeGender: "Male" | "Female";
-  isCaptain: boolean;
+  employeeAge: string | Date;
 }
 
 interface GameItemProps {
   game: Game;
-  registrationOpen: boolean;
+  isRegistered: boolean;
 }
 
-function GameItem({ game, registrationOpen }: GameItemProps) {
+function GameItem({ game, isRegistered }: GameItemProps) {
   const Icon = iconMap[game.icon as keyof typeof iconMap];
 
-  console.log(registrationOpen);
-
   return (
-    <div
-      className="
-          flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3
-          rounded-lg border border-default-200
-          bg-default-50 p-2 md:p-4
-        "
-    >
-      <div className="flex flex-col w-full gap-1">
+    <div className="flex w-full flex-col gap-1 rounded-lg border border-default-200 bg-default-50 p-2 md:p-4">
+      <div className="flex w-full gap-1 justify-between items-start">
         <div className="flex min-w-0 items-center gap-3">
           {Icon ? (
             <Icon className="shrink-0 text-2xl text-blue-600" />
@@ -60,93 +47,68 @@ function GameItem({ game, registrationOpen }: GameItemProps) {
 
           <p className="truncate font-medium">{game.name}</p>
         </div>
-      </div>
-
-      <div className="flex items-center gap-1">
-        {(game.category === "Sports" || game.category === "Games") && (
-          <p className="text-xs font-medium text-blue-400">
-            {game.ageCategory}
-          </p>
+        {isRegistered && (
+          <div className="flex shrink-0 items-center gap-1 rounded-full bg-success-100 px-2 py-1 text-xs font-medium text-success-700">
+            <FaCheckCircle className="text-success" />
+          </div>
         )}
-        <span className="shrink-0 rounded-full bg-default-100 px-2 py-1 text-xs text-default-500">
-          {game.type}
-        </span>
+      </div>
+      <div className="flex items-center gap-1 text-xs font-medium">
+        {game.type} | {game.gender} | {game.ageCategory}
       </div>
     </div>
   );
 }
 
-export default function IndividualGames({ employeeGender, isCaptain }: Props) {
-  const router = useRouter();
-
+export default function IndividualGames({
+  employeeGender,
+  employeeAge,
+}: Props) {
   const [games, setGames] = useState<Game[]>([]);
-  const [registeredGames, setRegisteredGames] = useState<RegisteredGame[]>([]);
   const [loading, setLoading] = useState(true);
-  const [submitted, setSubmitted] = useState(false);
-  const [registrationOpen, setRegistrationOpen] = useState(false);
+  const [registeredGameIds, setRegisteredGameIds] = useState<string[]>([]);
+
+  const employeeAgeCategory = getAgeCategory(employeeAge);
+
+  console.log("DOB:", employeeAge);
+  console.log("Age Category:", employeeAgeCategory);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
 
-        const [gamesRes, statusRes, settingsRes] = await Promise.all([
+        const [gamesRes, statusRes] = await Promise.all([
           fetch("/api/employee/games", {
             cache: "no-store",
           }),
-
           fetch("/api/employee/individual-registration/status", {
-            cache: "no-store",
-          }),
-
-          fetch("/api/settings", {
             cache: "no-store",
           }),
         ]);
 
         const gamesData = await gamesRes.json();
-        const statusData = await statusRes.json();
-        const settingsData = await settingsRes.json();
-
-        if (settingsRes.ok && settingsData.success) {
-          setRegistrationOpen(settingsData.settings.registrationOpen === true);
-        } else {
-          setRegistrationOpen(false);
-
-          toast.error(
-            settingsData.message || "Failed to load registration status.",
-          );
-        }
 
         if (!gamesRes.ok) {
           toast.error(gamesData.message || "Failed to load games.");
           return;
         }
 
-        const activeGames = gamesData.filter(
-          (game: Game) => game.isActive === true,
-        );
+        setGames(gamesData.filter((game: Game) => game.isActive));
 
-        setGames(activeGames);
+        if (statusRes.ok) {
+          const statusData = await statusRes.json();
 
-        if (!statusRes.ok) {
-          toast.error(
-            statusData.message || "Failed to check registration status.",
-          );
-          return;
-        }
+          const ids =
+            statusData.registration?.games?.map((g: { gameId: string }) =>
+              String(g.gameId),
+            ) || [];
 
-        if (statusData.registered) {
-          const existingGames: RegisteredGame[] =
-            statusData.registration?.games || [];
-
-          setSubmitted(true);
-          setRegisteredGames(existingGames);
+          setRegisteredGameIds(ids);
         }
       } catch (error) {
-        console.error("Failed to load individual registration:", error);
-
-        toast.error("Failed to load individual games.");
+        console.error(error);
+        toast.error("Failed to load games.");
       } finally {
         setLoading(false);
       }
@@ -155,12 +117,25 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
     loadData();
   }, []);
 
-  const eligibleGames = games.filter(
-    (game) => game.gender === employeeGender || game.gender === "Both",
-  );
+  const eligibleGames = games.filter((game) => {
+    // Gender must match
+    if (!(game.gender === employeeGender || game.gender === "Both")) {
+      return false;
+    }
+
+    // Off Stage and Stage don't have age restrictions
+    if (game.category === "Off Stage" || game.category === "Stage") {
+      return true;
+    }
+
+    // Sports and Games
+    return (
+      game.ageCategory === "Open" || game.ageCategory === employeeAgeCategory
+    );
+  });
 
   const sportsGames = eligibleGames.filter(
-    (game) => game.category === "Sports" || game.category === "Games",
+    (game) => game.category === "Sports",
   );
 
   const offStageGames = eligibleGames.filter(
@@ -181,13 +156,18 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
     }
 
     return (
-      <div className="flex flex-col gap-3">
-        <Label className="text-sm font-semibold md:text-base">{title}</Label>
+      <Card className="flex flex-col gap-3 shadow-xl border">
+        <Card.Header className="text-sm font-semibold md:text-base">
+          {title}
+        </Card.Header>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card.Content className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {categoryGames.map((game) => (
             <div key={game._id}>
-              <GameItem game={game} registrationOpen={registrationOpen} />
+              <GameItem
+                game={game}
+                isRegistered={registeredGameIds.includes(game._id)}
+              />
 
               {showType &&
                 (game.type === "Group" ? (
@@ -210,128 +190,30 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
                 ))}
             </div>
           ))}
-        </div>
-      </div>
+        </Card.Content>
+      </Card>
     );
   };
 
   return (
-    <div className="mt-10 flex flex-col gap-5">
+    <div className="mt-10 flex flex-col gap-5 px-3 md:px-5">
       {loading ? (
         <div className="flex items-center justify-center py-10">
           <Spinner size="md">Loading Games...</Spinner>
         </div>
-      ) : submitted ? (
-        <div className="px-3 md:px-5">
-          <div className="rounded-lg border border-success-200 bg-success-50 p-3 md:p-5">
-            <div className="flex items-center gap-3">
-              <FaCheckCircle className="text-xl text-success" />
-
-              <div>
-                <h2 className="font-semibold">
-                  Individual Registration Submitted
-                </h2>
-
-                <p className="text-sm text-default-500">
-                  Your selected individual games have been registered
-                  successfully.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5">
-            <h3 className="mb-3 text-sm font-semibold">Selected Games</h3>
-
-            {registeredGames.length === 0 ? (
-              <p className="text-sm text-default-500">No games found.</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                {registeredGames.map((game) => {
-                  const currentGame = eligibleGames.find(
-                    (item) => item._id === String(game.gameId),
-                  );
-
-                  const Icon = currentGame
-                    ? iconMap[currentGame.icon as keyof typeof iconMap]
-                    : null;
-
-                  return (
-                    <div
-                      key={String(game.gameId)}
-                      className="
-                        flex items-center gap-3
-                        rounded-lg border
-                        border-default-200
-                        bg-default-50 p-4
-                      "
-                    >
-                      {Icon ? (
-                        <Icon className="shrink-0 text-xl text-blue-600" />
-                      ) : (
-                        <FaCircle className="shrink-0 text-default-400" />
-                      )}
-
-                      <div className="min-w-0">
-                        <p className="font-medium">{game.gameName}</p>
-
-                        <p className="truncate text-xs text-default-500">
-                          {String(game.gameId)}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
       ) : (
-        <div className="flex flex-col gap-5 px-3 md:px-5">
-          {isCaptain ? (
-            !registrationOpen ? (
-              <div className="rounded-lg border border-warning-200 bg-warning-50 p-2 md:px-4 md:py-3 flex w-full items-start justify-between">
-                <div>
-                  <p className="font-medium text-warning-700">
-                    Registration is not available Now!.
-                  </p>
+        <>
+          <div className="rounded-lg border border-warning-200 bg-warning-50 p-3 md:p-4">
+            <p className="font-medium text-warning-700">
+              Registration is handled by your Team Captain.
+            </p>
 
-                  <p className="mt-1 text-sm text-warning-600">
-                    You can view the available games below. Registration will
-                    available soon!.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-lg border border-success-200 bg-success-50 p-2 md:px-4 md:py-3 flex flex-col md:flex-row w-full items-start justify-between gap-2">
-                <div>
-                  <p className="font-medium text-success-700">
-                    Registration is now open.
-                  </p>
+            <p className="mt-1 text-sm text-warning-600">
+              You can view all available games below. Contact your captain to
+              participate.
+            </p>
+          </div>
 
-                  <p className="mt-1 text-sm text-success-600">
-                    Select the games and team members to register.
-                  </p>
-                </div>
-                <Button onPress={() => router.push("/captain/registration")}>
-                  Register Now
-                </Button>
-              </div>
-            )
-          ) : (
-            <div className="rounded-lg border border-warning-200 bg-warning-50 p-2 md:px-4 md:py-3 flex w-full items-start justify-between">
-              <div>
-                <p className="font-medium text-warning-700">
-                  Registration is handled by your Team Captain.
-                </p>
-
-                <p className="mt-1 text-sm text-warning-600">
-                  You can view the available games below. Contact your captain
-                  to participate in this event.
-                </p>
-              </div>
-            </div>
-          )}
           {eligibleGames.length === 0 ? (
             <div className="rounded-lg border border-default-200 bg-default-50 p-6 text-center">
               <p className="font-medium">No games available.</p>
@@ -343,15 +225,12 @@ export default function IndividualGames({ employeeGender, isCaptain }: Props) {
           ) : (
             <div className="flex flex-col gap-8">
               {renderCategory("Off Stage Items", offStageGames, true)}
-
               {renderCategory("Stage Items", stageGames, true)}
-
               {renderCategory("Sports Items", sportsGames, true)}
-
               {renderCategory("Games", gamesItems, true)}
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );

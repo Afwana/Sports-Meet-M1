@@ -108,7 +108,7 @@ export default function PointsTable() {
 
                 <Table.Body items={rows}>
                   {(row) => (
-                    <Table.Row key={row.teamId}>
+                    <Table.Row key={row.teamId} id={row.teamId}>
                       <Table.Cell>
                         <span className="font-semibold">{row.rank}</span>
                       </Table.Cell>

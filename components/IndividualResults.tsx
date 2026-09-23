@@ -167,7 +167,7 @@ export default function IndividualResults() {
                     );
 
                     return (
-                      <Table.Row key={row.gameId}>
+                      <Table.Row key={row.gameId} id={row.gameId}>
                         <Table.Cell>{index + 1}</Table.Cell>
 
                         <Table.Cell>

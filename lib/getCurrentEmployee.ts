@@ -19,7 +19,7 @@ export async function getCurrentEmployee() {
 
     const employee = await Employee.findById(payload.id)
       .select(
-        "employeeCode employeeName dateOfBirth gender team role isCaptain isRegistered teamId",
+        "employeeCode employeeName dateOfBirth gender team role isCaptain isRegistered teamId department phoneNumber",
       )
       .lean();
 

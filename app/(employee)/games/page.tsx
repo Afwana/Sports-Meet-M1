@@ -59,7 +59,7 @@ export default async function GamesPage() {
         <Card.Content>
           <IndividualGames
             employeeGender={employee.gender}
-            isCaptain={employee.isCaptain}
+            employeeAge={employee.dateOfBirth}
           />
         </Card.Content>
       </Card>

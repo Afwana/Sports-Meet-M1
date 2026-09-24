@@ -48,7 +48,7 @@ export default function NotFound() {
 
           {/* Footer */}
           <div className="mt-12 flex items-center justify-center gap-2 text-xs text-slate-500">
-            <span>Recreation Meet 2026</span>
+            <span>Sports Meet 2026</span>
             <span>•</span>
             <span>Competition Portal</span>
           </div>

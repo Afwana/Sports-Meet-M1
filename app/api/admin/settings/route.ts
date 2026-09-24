@@ -14,7 +14,7 @@ export async function GET() {
 
     if (!settings) {
       settings = await Settings.create({
-        programName: "Recreation Meet 2026",
+        programName: "Sports Meet 2026",
         companyLogo: "",
         registrationOpen: false,
       });
@@ -26,7 +26,7 @@ export async function GET() {
       success: true,
       settings: {
         _id: settings._id.toString(),
-        programName: settings.programName ?? "Recreation Meet 2026",
+        programName: settings.programName ?? "Sports Meet 2026",
         companyLogo: settings.companyLogo ?? "",
         registrationOpen: settings.registrationOpen ?? false,
       },
@@ -56,7 +56,7 @@ export async function PATCH(req: NextRequest) {
 
     if (!settings) {
       settings = await Settings.create({
-        programName: "Recreation Meet 2026",
+        programName: "Sports Meet 2026",
         companyLogo: "",
         registrationOpen: false,
       });

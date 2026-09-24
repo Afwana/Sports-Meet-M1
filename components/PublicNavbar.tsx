@@ -15,7 +15,7 @@ export default function PublicNavbar() {
   const router = useRouter();
 
   const [settings, setSettings] = useState<SiteSettings>({
-    programName: "Recreation Meet 2026",
+    programName: "Sports Meet 2026",
     companyLogo: "",
   });
 

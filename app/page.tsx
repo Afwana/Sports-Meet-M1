@@ -17,7 +17,7 @@ export default function Home() {
       <div className="fixed inset-0 -z-10">
         <Image
           src="/images/mediaone.jpg"
-          alt="Recreation Meet Background"
+          alt="Sports Meet Background"
           fill
           priority
           className="object-cover"
@@ -32,11 +32,11 @@ export default function Home() {
         <div className="flex flex-1 flex-col items-center justify-center gap-8 px-5 py-14 text-center text-white md:gap-10 md:py-20">
           <div>
             <h1 className="text-3xl font-extrabold md:text-5xl lg:text-6xl">
-              Recreation Meet <span className="text-blue-500">2026</span>
+              Sports Meet <span className="text-blue-500">2026</span>
             </h1>
 
             <p className="mt-3 text-base font-semibold text-blue-300 md:text-xl">
-              Media One Recreation Meet
+              Media One Sports Meet
             </p>
 
             <p className="mt-2 text-xs text-slate-300 md:text-sm">

@@ -47,7 +47,7 @@ export default function AdminAuthCard() {
   const [loading, setLoading] = useState(false);
 
   const [settings, setSettings] = useState<SiteSettings>({
-    programName: "Recreation Meet 2026",
+    programName: "Sports Meet 2026",
     companyLogo: "",
   });
 

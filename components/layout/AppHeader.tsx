@@ -26,7 +26,7 @@ interface SiteSettings {
 export default function AppHeader({ role, user }: Props) {
   const pathname = usePathname();
   const [settings, setSettings] = useState<SiteSettings>({
-    programName: "Recreation Meet 2026",
+    programName: "Sports Meet 2026",
     companyLogo: "",
   });
 

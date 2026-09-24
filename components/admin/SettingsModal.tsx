@@ -57,7 +57,7 @@ export default function SettingsModal({
           return;
         }
 
-        setProgramName(data.settings?.programName || "Recreation Meet 2026");
+        setProgramName(data.settings?.programName || "Sports Meet 2026");
 
         setCompanyLogo(data.settings?.companyLogo || "");
       } catch (error) {

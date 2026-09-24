@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Recreation Meet 2026",
+  title: "Sports Meet 2026",
   description:
-    "Recreation Meet 2026 Media One — team registration and results portal.",
+    "Sports Meet 2026 Media One — team registration and results portal.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

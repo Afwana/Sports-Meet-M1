@@ -218,7 +218,7 @@ export function RegisterCard() {
   }, []);
 
   const [settings, setSettings] = useState<SiteSettings>({
-    programName: "Recreation Meet 2026",
+    programName: "Sports Meet 2026",
     companyLogo: "",
   });
 

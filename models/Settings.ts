@@ -4,7 +4,7 @@ const SettingsSchema = new mongoose.Schema(
   {
     programName: {
       type: String,
-      default: "Recreation Meet 2026",
+      default: "Sports Meet 2026",
       trim: true,
     },
 

@@ -187,7 +187,7 @@ export default function AnnouncementTable({
                               {announcement.title}
                             </p>
 
-                            <p className="mt-1 text-sm text-slate-300">
+                            <p className="mt-1 text-sm text-slate-700">
                               {announcement.message}
                             </p>
                           </div>

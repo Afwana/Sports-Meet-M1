@@ -127,7 +127,7 @@ export default function AnnouncementsPanel() {
                       {announcement.title}
                     </p>
 
-                    <p className="mt-0.5 truncate text-xs text-slate-400">
+                    <p className="mt-0.5 whitespace-pre-wrap wrap-break-word text-xs text-slate-400">
                       {announcement.message}
                     </p>
                   </div>

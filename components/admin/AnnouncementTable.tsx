@@ -221,7 +221,7 @@ export default function AnnouncementTable({
                         </Table.Cell>
 
                         <Table.Cell>
-                          <span className="text-sm text-slate-300">
+                          <span className="text-sm text-black">
                             {formatDate(
                               String(
                                 (

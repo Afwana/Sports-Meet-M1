@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       settings: {
-        programName: settings?.programName ?? "Sports Meet 2026",
+        programName: settings?.programName ?? "Recreation Meet 2026",
         companyLogo: settings?.companyLogo ?? "",
         registrationOpen: settings?.registrationOpen ?? false,
       },

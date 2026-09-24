@@ -448,7 +448,7 @@ export default function EmployeeFormModal({
 
                         <p className="text-default-500 text-sm">
                           {isRegistered
-                            ? "Employee has completed Sports Meet registration."
+                            ? "Employee has completed registration."
                             : "Employee has not registered yet."}
                         </p>
                       </Switch.Content>

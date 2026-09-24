@@ -16,7 +16,7 @@ import {
 } from "@heroui/react";
 import { ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -36,10 +36,40 @@ const loginSchema = z.object({
 type RegisterInput = z.infer<typeof registerSchema>;
 type LoginInput = z.infer<typeof loginSchema>;
 
+interface SiteSettings {
+  programName: string;
+  companyLogo: string;
+}
+
 export default function AdminAuthCard() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+
+  const [settings, setSettings] = useState<SiteSettings>({
+    programName: "Recreation Meet 2026",
+    companyLogo: "",
+  });
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings", {
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          setSettings(data.settings);
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    }
+
+    loadSettings();
+  }, []);
 
   const registerForm = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -128,7 +158,9 @@ export default function AdminAuthCard() {
           <ShieldCheck size={28} />
         </div>
 
-        <CardTitle className="text-2xl font-bold">Sports Meet 2026</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          {settings.programName}
+        </CardTitle>
 
         <CardDescription>Administrator Access</CardDescription>
       </CardHeader>

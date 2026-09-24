@@ -6,7 +6,7 @@ export default async function GamesPage() {
   const employee = await getCurrentEmployee();
 
   return (
-    <div className="flex flex-col gap-3 min-h-[calc(100vh-66px)] w-full bg-blue-50 font-sans dark:bg-black p-3">
+    <div className="flex flex-col gap-3 min-h-[calc(100vh-66px)] w-full bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 font-sans dark:bg-black p-3">
       <Card className="min-h-[calc(100vh-90px)] p-5">
         <Card.Header>
           <Card.Title className="text-lg md:text-2xl font-bold mt-3">

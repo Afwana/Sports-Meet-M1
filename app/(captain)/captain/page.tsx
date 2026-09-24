@@ -16,7 +16,7 @@ export default async function CaptainPage() {
 
   if (!captain.teamId) {
     return (
-      <div className="min-h-[calc(100vh-110px)] bg-blue-50 p-6 dark:bg-black">
+      <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-6 dark:bg-black">
         <Card className="w-full p-5">
           <Card.Content>
             <p className="text-danger">Your team is not assigned.</p>
@@ -35,7 +35,7 @@ export default async function CaptainPage() {
     ]);
 
   return (
-    <div className="min-h-[calc(100vh-110px)] bg-blue-50 dark:bg-black p-6">
+    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-6">
       <Card className="w-full p-5 min-h-[calc(100vh-115px)]">
         <Card.Header>
           <Card.Title>

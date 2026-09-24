@@ -41,6 +41,11 @@ interface Employee {
   role: "Employee" | "Captain";
 }
 
+interface SiteSettings {
+  programName: string;
+  companyLogo: string;
+}
+
 export function RegisterCard() {
   const router = useRouter();
 
@@ -212,10 +217,37 @@ export function RegisterCard() {
     loadTeams();
   }, []);
 
+  const [settings, setSettings] = useState<SiteSettings>({
+    programName: "Recreation Meet 2026",
+    companyLogo: "",
+  });
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings", {
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          setSettings(data.settings);
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    }
+
+    loadSettings();
+  }, []);
+
   return (
     <Card className="w-full md:w-2/5 p-5 h-auto shadow-md" variant="default">
       <CardHeader className="flex flex-col gap-1.5 items-center justify-center p-3 border-b border-solid">
-        <CardTitle className="text-3xl font-bold">Sports Meet 2026</CardTitle>
+        <CardTitle className="text-3xl font-bold">
+          {settings.programName}
+        </CardTitle>
         <CardDescription className="text-base">
           Employee Registration
         </CardDescription>

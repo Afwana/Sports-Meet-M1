@@ -26,7 +26,7 @@ interface SiteSettings {
 export default function AppHeader({ role, user }: Props) {
   const pathname = usePathname();
   const [settings, setSettings] = useState<SiteSettings>({
-    programName: "Sports Meet 2026",
+    programName: "Recreation Meet 2026",
     companyLogo: "",
   });
 
@@ -54,12 +54,9 @@ export default function AppHeader({ role, user }: Props) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b bg-white dark:bg-black">
+      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-950/80 backdrop-blur-md">
         <div className="flex h-16 max-w-full items-center justify-between px-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-lg xl:text-xl font-bold text-blue-700"
-          >
+          <Link href="/" className="flex items-center gap-3">
             {settings.companyLogo && (
               <Image
                 src={settings.companyLogo}
@@ -70,27 +67,41 @@ export default function AppHeader({ role, user }: Props) {
               />
             )}
 
-            <span>{settings.programName}</span>
+            <div className="hidden h-6 w-px bg-white/20 sm:block" />
+
+            <span className="hidden text-lg font-bold text-white sm:block">
+              {settings.programName}
+            </span>
           </Link>
 
           <nav className="hidden items-center gap-3 xl:gap-6 md:flex">
-            {links.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-2 text-sm xl:text-lg font-medium transition xl:p-2 ${
-                  pathname === item.href
-                    ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
-                    : "text-default-600 hover:text-blue-600"
-                }`}
-              >
-                <item.icon size={18} /> <span>{item.label}</span>
-              </Link>
-            ))}
+            {links.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`flex items-center gap-1.5 border-b-2 pb-1 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "border-blue-500 text-blue-400"
+                      : "border-transparent text-slate-300 hover:text-white"
+                  }`}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <Dropdown>
-            <Button isIconOnly aria-label="Menu" variant="secondary">
+            <Button
+              isIconOnly
+              aria-label="Menu"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-indigo-600 text-xs font-semibold"
+            >
               {user.role === "admin"
                 ? user.name.charAt(0).toUpperCase()
                 : user.employeeName.charAt(0).toUpperCase()}
@@ -162,23 +173,30 @@ export default function AppHeader({ role, user }: Props) {
         {/* Mobile Menu */}
         {links.length > 0 && (
           <ScrollShadow
-            className="md:hidden h-16 max-w-full px-4"
+            className="md:hidden h-8 max-w-full px-4"
             orientation="horizontal"
           >
             <nav className="flex flex-row gap-5">
-              {links.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`min-w-20 h-16 shrink-0 flex items-center justify-center text-base font-medium transition p-2  ${
-                    pathname === item.href
-                      ? "text-blue-600 border-b-2 border-blue-600 font-semibold rounded-none"
-                      : "text-default-600 hover:text-blue-600"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {links.map((item) => {
+                const isActive = pathname === item.href;
+                const Icon = item.icon;
+                console.log(isActive);
+
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`flex items-center gap-1.5 border-b-2 pb-1 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "border-blue-500 text-blue-400"
+                        : "border-transparent text-slate-300 hover:text-white"
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
           </ScrollShadow>
         )}

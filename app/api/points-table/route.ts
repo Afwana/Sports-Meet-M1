@@ -9,6 +9,8 @@ import MarathonResult from "@/models/MarathonResult";
 type TeamPoints = {
   teamId: string;
   teamName: string;
+  logo?: string;
+  color?: string;
   first: number;
   second: number;
   third: number;
@@ -20,7 +22,7 @@ export async function GET() {
     await connectDB();
 
     const teams = await Teams.find({ isActive: true })
-      .select("_id name")
+      .select("_id name logo color")
       .lean();
 
     const teamMap = new Map<string, TeamPoints>();
@@ -29,6 +31,8 @@ export async function GET() {
       teamMap.set(String(team._id), {
         teamId: String(team._id),
         teamName: team.name,
+        logo: team.logo,
+        color: team.color,
         first: 0,
         second: 0,
         third: 0,

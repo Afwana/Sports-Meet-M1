@@ -101,12 +101,12 @@ export default function PublicPointsTable({
                   ) : (
                     <div className="w-6" />
                   )}
-                  <span className="text-xl">{team.rank}</span>
+                  <span className="text-base md:text-xl">{team.rank}</span>
                 </div>
 
                 {/* Team */}
                 <div
-                  className={`font-semibold ${
+                  className={`text-base md:text-xl font-semibold ${
                     team.rank === 1 && team.totalPoints > 0
                       ? "text-white"
                       : "text-gray-800"

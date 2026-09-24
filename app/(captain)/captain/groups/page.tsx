@@ -117,13 +117,13 @@ export default function CaptainGroupsPage() {
 
   return (
     <>
-      <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5">
+      <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5 text-black">
         <Card className="w-full p-5 min-h-[calc(100vh-105px)]">
           <Card.Header>
             <div className="mb-6">
               <h1 className="text-2xl font-bold">Group Registrations</h1>
 
-              <p className="text-default-500 text-sm">
+              <p className="text-slate-500 text-sm">
                 Manage Group registrations for your team.
               </p>
 
@@ -162,11 +162,11 @@ export default function CaptainGroupsPage() {
                     <Table.Body items={paginatedItems} className="rounded-none">
                       {(registration) => (
                         <Table.Row key={registration._id} id={registration._id}>
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             {registration.showGame ? registration.slNo : ""}
                           </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             {registration.showGame ? (
                               <span className="font-semibold">
                                 {registration.gameName}
@@ -176,13 +176,13 @@ export default function CaptainGroupsPage() {
                             )}
                           </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <span className="font-medium">
                               {registration.groupName}
                             </span>
                           </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <div className="flex flex-wrap gap-2">
                               {registration.participants.map((participant) => (
                                 <div
@@ -193,7 +193,7 @@ export default function CaptainGroupsPage() {
                                     {participant.employeeName}
                                   </div>
 
-                                  <div className="text-xs text-default-500">
+                                  <div className="text-xs text-slate-300">
                                     {participant.employeeCode}
                                   </div>
                                 </div>

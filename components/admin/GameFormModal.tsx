@@ -209,7 +209,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                 {/* Game Name */}
 
                 <div className="flex flex-col gap-1">
-                  <Label>Game Name</Label>
+                  <Label className="text-black">Game Name</Label>
 
                   <Input placeholder="Enter game name" {...register("name")} />
 
@@ -221,7 +221,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                 {/* Category */}
 
                 <div className="flex flex-col gap-1">
-                  <Label>Category</Label>
+                  <Label className="text-black">Category</Label>
 
                   <Select
                     aria-label="Game category"
@@ -241,7 +241,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Sports" textValue="Sports">
                           Sports
                         </ListBox.Item>
@@ -265,7 +265,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                 {/* Type */}
 
                 <div className="flex flex-col gap-1">
-                  <Label>Type</Label>
+                  <Label className="text-black">Type</Label>
 
                   <Select
                     aria-label="Game type"
@@ -282,7 +282,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Individual">Individual</ListBox.Item>
 
                         <ListBox.Item id="Group">Group</ListBox.Item>
@@ -292,7 +292,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Gender</Label>
+                  <Label className="text-black">Gender</Label>
 
                   <Select
                     aria-label="Game gender"
@@ -311,7 +311,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Male" textValue="Male">
                           Male
                         </ListBox.Item>
@@ -333,7 +333,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
 
                 {(category === "Sports" || category === "Games") && (
                   <div className="flex flex-col gap-1">
-                    <Label>Age Category</Label>
+                    <Label className="text-black">Age Category</Label>
 
                     <Select
                       aria-label="Age category"
@@ -354,7 +354,7 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                       </Select.Trigger>
 
                       <Select.Popover>
-                        <ListBox>
+                        <ListBox className="text-black">
                           <ListBox.Item id="Open" textValue="Open">
                             Open
                           </ListBox.Item>
@@ -388,14 +388,16 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                   <>
                     <div className="rounded-xl border p-4 space-y-3">
                       <div className="flex items-center gap-2">
-                        <p className="font-semibold">
+                        <p className="font-semibold text-black">
                           Individual Registration Limits
                         </p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="flex flex-col gap-1">
-                          <Label>Maximum Participants</Label>
+                          <Label className="text-black">
+                            Maximum Participants
+                          </Label>
 
                           <Controller
                             control={control}
@@ -422,7 +424,9 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                          <Label>Maximum Participants Per Team</Label>
+                          <Label className="text-black">
+                            Maximum Participants Per Team
+                          </Label>
 
                           <Controller
                             control={control}
@@ -455,13 +459,17 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                 {type === "Group" && (
                   <div className="rounded-xl border p-4 space-y-3">
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold">Group Registration Rules</p>
+                      <p className="font-semibold text-black">
+                        Group Registration Rules
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
                       {/* Min Participants */}
                       <div className="flex flex-col gap-1">
-                        <Label>Minimum Participants Per Group</Label>
+                        <Label className="text-black">
+                          Minimum Participants Per Group
+                        </Label>
 
                         <Input
                           type="number"
@@ -473,7 +481,9 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
 
                       {/* Max Participants */}
                       <div className="flex flex-col gap-1">
-                        <Label>Maximum Participants Per Group</Label>
+                        <Label className="text-black">
+                          Maximum Participants Per Group
+                        </Label>
 
                         <Controller
                           control={control}
@@ -501,7 +511,9 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
 
                       {/* Group Only */}
                       <div className="flex flex-col gap-1">
-                        <Label>Max Groups per Team</Label>
+                        <Label className="text-black">
+                          Max Groups per Team
+                        </Label>
                         <Input
                           type="number"
                           {...register("maxTeamsPerCompetitionTeam", {
@@ -522,13 +534,13 @@ export default function GameFormModal({ game, onClose, onSaved }: Props) {
                       setValue("isActive", value, { shouldDirty: true })
                     }
                   >
-                    <p className="font-medium">Status</p>
+                    <p className="font-medium text-black">Status</p>
                     <Switch.Content>
                       <Switch.Control>
                         <Switch.Thumb />
                       </Switch.Control>
 
-                      <p className="text-default-500 text-sm">
+                      <p className="text-slate-300 text-sm">
                         {isActive
                           ? "This game is available for the competition."
                           : "This game is hidden from employees."}

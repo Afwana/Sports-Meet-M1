@@ -107,11 +107,13 @@ function PositionCell({
 
     return (
       <div className="flex min-w-40 flex-col">
-        <span className="font-medium">{individual.employeeName}</span>
+        <span className="font-medium text-black">
+          {individual.employeeName}
+        </span>
 
-        <span className="text-xs text-default-500">{individual.teamName}</span>
+        <span className="text-xs text-slate-300">{individual.teamName}</span>
 
-        <span className="text-[11px] text-default-400">
+        <span className="text-[11px] text-slate-200">
           {individual.employeeCode}
         </span>
       </div>
@@ -123,9 +125,9 @@ function PositionCell({
 
   return (
     <div className="flex min-w-40 flex-col">
-      <span className="font-medium">{group.groupName}</span>
+      <span className="font-medium text-black">{group.groupName}</span>
 
-      <span className="text-xs text-default-500">{group.teamName}</span>
+      <span className="text-xs text-slate-300">{group.teamName}</span>
     </div>
   );
 }
@@ -203,21 +205,21 @@ export default function ResultsTable({
               return (
                 <Table.Row key={row.gameId} id={row.gameId}>
                   {/* SL.NO */}
-                  <Table.Cell>{index + 1}</Table.Cell>
+                  <Table.Cell className="text-black">{index + 1}</Table.Cell>
 
                   {/* GAME */}
-                  <Table.Cell>
+                  <Table.Cell className="text-black">
                     <div className="flex flex-col">
                       <span className="font-medium">{row.gameName}</span>
 
-                      <span className="text-xs text-default-500">
+                      <span className="text-xs text-slate-300">
                         {row.category} | {row.gender} | {row.ageCategory}
                       </span>
                     </div>
                   </Table.Cell>
 
                   {/* TYPE */}
-                  <Table.Cell>
+                  <Table.Cell className="text-black">
                     <span
                       className={
                         row.type === "Individual"
@@ -264,7 +266,7 @@ export default function ResultsTable({
                         onPress={() => onEdit(row)}
                         isDisabled={!row.resultId}
                       >
-                        <Pencil size={16} />
+                        <Pencil size={16} color="black" />
                       </Button>
 
                       <Button

@@ -75,7 +75,7 @@ export default function TeamsTable({ teams }: Props) {
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Teams</h1>
 
-            <p className="text-default-500 text-sm">Manage Teams.</p>
+            <p className="text-slate-500 text-sm">Manage Teams.</p>
           </div>
           <div className="flex flex-col gap-3 md:flex-row md:justify-between">
             <Input
@@ -120,7 +120,7 @@ export default function TeamsTable({ teams }: Props) {
                   {(team) => {
                     return (
                       <Table.Row key={team._id} id={team._id}>
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           <div className="flex flex-col md:flex-row md:items-center gap-3">
                             {team.logo ? (
                               <Image
@@ -142,11 +142,11 @@ export default function TeamsTable({ teams }: Props) {
                           </div>
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           {team.captain ? (
                             <div className="flex flex-col">
                               <span>{team.captain.employeeName}</span>
-                              <span className="text-xs text-default-500">
+                              <span className="text-xs text-slate-300">
                                 {team.captain.employeeCode}
                               </span>
                             </div>
@@ -155,7 +155,7 @@ export default function TeamsTable({ teams }: Props) {
                           )}
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           <Switch isSelected={team.isActive} size="sm">
                             <Switch.Content>
                               <Switch.Control>
@@ -174,7 +174,7 @@ export default function TeamsTable({ teams }: Props) {
                               aria-label={`Edit ${team.name}`}
                               onPress={() => setEditingTeam(team)}
                             >
-                              <Pencil size={16} />
+                              <Pencil size={16} color="black" />
                             </Button>
 
                             <Button

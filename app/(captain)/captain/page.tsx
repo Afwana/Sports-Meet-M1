@@ -16,7 +16,7 @@ export default async function CaptainPage() {
 
   if (!captain.teamId) {
     return (
-      <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-6 dark:bg-black">
+      <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-6 dark:bg-black text-black">
         <Card className="w-full p-5">
           <Card.Content>
             <p className="text-danger">Your team is not assigned.</p>
@@ -35,12 +35,12 @@ export default async function CaptainPage() {
     ]);
 
   return (
-    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-6">
+    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-6 text-black">
       <Card className="w-full p-5 min-h-[calc(100vh-115px)]">
         <Card.Header>
           <Card.Title>
             <Badge.Anchor>
-              <p className="text-2xl font-bold">{captain.team}</p>
+              <p className="text-2xl font-bold text-black">{captain.team}</p>
               <Badge
                 className="min-w-7 translate-x-5 font-semibold tabular-nums"
                 color="accent"
@@ -51,7 +51,7 @@ export default async function CaptainPage() {
               </Badge>
             </Badge.Anchor>
           </Card.Title>
-          <Card.Description className="text-default-500 mt-1">
+          <Card.Description className="text-slate-600 mt-1">
             Welcome back, {captain.employeeName}
           </Card.Description>
         </Card.Header>

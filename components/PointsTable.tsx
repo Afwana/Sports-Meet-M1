@@ -78,7 +78,7 @@ export default function PointsTable() {
     <Card>
       <Card.Header>
         <div>
-          <Card.Title>Point Table</Card.Title>
+          <Card.Title className="text-black">Point Table</Card.Title>
 
           <Card.Description>
             Current team standings based on published results.
@@ -109,21 +109,27 @@ export default function PointsTable() {
                 <Table.Body items={rows}>
                   {(row) => (
                     <Table.Row key={row.teamId} id={row.teamId}>
-                      <Table.Cell>
+                      <Table.Cell className="text-black">
                         <span className="font-semibold">{row.rank}</span>
                       </Table.Cell>
 
-                      <Table.Cell>
+                      <Table.Cell className="text-black">
                         <span className="font-medium">{row.teamName}</span>
                       </Table.Cell>
 
-                      <Table.Cell>{row.first}</Table.Cell>
+                      <Table.Cell className="text-black">
+                        {row.first}
+                      </Table.Cell>
 
-                      <Table.Cell>{row.second}</Table.Cell>
+                      <Table.Cell className="text-black">
+                        {row.second}
+                      </Table.Cell>
 
-                      <Table.Cell>{row.third}</Table.Cell>
+                      <Table.Cell className="text-black">
+                        {row.third}
+                      </Table.Cell>
 
-                      <Table.Cell>
+                      <Table.Cell className="text-black">
                         <span className="font-bold">{row.totalPoints}</span>
                       </Table.Cell>
                     </Table.Row>

@@ -87,9 +87,9 @@ export default function EmployeesTable({ employees }: Props) {
       <Card className="w-full p-5 min-h-[calc(100vh-115px)]">
         <Card.Header>
           <div className="mb-6">
-            <h1 className="text-2xl font-bold">Employees</h1>
+            <h1 className="text-black text-2xl font-bold">Employees</h1>
 
-            <p className="text-default-500 text-sm">
+            <p className="text-slate-500 text-sm">
               Manage employees and captains.
             </p>
           </div>
@@ -137,13 +137,13 @@ export default function EmployeesTable({ employees }: Props) {
                     return (
                       <Table.Row key={employee._id} id={employee._id}>
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 text-black">
                             {employee.employeeCode}
                           </div>
                         </Table.Cell>
 
                         <Table.Cell>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-col gap-1 text-black">
                             {employee.employeeName}
                             <span className="text-slate-300 text-xs font-medium">
                               {employee.dateOfBirth
@@ -154,13 +154,13 @@ export default function EmployeesTable({ employees }: Props) {
                         </Table.Cell>
 
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 text-black">
                             {employee.gender}
                           </div>
                         </Table.Cell>
 
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 text-black">
                             {employee.team}
                           </div>
                         </Table.Cell>
@@ -178,13 +178,13 @@ export default function EmployeesTable({ employees }: Props) {
                         </Table.Cell>
 
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 text-black">
                             {employee.department}
                           </div>
                         </Table.Cell>
 
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 text-black">
                             {employee.phoneNumber}
                           </div>
                         </Table.Cell>
@@ -208,7 +208,7 @@ export default function EmployeesTable({ employees }: Props) {
                               aria-label={`Edit ${employee.employeeName}`}
                               onPress={() => setEditingEmployee(employee)}
                             >
-                              <Pencil size={16} />
+                              <Pencil size={16} color="black" />
                             </Button>
 
                             <Button

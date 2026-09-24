@@ -176,7 +176,7 @@ export default function SettingsModal({
               ) : (
                 <div className="space-y-6">
                   <div className="flex flex-col gap-1 space-y-2">
-                    <Label>Program Name</Label>
+                    <Label className="text-black">Program Name</Label>
 
                     <Input
                       value={programName}
@@ -186,7 +186,7 @@ export default function SettingsModal({
                   </div>
 
                   <div className="flex flex-col gap-1 space-y-3">
-                    <Label>Company Logo</Label>
+                    <Label className="text-black">Company Logo</Label>
 
                     <Input
                       type="file"

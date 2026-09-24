@@ -103,7 +103,9 @@ export default function PointConfigurationTable() {
         <Card.Header>
           <div className="flex flex-col md:flex-row w-full md:items-center justify-between gap-4">
             <div>
-              <Card.Title>Point Configuration</Card.Title>
+              <Card.Title className="text-black">
+                Point Configuration
+              </Card.Title>
 
               <Card.Description>
                 Configure points awarded for competition positions.
@@ -147,17 +149,21 @@ export default function PointConfigurationTable() {
                           key={configuration._id}
                           id={configuration._id}
                         >
-                          <Table.Cell>{index + 1}</Table.Cell>
+                          <Table.Cell className="text-black">
+                            {index + 1}
+                          </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <span className="font-medium">
                               {configuration.name}
                             </span>
                           </Table.Cell>
 
-                          <Table.Cell>{configuration.type ?? "-"}</Table.Cell>
+                          <Table.Cell className="text-black">
+                            {configuration.type ?? "-"}
+                          </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <div className="flex flex-wrap gap-1">
                               {configuration.positions.map((item) => (
                                 <span
@@ -172,12 +178,12 @@ export default function PointConfigurationTable() {
                             </div>
                           </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <span
                               className={
                                 configuration.isActive
                                   ? "rounded-full bg-success/10 px-2.5 py-1 text-xs text-success"
-                                  : "rounded-full bg-default-100 px-2.5 py-1 text-xs text-default-500"
+                                  : "rounded-full bg-default-100 px-2.5 py-1 text-xs text-slate-300"
                               }
                             >
                               {configuration.isActive ? "Active" : "Inactive"}
@@ -193,7 +199,7 @@ export default function PointConfigurationTable() {
                                 onPress={() => handleEdit(configuration)}
                                 aria-label="Edit configuration"
                               >
-                                <Pencil size={16} />
+                                <Pencil size={16} color="black" />
                               </Button>
 
                               <Button

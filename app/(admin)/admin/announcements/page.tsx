@@ -19,7 +19,7 @@ export default async function AnnouncementsPage() {
   }));
 
   return (
-    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-6 dark:bg-black">
+    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-3 md:p-6 dark:bg-black">
       <AnnouncementTable initialAnnouncements={serializedAnnouncements} />
     </div>
   );

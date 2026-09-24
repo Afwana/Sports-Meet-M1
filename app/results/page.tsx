@@ -11,7 +11,7 @@ export default function ResultsPage() {
           <div className="mb-3">
             <h1 className="text-2xl font-bold">Results</h1>
 
-            <p className="text-sm text-default-500">
+            <p className="text-sm text-slate-300">
               View results and current team standings.
             </p>
           </div>

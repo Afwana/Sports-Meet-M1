@@ -164,7 +164,7 @@ export default function EditIndividualRegistrationModal({
                       <span className="font-semibold">{game.name}</span>
                     </div>
 
-                    <p className="mt-1 text-sm text-default-500">
+                    <p className="mt-1 text-sm text-slate-300">
                       Update participants for this game.
                     </p>
                   </div>
@@ -176,7 +176,7 @@ export default function EditIndividualRegistrationModal({
                   ) : (
                     <>
                       <div className="space-y-2">
-                        <Label>Select Employees</Label>
+                        <Label className="text-black">Select Employees</Label>
                         <Autocomplete
                           value={selectedEmployeeKey}
                           onChange={(value) => {
@@ -215,6 +215,7 @@ export default function EditIndividualRegistrationModal({
                                 renderEmptyState={() => (
                                   <EmptyState>No employees found</EmptyState>
                                 )}
+                                className="text-black"
                               >
                                 {employees
                                   .filter(
@@ -229,7 +230,7 @@ export default function EditIndividualRegistrationModal({
                                     >
                                       <div className="flex flex-col">
                                         <span>{emp.employeeName}</span>
-                                        <span className="text-xs text-default-500">
+                                        <span className="text-xs text-slate-300">
                                           {emp.employeeCode}
                                         </span>
                                       </div>
@@ -275,7 +276,7 @@ export default function EditIndividualRegistrationModal({
                       </div>
 
                       <div className="flex justify-between text-sm">
-                        <span className="text-default-500">Selected</span>
+                        <span className="text-slate-300">Selected</span>
 
                         <span className="font-semibold">
                           {selectedEmployees.length} /{" "}

@@ -49,7 +49,7 @@ export default function AdminKPICards({
             <Card.Title className="flex items-center gap-3">
               <span className="text-blue-600">{card.icon}</span>
 
-              <span className="text-xl font-bold">{card.value}</span>
+              <span className="text-xl font-bold text-black">{card.value}</span>
             </Card.Title>
 
             <Card.Description>{card.label}</Card.Description>

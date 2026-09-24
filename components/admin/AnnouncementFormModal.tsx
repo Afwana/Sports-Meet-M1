@@ -211,7 +211,7 @@ export default function AnnouncementFormModal({
                           <div className="flex flex-col">
                             <span className="font-medium">Active</span>
 
-                            <span className="text-sm text-default-500">
+                            <span className="text-sm text-slate-300">
                               Show this announcement to employees and captains
                             </span>
                           </div>

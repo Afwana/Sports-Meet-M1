@@ -298,12 +298,14 @@ export default function AdminDataManagement() {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-4 text-black">
         {/* SETTINGS */}
         <Card className="p-5">
           <Card.Header>
             <div>
-              <Card.Title>Competition Settings</Card.Title>
+              <Card.Title className="text-black">
+                Competition Settings
+              </Card.Title>
 
               <Card.Description>
                 Manage company branding and program information.
@@ -331,7 +333,7 @@ export default function AdminDataManagement() {
         <Card className="p-5">
           <Card.Header>
             <div>
-              <Card.Title>Employee Data</Card.Title>
+              <Card.Title className="text-black">Employee Data</Card.Title>
 
               <Card.Description>
                 Import, export and reset employee information.
@@ -390,7 +392,7 @@ export default function AdminDataManagement() {
         <Card className="p-5">
           <Card.Header>
             <div>
-              <Card.Title>Team Data</Card.Title>
+              <Card.Title className="text-black">Team Data</Card.Title>
 
               <Card.Description>
                 Remove all competition teams and their registrations.
@@ -413,7 +415,7 @@ export default function AdminDataManagement() {
         <Card className="p-5">
           <Card.Header>
             <div>
-              <Card.Title>Registrations Data</Card.Title>
+              <Card.Title className="text-black">Registrations Data</Card.Title>
 
               <Card.Description>
                 Remove all Individuals and Group Registrations.
@@ -433,7 +435,7 @@ export default function AdminDataManagement() {
                     <Switch.Thumb />
                   </Switch.Control>
 
-                  <p className="text-sm text-default-500">
+                  <p className="text-sm text-slate-300">
                     {loadingRegistration
                       ? "Loading registration status..."
                       : updatingRegistration

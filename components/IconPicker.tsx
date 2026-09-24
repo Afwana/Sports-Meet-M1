@@ -16,7 +16,7 @@ export default function IconPicker({
 }: IconPickerProps) {
   return (
     <div className="flex flex-col gap-1">
-      <Label>{label}</Label>
+      <Label className="text-black">{label}</Label>
 
       <Select
         value={value}
@@ -35,7 +35,7 @@ export default function IconPicker({
               <ListBox.Item key={name} id={name} textValue={name}>
                 <div className="flex items-center gap-3">
                   <Icon className="text-xl text-blue-600" />
-                  <span>{name}</span>
+                  <span className="text-black">{name}</span>
                 </div>
                 <ListBox.ItemIndicator />
               </ListBox.Item>

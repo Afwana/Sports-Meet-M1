@@ -595,11 +595,13 @@ export default function AdminResultsPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-6 dark:bg-black">
+    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-3 md:p-6 dark:bg-black">
       <Card className="min-h-[calc(100vh-115px)] w-full p-5">
         <Card.Header>
           <div>
-            <Card.Title className="text-lg font-semibold">Results</Card.Title>
+            <Card.Title className="text-lg font-semibold text-black">
+              Results
+            </Card.Title>
 
             <Card.Description>
               Select a game and assign competition result positions.
@@ -614,7 +616,7 @@ export default function AdminResultsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 {/* TYPE */}
                 <div>
-                  <Label className="mb-2">Game Type</Label>
+                  <Label className="mb-2 text-black">Game Type</Label>
 
                   <Select
                     aria-label="select type"
@@ -632,7 +634,7 @@ export default function AdminResultsPage() {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Individual" textValue="Individual">
                           Individual
                         </ListBox.Item>
@@ -647,7 +649,7 @@ export default function AdminResultsPage() {
 
                 {/* CATEGORY */}
                 <div>
-                  <Label className="mb-2">Category</Label>
+                  <Label className="mb-2 text-black">Category</Label>
 
                   <Select
                     aria-label="select category"
@@ -668,7 +670,7 @@ export default function AdminResultsPage() {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Sports" textValue="Sports">
                           Sports
                         </ListBox.Item>
@@ -691,7 +693,7 @@ export default function AdminResultsPage() {
 
                 {/* GENDER */}
                 <div>
-                  <Label className="mb-2">Gender</Label>
+                  <Label className="mb-2 text-black">Gender</Label>
 
                   <Select
                     aria-label="select gender"
@@ -710,7 +712,7 @@ export default function AdminResultsPage() {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Both" textValue="Both">
                           Both
                         </ListBox.Item>
@@ -731,7 +733,7 @@ export default function AdminResultsPage() {
                 {(selectedCategory === "Sports" ||
                   selectedCategory === "Games") && (
                   <div>
-                    <Label className="mb-2">Age Category</Label>
+                    <Label className="mb-2 text-black">Age Category</Label>
 
                     <Select
                       aria-label="select category"
@@ -752,7 +754,7 @@ export default function AdminResultsPage() {
                       </Select.Trigger>
 
                       <Select.Popover>
-                        <ListBox>
+                        <ListBox className="text-black">
                           <ListBox.Item id="Open" textValue="Open">
                             Open
                           </ListBox.Item>
@@ -773,18 +775,18 @@ export default function AdminResultsPage() {
 
               {/* GAME */}
               <div className="space-y-2">
-                <Label>Select {selectedType} Game</Label>
+                <Label className="text-black">Select {selectedType} Game</Label>
 
                 {loadingGames ? (
                   <div className="flex items-center gap-2 py-2">
                     <Spinner size="sm" />
 
-                    <span className="text-sm text-default-500">
+                    <span className="text-sm text-slate-300">
                       Loading games...
                     </span>
                   </div>
                 ) : filteredGames.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-default-300 p-5 text-sm text-default-500">
+                  <div className="rounded-lg border border-dashed border-default-300 p-5 text-sm text-slate-300">
                     No active {selectedType.toLowerCase()} games found.
                   </div>
                 ) : (
@@ -803,7 +805,7 @@ export default function AdminResultsPage() {
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         {filteredGames.map((game) => (
                           <ListBox.Item
                             key={game._id}
@@ -830,7 +832,7 @@ export default function AdminResultsPage() {
                     <Spinner />
                   </div>
                 ) : groupItems.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
                     No groups are registered for this game.
                   </div>
                 ) : (
@@ -841,13 +843,13 @@ export default function AdminResultsPage() {
                           <Spinner />
                         </div>
                       ) : positions.length === 0 ? (
-                        <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                        <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
                           Please add point configuration to game types!.
                         </div>
                       ) : (
                         positions.map(({ position, label }) => (
                           <div key={position} className="space-y-2">
-                            <Label>{label}</Label>
+                            <Label className="text-black">{label}</Label>
 
                             <Select
                               aria-label={`select group for ${label}`}
@@ -864,7 +866,7 @@ export default function AdminResultsPage() {
                               </Select.Trigger>
 
                               <Select.Popover>
-                                <ListBox>
+                                <ListBox className="text-black">
                                   {groupItems.map((group) => (
                                     <ListBox.Item
                                       key={group.groupId}
@@ -876,7 +878,7 @@ export default function AdminResultsPage() {
                                           {group.groupName}
                                         </span>
 
-                                        <span className="text-xs text-default-500">
+                                        <span className="text-xs text-slate-300">
                                           {group.teamName} •{" "}
                                           {group.participantCount} members
                                         </span>
@@ -931,7 +933,7 @@ export default function AdminResultsPage() {
                     <Spinner />
                   </div>
                 ) : participants.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
                     No employees are registered for this game.
                   </div>
                 ) : (
@@ -942,13 +944,13 @@ export default function AdminResultsPage() {
                           <Spinner />
                         </div>
                       ) : positions.length === 0 ? (
-                        <div className="w-full rounded-lg border border-dashed border-default-300 p-8 text-center text-default-500">
+                        <div className="w-full rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
                           Please add point configuration to game types!.
                         </div>
                       ) : (
                         positions.map(({ position, label }) => (
                           <div key={position} className="space-y-2">
-                            <Label>{label}</Label>
+                            <Label className="text-black">{label}</Label>
 
                             <Select
                               aria-label={`select participant for ${label}`}
@@ -965,7 +967,7 @@ export default function AdminResultsPage() {
                               </Select.Trigger>
 
                               <Select.Popover>
-                                <ListBox>
+                                <ListBox className="text-black">
                                   {participants.map((employee) => (
                                     <ListBox.Item
                                       key={employee.employeeId}
@@ -977,7 +979,7 @@ export default function AdminResultsPage() {
                                           {employee.employeeName}
                                         </span>
 
-                                        <span className="text-xs text-default-500">
+                                        <span className="text-xs text-slate-300">
                                           {employee.employeeCode} •{" "}
                                           {employee.team}
                                         </span>
@@ -1017,9 +1019,9 @@ export default function AdminResultsPage() {
           {/* ALL RESULTS TABLE */}
           <div className="border-t border-default-200 pt-6">
             <div className="mb-4">
-              <h2 className="text-lg font-semibold">All Results</h2>
+              <h2 className="text-lg font-semibold text-black">All Results</h2>
 
-              <p className="text-sm text-default-500">
+              <p className="text-sm text-slate-300">
                 Manage results of all games.
               </p>
             </div>

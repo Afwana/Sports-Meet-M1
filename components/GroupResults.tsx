@@ -60,7 +60,7 @@ function PositionCell({ result }: { result: GroupPosition }) {
     <div className="flex min-w-40 flex-col">
       <span className="font-medium">{result.groupName}</span>
 
-      <span className="text-xs text-default-500">{result.teamName}</span>
+      <span className="text-xs text-slate-300">{result.teamName}</span>
     </div>
   );
 }
@@ -125,7 +125,7 @@ export default function GroupResults() {
     <Card>
       <Card.Header>
         <div>
-          <Card.Title>Group Results</Card.Title>
+          <Card.Title className="text-black">Group Results</Card.Title>
 
           <Card.Description>
             View the winners and results of group events.
@@ -161,19 +161,21 @@ export default function GroupResults() {
 
                     return (
                       <Table.Row key={row.gameId} id={row.gameId}>
-                        <Table.Cell>{index + 1}</Table.Cell>
+                        <Table.Cell className="text-black">
+                          {index + 1}
+                        </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           <div className="flex flex-col">
                             <span className="font-medium">{row.gameName}</span>
 
-                            <span className="text-xs text-default-500">
+                            <span className="text-xs text-slate-300">
                               {row.category} | {row.gender} | {row.ageCategory}
                             </span>
                           </div>
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           {row.hasResult ? (
                             <PositionCell result={row.positions.first} />
                           ) : (
@@ -183,7 +185,7 @@ export default function GroupResults() {
                           )}
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           {row.hasResult ? (
                             <PositionCell result={row.positions.second} />
                           ) : (
@@ -191,7 +193,7 @@ export default function GroupResults() {
                           )}
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           {row.hasResult ? (
                             <PositionCell result={row.positions.third} />
                           ) : (

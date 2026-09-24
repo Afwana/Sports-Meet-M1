@@ -102,7 +102,7 @@ export default function DeleteAnnouncementModal({
                   </p>
                 </div>
 
-                <p className="text-sm text-default-500">
+                <p className="text-sm text-slate-300">
                   This action cannot be undone.
                 </p>
               </div>

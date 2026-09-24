@@ -6,19 +6,19 @@ export default async function GamesPage() {
   const employee = await getCurrentEmployee();
 
   return (
-    <div className="flex flex-col gap-3 min-h-[calc(100vh-66px)] w-full bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 font-sans dark:bg-black p-3">
+    <div className="flex flex-col gap-3 min-h-[calc(100vh-66px)] w-full bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 font-sans dark:bg-black p-3 text-black">
       <Card className="min-h-[calc(100vh-90px)] p-5">
         <Card.Header>
-          <Card.Title className="text-lg md:text-2xl font-bold mt-3">
+          <Card.Title className="text-lg md:text-2xl font-bold mt-3 text-black">
             Individual Games
           </Card.Title>
-          <Card.Description className="text-xs md:text-sm mt-1">
+          <Card.Description className="text-xs md:text-sm mt-1 text-slate-500">
             Choose your games to participate!
           </Card.Description>
 
           <div className="flex flex-col md:flex-row items-center gap-2.5 mt-6">
             <div className="flex flex-col gap-1 w-full">
-              <Label htmlFor="code" className="text-xs">
+              <Label htmlFor="code" className="text-xs text-black">
                 Employee Code
               </Label>
               <Input
@@ -30,7 +30,7 @@ export default async function GamesPage() {
               />
             </div>
             <div className="flex flex-col gap-1 w-full">
-              <Label htmlFor="name" className="text-xs">
+              <Label htmlFor="name" className="text-xs text-black">
                 Employee Name
               </Label>
               <Input
@@ -42,7 +42,7 @@ export default async function GamesPage() {
               />
             </div>
             <div className="flex flex-col gap-1 w-full">
-              <Label htmlFor="team" className="text-xs">
+              <Label htmlFor="team" className="text-xs text-black">
                 Team
               </Label>
               <Input

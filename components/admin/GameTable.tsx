@@ -84,9 +84,9 @@ export default function GameTable({ games }: Props) {
     <div>
       <Card className="w-full p-5 min-h-[calc(100vh-115px)]">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">Games</h1>
+          <h1 className="text-2xl font-bold text-black">Games</h1>
 
-          <p className="text-default-500 text-sm">
+          <p className="text-slate-500 text-sm">
             Manage Individual and Group games.
           </p>
         </div>
@@ -137,7 +137,7 @@ export default function GameTable({ games }: Props) {
                     return (
                       <Table.Row key={game._id} id={game._id}>
                         <Table.Cell>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 text-black">
                             {Icon ? (
                               <Icon
                                 size={22}
@@ -150,13 +150,21 @@ export default function GameTable({ games }: Props) {
                           </div>
                         </Table.Cell>
 
-                        <Table.Cell>{game.category}</Table.Cell>
+                        <Table.Cell className="text-black">
+                          {game.category}
+                        </Table.Cell>
 
-                        <Table.Cell>{game.gender}</Table.Cell>
+                        <Table.Cell className="text-black">
+                          {game.gender}
+                        </Table.Cell>
 
-                        <Table.Cell>{game.type}</Table.Cell>
+                        <Table.Cell className="text-black">
+                          {game.type}
+                        </Table.Cell>
 
-                        <Table.Cell>{game.ageCategory}</Table.Cell>
+                        <Table.Cell className="text-black">
+                          {game.ageCategory}
+                        </Table.Cell>
 
                         <Table.Cell>
                           <Switch isSelected={game.isActive} size="sm">
@@ -177,7 +185,7 @@ export default function GameTable({ games }: Props) {
                               aria-label={`Edit ${game.name}`}
                               onPress={() => setEditingGame(game)}
                             >
-                              <Pencil size={16} />
+                              <Pencil size={16} color="black" />
                             </Button>
 
                             <Button

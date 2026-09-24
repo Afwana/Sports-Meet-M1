@@ -133,7 +133,7 @@ export default function DeleteGroupRegistrationModal({
                 </div>
 
                 {game?.type === "Group" ? (
-                  <p className="text-sm text-default-500">
+                  <p className="text-sm text-slate-300">
                     This group contains{" "}
                     <strong>
                       {(registration as GroupRegistration)?.participants.length}
@@ -146,7 +146,7 @@ export default function DeleteGroupRegistrationModal({
                     . They will become available again for this game.
                   </p>
                 ) : (
-                  <p className="text-sm text-default-500">
+                  <p className="text-sm text-slate-300">
                     <strong>
                       {(registration as IndividualRegistration)?.employeeName}
                     </strong>{" "}

@@ -218,7 +218,7 @@ export default function IndividualGames({
             <div className="rounded-lg border border-default-200 bg-default-50 p-6 text-center">
               <p className="font-medium">No games available.</p>
 
-              <p className="mt-1 text-sm text-default-500">
+              <p className="mt-1 text-sm text-slate-300">
                 No games matching your gender are currently available.
               </p>
             </div>

@@ -170,7 +170,7 @@ export default function AddIndividualRegistrationModal({
                       <span className="font-semibold">{game.name}</span>
                     </div>
 
-                    <p className="mt-1 text-sm text-default-500">
+                    <p className="mt-1 text-sm text-slate-300">
                       Select up to {game.maxParticipantsPerTeam} employees.
                     </p>
                   </div>
@@ -180,13 +180,13 @@ export default function AddIndividualRegistrationModal({
                       <Spinner />
                     </div>
                   ) : employees.length === 0 ? (
-                    <div className="rounded-lg border border-dashed p-8 text-center text-default-500">
+                    <div className="rounded-lg border border-dashed p-8 text-center text-slate-300">
                       No available employees.
                     </div>
                   ) : (
                     <>
                       <div className="space-y-2">
-                        <Label>Select Employees</Label>
+                        <Label className="text-black">Select Employees</Label>
                         <Autocomplete
                           value={selectedEmployeeKey}
                           onChange={(value) => {
@@ -225,6 +225,7 @@ export default function AddIndividualRegistrationModal({
                                 renderEmptyState={() => (
                                   <EmptyState>No employees found</EmptyState>
                                 )}
+                                className="text-black"
                               >
                                 {employees
                                   .filter(
@@ -239,7 +240,7 @@ export default function AddIndividualRegistrationModal({
                                     >
                                       <div className="flex flex-col">
                                         <span>{emp.employeeName}</span>
-                                        <span className="text-xs text-default-500">
+                                        <span className="text-xs text-slate-300">
                                           {emp.employeeCode}
                                         </span>
                                       </div>
@@ -287,7 +288,7 @@ export default function AddIndividualRegistrationModal({
                       </div>
 
                       <div className="flex justify-between text-sm">
-                        <span className="text-default-500">Selected</span>
+                        <span className="text-slate-300">Selected</span>
 
                         <span className="font-semibold">
                           {selectedEmployees.length} /{" "}

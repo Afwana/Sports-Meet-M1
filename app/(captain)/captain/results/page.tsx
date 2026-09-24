@@ -14,13 +14,13 @@ export default async function CaptainResultsPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5">
+    <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5 text-black">
       <Card className="w-full p-5 min-h-[calc(100vh-105px)]">
         <Card.Header>
           <div className="mb-3">
             <h1 className="text-2xl font-bold">Results</h1>
 
-            <p className="text-sm text-default-500">
+            <p className="text-sm text-slate-500">
               View results and current team standings.
             </p>
           </div>

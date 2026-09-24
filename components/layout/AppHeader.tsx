@@ -109,12 +109,16 @@ export default function AppHeader({ role, user }: Props) {
 
             <Dropdown.Popover className="rounded-lg">
               <Dropdown.Menu>
-                <Dropdown.Item id="profile" textValue="Profile" className="p-2">
+                <Dropdown.Item
+                  id="profile"
+                  textValue="Profile"
+                  className="p-2 text-black"
+                >
                   {user.role === "admin" ? (
                     <div className="flex flex-col gap-3 border rounded-lg p-3 w-full">
                       <div className="flex flex-col">
                         <p className="text-base font-semibold">{user.name}</p>
-                        <p className="text-sm text-default-500">{user.email}</p>
+                        <p className="text-sm text-slate-300">{user.email}</p>
                       </div>
 
                       <div className=" flex gap-1 items-center px-1">
@@ -131,7 +135,7 @@ export default function AppHeader({ role, user }: Props) {
                           {user.employeeName}
                         </p>
 
-                        <p className="text-xs text-default-500">
+                        <p className="text-xs text-slate-400">
                           {user.employeeCode}
                         </p>
                       </div>

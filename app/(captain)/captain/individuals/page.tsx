@@ -110,13 +110,13 @@ export default function CaptainIndividualsPage() {
 
   return (
     <>
-      <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5">
+      <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5 text-black">
         <Card className="w-full p-5 min-h-[calc(100vh-105px)]">
           <Card.Header>
             <div className="mb-6">
               <h1 className="text-2xl font-bold">Individual Registrations</h1>
 
-              <p className="text-default-500 text-sm">
+              <p className="text-slate-500 text-sm">
                 Manage individual registrations for your team.
               </p>
 
@@ -157,19 +157,19 @@ export default function CaptainIndividualsPage() {
                           key={registration.gameId}
                           id={registration.gameId}
                         >
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             {groupedRegistrations.findIndex(
                               (item) => item.gameId === registration.gameId,
                             ) + 1}
                           </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <span className="font-semibold">
                               {registration.gameName}
                             </span>
                           </Table.Cell>
 
-                          <Table.Cell>
+                          <Table.Cell className="text-black">
                             <div className="flex flex-wrap gap-2">
                               {registration.participants.map((itm) => (
                                 <div
@@ -180,7 +180,7 @@ export default function CaptainIndividualsPage() {
                                     {itm.employee.employeeName}
                                   </div>
 
-                                  <div className="text-xs text-default-500">
+                                  <div className="text-xs text-slate-300">
                                     {itm.employee.employeeCode}
                                   </div>
                                 </div>

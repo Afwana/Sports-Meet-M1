@@ -48,15 +48,13 @@ export default function CaptainMembersPage() {
   );
 
   return (
-    <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5">
+    <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5 text-black">
       <Card className="w-full p-5 min-h-[calc(100vh-105px)]">
         <Card.Header>
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Team Members</h1>
 
-            <p className="text-default-500 text-sm">
-              Manage your team members.
-            </p>
+            <p className="text-slate-500 text-sm">Manage your team members.</p>
           </div>
           <div className="flex flex-col gap-3 md:flex-row md:justify-between">
             <Input
@@ -87,19 +85,19 @@ export default function CaptainMembersPage() {
                   {(employee) => {
                     return (
                       <Table.Row key={employee._id} id={employee._id}>
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           <div className="flex items-center gap-3">
                             {employee.employeeCode}
                           </div>
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           <div className="flex items-center gap-3">
                             {employee.employeeName}
                           </div>
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           {employee.isCaptain ? (
                             <Chip color="accent" className="bg-blue-50">
                               {employee.role}
@@ -111,7 +109,7 @@ export default function CaptainMembersPage() {
                           )}
                         </Table.Cell>
 
-                        <Table.Cell>
+                        <Table.Cell className="text-black">
                           <Switch isSelected={employee.isRegistered} size="sm">
                             <Switch.Content>
                               <Switch.Control>

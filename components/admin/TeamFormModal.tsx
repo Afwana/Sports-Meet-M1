@@ -231,7 +231,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                 {/* Team Name */}
 
                 <div className="flex flex-col gap-1">
-                  <Label>Team Name</Label>
+                  <Label className="text-black">Team Name</Label>
 
                   <Input placeholder="Enter team name" {...register("name")} />
 
@@ -255,7 +255,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                       }
                     }}
                   >
-                    <Label>Captain</Label>
+                    <Label className="text-black">Captain</Label>
 
                     <Autocomplete.Trigger>
                       <Autocomplete.Value />
@@ -301,7 +301,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                                 >
                                   <div className="flex flex-col">
                                     <span>{employee.employeeName}</span>
-                                    <span className="text-xs text-default-500">
+                                    <span className="text-xs text-slate-300">
                                       {employee.employeeCode}
                                     </span>
                                   </div>
@@ -318,7 +318,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
 
                 {/* Logo Image upload */}
                 <div className="flex flex-col gap-2">
-                  <Label>Team Logo</Label>
+                  <Label className="text-black">Team Logo</Label>
 
                   <div className="flex items-center gap-4">
                     <div className="h-20 w-20 overflow-hidden rounded-xl border bg-default-100">
@@ -331,7 +331,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                           objectFit="cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-xs text-default-500">
+                        <div className="flex h-full items-center justify-center text-xs text-slate-300">
                           No Logo
                         </div>
                       )}
@@ -347,7 +347,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
 
                 {/* Color picker */}
                 <div className="flex flex-col gap-2">
-                  <Label>Team Color</Label>
+                  <Label className="text-black">Team Color</Label>
 
                   <div className="flex items-center gap-4 rounded-xl border p-3">
                     <input
@@ -363,7 +363,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
 
                     <div className="flex flex-col">
                       <span className="font-medium">{color || "#2563EB"}</span>
-                      <span className="text-sm text-default-500">
+                      <span className="text-sm text-slate-300">
                         Team primary color
                       </span>
                     </div>
@@ -378,6 +378,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                     onChange={(value) =>
                       setValue("isActive", value, { shouldDirty: true })
                     }
+                    className="text-black"
                   >
                     <p className="font-medium">Status</p>
                     <Switch.Content>
@@ -385,7 +386,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                         <Switch.Thumb />
                       </Switch.Control>
 
-                      <p className="text-default-500 text-sm">
+                      <p className="text-slate-300 text-sm">
                         {isActive
                           ? "Captain is active."
                           : "Captain is not here!."}

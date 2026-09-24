@@ -177,13 +177,13 @@ function CaptainRegistrationPageContent() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5">
+    <div className="min-h-[calc(100vh-104px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 dark:bg-black p-5 text-black">
       <Card className="w-full p-5 min-h-[calc(100vh-105px)]">
         <Card.Header>
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Registrations</h1>
 
-            <p className="text-default-500 text-sm">
+            <p className="text-slate-500 text-sm">
               Manage individual and group registrations for your team.
             </p>
           </div>
@@ -193,7 +193,7 @@ function CaptainRegistrationPageContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* TYPE */}
             <div>
-              <Label className="mb-2">Game Type</Label>
+              <Label className="mb-2 text-black">Game Type</Label>
 
               <Select
                 aria-label="select type"
@@ -212,7 +212,7 @@ function CaptainRegistrationPageContent() {
                 </Select.Trigger>
 
                 <Select.Popover>
-                  <ListBox>
+                  <ListBox className="text-black">
                     <ListBox.Item id="Individual" textValue="Individual">
                       Individual
                     </ListBox.Item>
@@ -227,7 +227,7 @@ function CaptainRegistrationPageContent() {
 
             {/* CATEGORY */}
             <div>
-              <Label className="mb-2">Category</Label>
+              <Label className="mb-2 text-black">Category</Label>
 
               <Select
                 aria-label="select category"
@@ -246,7 +246,7 @@ function CaptainRegistrationPageContent() {
                 </Select.Trigger>
 
                 <Select.Popover>
-                  <ListBox>
+                  <ListBox className="text-black">
                     <ListBox.Item id="Sports" textValue="Sports">
                       Sports
                     </ListBox.Item>
@@ -269,7 +269,7 @@ function CaptainRegistrationPageContent() {
 
             {/* GENDER */}
             <div>
-              <Label className="mb-2">Gender</Label>
+              <Label className="mb-2 text-black">Gender</Label>
 
               <Select
                 aria-label="select gender"
@@ -288,7 +288,7 @@ function CaptainRegistrationPageContent() {
                 </Select.Trigger>
 
                 <Select.Popover>
-                  <ListBox>
+                  <ListBox className="text-black">
                     <ListBox.Item id="Both" textValue="Both">
                       Both
                     </ListBox.Item>
@@ -308,7 +308,7 @@ function CaptainRegistrationPageContent() {
             {/* AGE */}
             {(category === "Sports" || category === "Games") && (
               <div>
-                <Label className="mb-2">Age Category</Label>
+                <Label className="mb-2 text-black">Age Category</Label>
 
                 <Select
                   aria-label="select category"
@@ -327,7 +327,7 @@ function CaptainRegistrationPageContent() {
                   </Select.Trigger>
 
                   <Select.Popover>
-                    <ListBox>
+                    <ListBox className="text-black">
                       <ListBox.Item id="Open" textValue="Open">
                         Open
                       </ListBox.Item>
@@ -347,7 +347,7 @@ function CaptainRegistrationPageContent() {
           </div>
 
           <div className="mt-6 max-w-xl">
-            <Label className="mb-2">Select Game</Label>
+            <Label className="mb-2 text-black">Select Game</Label>
 
             <Select
               aria-label="select game"
@@ -365,7 +365,7 @@ function CaptainRegistrationPageContent() {
               </Select.Trigger>
 
               <Select.Popover>
-                <ListBox>
+                <ListBox className="text-black">
                   {filteredGames.map((game) => (
                     <ListBox.Item
                       key={game._id}
@@ -392,7 +392,7 @@ function CaptainRegistrationPageContent() {
                 {type === "Group" ? (
                   <>
                     <div className="rounded-lg bg-default-100 p-4">
-                      <p className="text-sm text-default-500">
+                      <p className="text-sm text-slate-400">
                         Minimum Participants
                       </p>
 
@@ -402,7 +402,7 @@ function CaptainRegistrationPageContent() {
                     </div>
 
                     <div className="rounded-lg bg-default-100 p-4">
-                      <p className="text-sm text-default-500">
+                      <p className="text-sm text-slate-400">
                         Maximum Participants
                       </p>
 
@@ -412,7 +412,7 @@ function CaptainRegistrationPageContent() {
                     </div>
 
                     <div className="rounded-lg bg-default-100 p-4">
-                      <p className="text-sm text-default-500">Maximum Groups</p>
+                      <p className="text-sm text-slate-400">Maximum Groups</p>
 
                       <p className="text-xl font-bold">
                         {selectedGame.maxTeamsPerCompetitionTeam}
@@ -422,7 +422,7 @@ function CaptainRegistrationPageContent() {
                 ) : (
                   <>
                     <div className="rounded-lg bg-default-100 p-4">
-                      <p className="text-sm text-default-500">
+                      <p className="text-sm text-slate-400">
                         Maximum Participants
                       </p>
 
@@ -432,9 +432,7 @@ function CaptainRegistrationPageContent() {
                     </div>
 
                     <div className="rounded-lg bg-default-100 p-4">
-                      <p className="text-sm text-default-500">
-                        Maximum Per Team
-                      </p>
+                      <p className="text-sm text-slate-400">Maximum Per Team</p>
 
                       <p className="text-xl font-bold">
                         {selectedGame.maxParticipantsPerTeam}
@@ -464,7 +462,7 @@ function CaptainRegistrationPageContent() {
               ) : type === "Group" ? (
                 <div className="space-y-4 mt-4">
                   {groupRegistrations.length === 0 ? (
-                    <div className="rounded-lg border border-dashed py-12 text-center text-default-500">
+                    <div className="rounded-lg border border-dashed py-12 text-center text-slate-300">
                       No groups created yet.
                     </div>
                   ) : (
@@ -481,7 +479,7 @@ function CaptainRegistrationPageContent() {
                                 </span>
                               </div>
 
-                              <p className="text-sm text-default-500">
+                              <p className="text-sm text-slate-300">
                                 {group.participants.length} /{" "}
                                 {selectedGame.maxParticipants} participants
                               </p>
@@ -518,7 +516,7 @@ function CaptainRegistrationPageContent() {
                                   {emp.employeeName}
                                 </div>
 
-                                <div className="text-xs text-default-500">
+                                <div className="text-xs text-slate-300">
                                   {emp.employeeCode}
                                 </div>
                               </div>
@@ -532,7 +530,7 @@ function CaptainRegistrationPageContent() {
               ) : (
                 <div className="space-y-4 mt-4">
                   {individualRegistrations.length === 0 ? (
-                    <div className="rounded-lg border border-dashed py-12 text-center text-default-500">
+                    <div className="rounded-lg border border-dashed py-12 text-center text-slate-300">
                       No individual registrations yet.
                     </div>
                   ) : (
@@ -552,7 +550,7 @@ function CaptainRegistrationPageContent() {
                                     {registration?.employee?.employeeName}
                                   </span>
                                 </div>
-                                <p className="text-sm text-default-500">
+                                <p className="text-sm text-slate-300">
                                   {registration?.employee?.employeeCode}
                                 </p>
                               </div>

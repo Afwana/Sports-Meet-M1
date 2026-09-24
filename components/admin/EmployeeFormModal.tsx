@@ -229,7 +229,7 @@ export default function EmployeeFormModal({
                 {/* Employee Code */}
 
                 <div className="flex flex-col gap-1">
-                  <Label>Employee Code</Label>
+                  <Label className="text-black">Employee Code</Label>
 
                   <Input
                     placeholder="Enter employee code"
@@ -253,7 +253,7 @@ export default function EmployeeFormModal({
                 {/* Employee Name */}
 
                 <div className="flex flex-col gap-1">
-                  <Label>Employee Name</Label>
+                  <Label className="text-black">Employee Name</Label>
 
                   <Input
                     placeholder="Enter employee name"
@@ -275,7 +275,7 @@ export default function EmployeeFormModal({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Date of Birth</Label>
+                  <Label className="text-black">Date of Birth</Label>
 
                   <Input type="date" {...register("dateOfBirth")} />
 
@@ -287,7 +287,7 @@ export default function EmployeeFormModal({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Gender</Label>
+                  <Label className="text-black">Gender</Label>
 
                   <Select
                     aria-label="Employee gender"
@@ -331,7 +331,7 @@ export default function EmployeeFormModal({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Team</Label>
+                  <Label className="text-black">Team</Label>
 
                   <Select
                     aria-label="Team"
@@ -386,7 +386,7 @@ export default function EmployeeFormModal({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Department</Label>
+                  <Label className="text-black">Department</Label>
 
                   <Input
                     placeholder="Enter department"
@@ -401,7 +401,7 @@ export default function EmployeeFormModal({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Phone Number</Label>
+                  <Label className="text-black">Phone Number</Label>
 
                   <Input
                     type="tel"
@@ -419,14 +419,14 @@ export default function EmployeeFormModal({
                 {isEdit && (
                   <div className="rounded-lg border p-3">
                     <Switch isSelected={employee?.isCaptain} isDisabled>
-                      <p className="font-medium">Captain</p>
+                      <p className="font-medium text-black">Captain</p>
 
                       <Switch.Content>
                         <Switch.Control>
                           <Switch.Thumb />
                         </Switch.Control>
 
-                        <p className="text-default-500 text-sm">
+                        <p className="text-slate-300 text-sm">
                           {employee?.isCaptain
                             ? "Assigned as team captain."
                             : "Not a captain."}
@@ -439,14 +439,16 @@ export default function EmployeeFormModal({
                 {isEdit && (
                   <div className="rounded-lg border p-3">
                     <Switch isSelected={isRegistered} isDisabled>
-                      <p className="font-medium">Registration Status</p>
+                      <p className="font-medium text-black">
+                        Registration Status
+                      </p>
 
                       <Switch.Content>
                         <Switch.Control>
                           <Switch.Thumb />
                         </Switch.Control>
 
-                        <p className="text-default-500 text-sm">
+                        <p className="text-slate-300 text-sm">
                           {isRegistered
                             ? "Employee has completed registration."
                             : "Employee has not registered yet."}

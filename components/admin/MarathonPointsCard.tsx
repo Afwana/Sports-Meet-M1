@@ -125,15 +125,17 @@ export default function MarathonPointsCard({
   return (
     <Card className="space-y-5 p-5">
       <div>
-        <h3 className="text-lg font-semibold">Marathon Team Participation</h3>
-        <p className="text-sm text-default-500">
+        <h3 className="text-lg font-semibold text-black">
+          Marathon Team Participation
+        </h3>
+        <p className="text-sm text-slate-300">
           Select only the employees who actually participated.
         </p>
       </div>
 
-      <div className="flex items-center justify-between border-b pb-4">
-        <div className="w-1/4 space-y-2">
-          <Label>Select Team</Label>
+      <div className="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 gap-3">
+        <div className="w-full md:w-1/4 space-y-2">
+          <Label className="text-black">Select Team</Label>
 
           <Select
             value={selectedTeamId}
@@ -147,7 +149,7 @@ export default function MarathonPointsCard({
             </Select.Trigger>
 
             <Select.Popover>
-              <ListBox>
+              <ListBox className="text-black">
                 {teams.map((team) => (
                   <ListBox.Item
                     key={team.teamId}
@@ -183,14 +185,14 @@ export default function MarathonPointsCard({
                   : "border-default-200 hover:border-primary/50 hover:bg-default-50"
               }`}
             >
-              <div className="font-semibold">{team.teamName}</div>
+              <div className="font-semibold text-black">{team.teamName}</div>
 
-              <div className="mt-1 text-xs text-default-500">
+              <div className="mt-1 text-xs text-slate-300">
                 Selected {team.selectedEmployees.length} /{" "}
                 {team.employees.length}
               </div>
 
-              <div className="mt-2 text-sm font-semibold text-primary">
+              <div className="mt-2 text-sm font-semibold text-primary text-slate-600">
                 {team.selectedEmployees.length} pts
               </div>
             </button>
@@ -202,20 +204,22 @@ export default function MarathonPointsCard({
         <Card className="border border-default-200 p-5">
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h4 className="text-xl font-semibold">{selectedTeam.teamName}</h4>
-              <p className="text-sm text-default-500">
+              <h4 className="text-xl font-semibold text-black">
+                {selectedTeam.teamName}
+              </h4>
+              <p className="text-sm text-slate-300">
                 Registered: {selectedTeam.employees.length} • Selected:{" "}
                 {selectedTeam.selectedEmployees.length}
               </p>
             </div>
 
-            <div className="rounded-full bg-primary/10 px-4 py-2 text-lg font-semibold text-primary">
+            <div className="rounded-full bg-primary/10 px-4 py-2 text-lg font-semibold text-slate-600">
               {selectedTeam.selectedEmployees.length} pts
             </div>
           </div>
 
           {selectedTeam.employees.length === 0 ? (
-            <p className="text-sm text-default-500">
+            <p className="text-sm text-slate-300">
               No registered participants.
             </p>
           ) : (
@@ -236,10 +240,10 @@ export default function MarathonPointsCard({
                         <Checkbox.Indicator />
                       </Checkbox.Control>
                       <div className="flex flex-col">
-                        <span className="font-medium">
+                        <span className="font-medium text-black">
                           {employee.employeeName}
                         </span>
-                        <span className="text-xs text-default-500">
+                        <span className="text-xs text-slate-300">
                           {employee.employeeCode}
                         </span>
                       </div>

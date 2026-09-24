@@ -66,7 +66,7 @@ export default function DeleteEmployeeModal({
               <div className="space-y-3">
                 <p className="text-lg font-semibold">{employee.employeeName}</p>
 
-                <p className="text-default-500">
+                <p className="text-slate-300">
                   Are you sure you want to delete this employee?
                 </p>
 

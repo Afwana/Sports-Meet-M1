@@ -250,7 +250,7 @@ export default function PointConfigurationFormModal({
               <div className="space-y-5 px-3">
                 {/* Configuration Name */}
                 <div className="space-y-2 flex flex-col">
-                  <Label>Configuration Name</Label>
+                  <Label className="text-black">Configuration Name</Label>
 
                   <Input
                     value={name}
@@ -261,7 +261,7 @@ export default function PointConfigurationFormModal({
 
                 {/* Configuration Type */}
                 <div className="space-y-2">
-                  <Label>Configuration Type</Label>
+                  <Label className="text-black">Configuration Type</Label>
 
                   <Select
                     value={type}
@@ -277,7 +277,7 @@ export default function PointConfigurationFormModal({
                     </Select.Trigger>
 
                     <Select.Popover>
-                      <ListBox>
+                      <ListBox className="text-black">
                         <ListBox.Item id="Individual" textValue="Individual">
                           Individual
                           <ListBox.ItemIndicator />
@@ -295,7 +295,7 @@ export default function PointConfigurationFormModal({
                 {/* Positions */}
                 <div className="space-y-3 px-4 ">
                   <div className="flex items-center justify-between">
-                    <Label>Positions & Points</Label>
+                    <Label className="text-black">Positions & Points</Label>
 
                     <Button size="sm" variant="ghost" onPress={addPosition}>
                       + Add Position
@@ -309,7 +309,7 @@ export default function PointConfigurationFormModal({
                         className="grid grid-cols-[1fr_1fr_auto] items-end gap-3"
                       >
                         <div className="flex flex-col gap-1 w-32">
-                          <Label>Position</Label>
+                          <Label className="text-black">Position</Label>
                           <Input
                             type="number"
                             min={1}
@@ -325,7 +325,7 @@ export default function PointConfigurationFormModal({
                         </div>
 
                         <div className="flex flex-col gap-1 w-32">
-                          <Label>Points</Label>
+                          <Label className="text-black">Points</Label>
                           <Input
                             type="number"
                             min={0}

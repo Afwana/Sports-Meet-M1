@@ -245,7 +245,7 @@ export function RegisterCard() {
   return (
     <Card className="w-full md:w-2/5 p-5 h-auto shadow-md" variant="default">
       <CardHeader className="flex flex-col gap-1.5 items-center justify-center p-3 border-b border-solid">
-        <CardTitle className="text-xl md:text-3xl font-bold">
+        <CardTitle className="text-xl md:text-3xl font-bold text-black">
           {settings.programName}
         </CardTitle>
         <CardDescription className="text-sm md:text-base">
@@ -258,7 +258,9 @@ export function RegisterCard() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col gap-1">
-            <Label htmlFor="employee-code">Employee Code</Label>
+            <Label htmlFor="employee-code" className="text-black">
+              Employee Code
+            </Label>
             <InputGroup className="h-10 w-full flex justify-between gap-2 bg-transparent shadow-none focus:border-none">
               <Input
                 id="employee-code"
@@ -291,7 +293,9 @@ export function RegisterCard() {
           {employee && (
             <>
               <div className="flex flex-col gap-1">
-                <Label htmlFor="employee-name">Employee Name</Label>
+                <Label htmlFor="employee-name" className="text-black">
+                  Employee Name
+                </Label>
                 <Input
                   id="employee-name"
                   placeholder="Enter your name..."
@@ -303,7 +307,9 @@ export function RegisterCard() {
               </div>
               {canLogin ? (
                 <div className="flex flex-col gap-1">
-                  <Label htmlFor="employee-team">Team</Label>
+                  <Label htmlFor="employee-team" className="text-black">
+                    Team
+                  </Label>
                   <Input
                     id="employee-team"
                     className="h-10"
@@ -370,7 +376,7 @@ export function RegisterCard() {
                 isSelected={employee.isCaptain}
                 isReadOnly
               >
-                <Checkbox.Content>
+                <Checkbox.Content className="text-black">
                   <Checkbox.Control>
                     <Checkbox.Indicator />
                   </Checkbox.Control>

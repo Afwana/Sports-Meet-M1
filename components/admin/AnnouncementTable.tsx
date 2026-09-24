@@ -126,9 +126,9 @@ export default function AnnouncementTable({
       <Card aria-label="card" className="w-full p-5 min-h-[calc(100vh-115px)]">
         <Card.Header>
           <div className="mb-6">
-            <h1 className="text-2xl font-bold">Announcements</h1>
+            <h1 className="text-2xl font-bold text-black">Announcements</h1>
 
-            <p className="text-default-500 text-sm">
+            <p className="text-slate-500 text-sm">
               Create and manage announcements for employees and captains.
             </p>
           </div>
@@ -160,7 +160,7 @@ export default function AnnouncementTable({
 
         <Card.Content>
           {filteredAnnouncements.length === 0 ? (
-            <div className="py-10 text-center text-default-500">
+            <div className="py-10 text-center text-slate-300">
               No announcements found.
             </div>
           ) : (
@@ -187,7 +187,7 @@ export default function AnnouncementTable({
                               {announcement.title}
                             </p>
 
-                            <p className="mt-1 text-sm text-default-500">
+                            <p className="mt-1 text-sm text-slate-300">
                               {announcement.message}
                             </p>
                           </div>
@@ -221,7 +221,7 @@ export default function AnnouncementTable({
                         </Table.Cell>
 
                         <Table.Cell>
-                          <span className="text-sm text-default-500">
+                          <span className="text-sm text-slate-300">
                             {formatDate(
                               String(
                                 (

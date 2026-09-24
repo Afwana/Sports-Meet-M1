@@ -158,7 +158,7 @@ export default function AdminAuthCard() {
           <ShieldCheck size={28} />
         </div>
 
-        <CardTitle className="text-2xl font-bold">
+        <CardTitle className="text-2xl font-bold text-black">
           {settings.programName}
         </CardTitle>
 
@@ -186,7 +186,7 @@ export default function AdminAuthCard() {
                 className="space-y-4"
               >
                 <div className="flex flex-col gap-1">
-                  <Label>Username</Label>
+                  <Label className="text-black">Username</Label>
 
                   <Input
                     placeholder="Enter your username"
@@ -201,7 +201,7 @@ export default function AdminAuthCard() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Password</Label>
+                  <Label className="text-black">Password</Label>
 
                   <Input
                     type="password"
@@ -248,7 +248,7 @@ export default function AdminAuthCard() {
                 className="space-y-4"
               >
                 <div className="flex flex-col gap-1">
-                  <Label>Name</Label>
+                  <Label className="text-black">Name</Label>
 
                   <Input
                     placeholder="Enter your name"
@@ -263,7 +263,7 @@ export default function AdminAuthCard() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Email</Label>
+                  <Label className="text-black">Email</Label>
 
                   <Input
                     type="email"
@@ -279,7 +279,7 @@ export default function AdminAuthCard() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Username</Label>
+                  <Label className="text-black">Username</Label>
 
                   <Input
                     placeholder="Choose a username"
@@ -294,7 +294,7 @@ export default function AdminAuthCard() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <Label>Password</Label>
+                  <Label className="text-black">Password</Label>
 
                   <Input
                     type="password"

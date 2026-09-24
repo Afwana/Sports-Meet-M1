@@ -46,11 +46,11 @@ export default function PublicNavbar() {
         <Link href="/" className="flex items-center gap-3">
           {settings.companyLogo && (
             <Image
-              src="/images/mediaone-mark.png"
+              src={settings.companyLogo}
               alt="Media One"
               width={36}
               height={36}
-              className="rounded-md"
+              objectFit="cover"
             />
           )}
 

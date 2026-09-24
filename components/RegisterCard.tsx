@@ -245,10 +245,10 @@ export function RegisterCard() {
   return (
     <Card className="w-full md:w-2/5 p-5 h-auto shadow-md" variant="default">
       <CardHeader className="flex flex-col gap-1.5 items-center justify-center p-3 border-b border-solid">
-        <CardTitle className="text-3xl font-bold">
+        <CardTitle className="text-xl md:text-3xl font-bold">
           {settings.programName}
         </CardTitle>
-        <CardDescription className="text-base">
+        <CardDescription className="text-sm md:text-base">
           Employee Registration
         </CardDescription>
       </CardHeader>

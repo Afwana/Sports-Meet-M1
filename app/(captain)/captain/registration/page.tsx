@@ -123,7 +123,6 @@ function CaptainRegistrationPageContent() {
     gamesList: Game[] = games,
     typeOverride: string = type,
   ) => {
-    // const game = games.find((g) => g._id === gameId) || null;
     const game = gamesList.find((g) => g._id === gameId) || null;
 
     setSelectedGame(game);

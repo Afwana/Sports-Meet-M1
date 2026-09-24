@@ -1,5 +1,4 @@
 // types/registration.ts
-
 export interface RegistrationParticipant {
   _id: string;
   employeeName: string;

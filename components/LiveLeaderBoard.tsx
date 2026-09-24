@@ -14,8 +14,6 @@ interface PointTableRow {
   totalPoints: number;
 }
 
-// Rank badge colors: 1st = red, 2nd/4th+ = slate, 3rd = amber — matches the
-// reference design rather than literal medal colors.
 const RANK_BADGE_CLASS: Record<number, string> = {
   1: "bg-red-500 text-white",
   2: "bg-slate-500 text-white",

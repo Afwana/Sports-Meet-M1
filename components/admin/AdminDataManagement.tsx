@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import SettingsModal from "./SettingsModal";
 import { useRouter } from "next/navigation";
+import { FaPrint } from "react-icons/fa";
 
 export default function AdminDataManagement() {
   const router = useRouter();
@@ -447,22 +448,40 @@ export default function AdminDataManagement() {
                 </Switch.Content>
               </Switch>
             </div>
-            <Button
-              variant="danger"
-              onPress={handleClearIndividuals}
-              isDisabled={clearingIndividuals}
-            >
-              <FaTrash />
-              {clearingIndividuals ? "Clearing..." : "Clear Individuals"}
-            </Button>
-            <Button
-              variant="danger"
-              onPress={handleClearGroups}
-              isDisabled={clearingGroups}
-            >
-              <FaTrash />
-              {clearingGroups ? "Clearing..." : "Clear Groups"}
-            </Button>
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              <Button
+                variant="outline"
+                onPress={() => router.push("/api/admin/registrations/export")}
+              >
+                <FaFileExcel />
+                Export Registrations
+              </Button>
+              <Button
+                variant="primary"
+                onPress={() => {
+                  router.push("/admin/registrations/print");
+                }}
+              >
+                <FaPrint />
+                Print Registrations
+              </Button>
+              <Button
+                variant="danger"
+                onPress={handleClearIndividuals}
+                isDisabled={clearingIndividuals}
+              >
+                <FaTrash />
+                {clearingIndividuals ? "Clearing..." : "Clear Individuals"}
+              </Button>
+              <Button
+                variant="danger"
+                onPress={handleClearGroups}
+                isDisabled={clearingGroups}
+              >
+                <FaTrash />
+                {clearingGroups ? "Clearing..." : "Clear Groups"}
+              </Button>
+            </div>
           </Card.Content>
         </Card>
       </div>

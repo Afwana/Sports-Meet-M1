@@ -54,7 +54,7 @@ export default function AppHeader({ role, user }: Props) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-950/80 backdrop-blur-md">
+      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-950/80 backdrop-blur-md print:hidden">
         <div className="flex h-16 max-w-full items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-3">
             {settings.companyLogo && (

@@ -466,65 +466,67 @@ function CaptainRegistrationPageContent() {
                       No groups created yet.
                     </div>
                   ) : (
-                    groupRegistrations.map((group) => (
-                      <Card key={group._id}>
-                        <Card.Header>
-                          <div className="flex w-full justify-between">
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <FaPeopleGroup />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                      {groupRegistrations.map((group) => (
+                        <Card key={group._id}>
+                          <Card.Header>
+                            <div className="flex w-full justify-between">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <FaPeopleGroup />
 
-                                <span className="font-bold">
-                                  {group.groupName}
-                                </span>
-                              </div>
-
-                              <p className="text-sm text-slate-300">
-                                {group.participants.length} /{" "}
-                                {selectedGame.maxParticipants} participants
-                              </p>
-                            </div>
-
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onPress={() => setEditingGroup(group)}
-                              >
-                                Edit
-                              </Button>
-
-                              <Button
-                                size="sm"
-                                variant="danger"
-                                onPress={() => setDeletingRegistration(group)}
-                              >
-                                <FaTrash />
-                              </Button>
-                            </div>
-                          </div>
-                        </Card.Header>
-
-                        <Card.Content>
-                          <div className="grid md:grid-cols-3 gap-2">
-                            {group.participants.map((emp) => (
-                              <div
-                                key={emp._id}
-                                className="rounded-md bg-default-100 p-3"
-                              >
-                                <div className="font-medium">
-                                  {emp.employeeName}
+                                  <span className="font-bold">
+                                    {group.groupName}
+                                  </span>
                                 </div>
 
-                                <div className="text-xs text-slate-300">
-                                  {emp.employeeCode}
-                                </div>
+                                <p className="text-sm text-slate-300">
+                                  {group.participants.length} /{" "}
+                                  {selectedGame.maxParticipants} participants
+                                </p>
                               </div>
-                            ))}
-                          </div>
-                        </Card.Content>
-                      </Card>
-                    ))
+
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onPress={() => setEditingGroup(group)}
+                                >
+                                  Edit
+                                </Button>
+
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  onPress={() => setDeletingRegistration(group)}
+                                >
+                                  <FaTrash />
+                                </Button>
+                              </div>
+                            </div>
+                          </Card.Header>
+
+                          <Card.Content>
+                            <div className="grid md:grid-cols-3 gap-2">
+                              {group.participants.map((emp) => (
+                                <div
+                                  key={emp._id}
+                                  className="rounded-md bg-default-100 p-3"
+                                >
+                                  <div className="font-medium">
+                                    {emp.employeeName}
+                                  </div>
+
+                                  <div className="text-xs text-slate-300">
+                                    {emp.employeeCode}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </Card.Content>
+                        </Card>
+                      ))}
+                    </div>
                   )}
                 </div>
               ) : (

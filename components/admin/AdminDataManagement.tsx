@@ -448,7 +448,7 @@ export default function AdminDataManagement() {
                 </Switch.Content>
               </Switch>
             </div>
-            <div className="grid grid-cols-2 gap-3 mt-2">
+            <div className="grid grdi-cols-1 md:grid-cols-2 gap-3 mt-2">
               <Button
                 variant="outline"
                 onPress={() => router.push("/api/admin/registrations/export")}

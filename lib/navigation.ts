@@ -11,6 +11,7 @@ export const navigation = {
     { label: "Teams", href: "/admin/teams", icon: BsMicrosoftTeams },
     { label: "Games", href: "/admin/games", icon: IoGameController },
     { label: "Announcements", href: "/admin/announcements", icon: FaBell },
+    { label: "Registrations", href: "/admin/registrations", icon: FaListCheck },
     { label: "Results", href: "/admin/results", icon: FaMedal },
   ],
 

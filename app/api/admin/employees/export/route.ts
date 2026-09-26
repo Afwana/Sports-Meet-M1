@@ -6,10 +6,10 @@ import Employee from "@/models/Employee";
 import { getCurrentAdmin } from "@/lib/getCurrentAdmin";
 
 export async function GET() {
+  await getCurrentAdmin();
+
   try {
     await connectDB();
-
-    await getCurrentAdmin();
 
     const employees = await Employee.find({})
       .select("employeeCode employeeName gender team department phoneNumber")

@@ -12,9 +12,10 @@ const GENDER_ORDER = ["Both", "Male", "Female"];
 const AGE_ORDER = ["Open", "Junior", "Senior"];
 
 export async function GET() {
+  await getCurrentAdmin();
+
   try {
     await connectDB();
-    await getCurrentAdmin();
 
     const [teams, games, individualRegs, groupRegs] = await Promise.all([
       Teams.find({}).select("_id name").sort({ name: 1 }).lean(),

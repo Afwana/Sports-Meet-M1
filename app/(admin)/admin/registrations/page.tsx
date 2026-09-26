@@ -162,7 +162,7 @@ export default function AdminRegistrationsPage() {
   }, [categoryEntry]);
 
   return (
-    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-slate-950/80 via-slate-950/55 to-slate-950/90 p-3 md:p-6">
+    <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-3 md:p-6 dark:bg-black">
       <Card className="w-full min-h-[calc(100vh-115px)] p-5">
         <Card.Header className="flex flex-col gap-3 md:flex-row md:justify-between">
           <div className="mb-6">

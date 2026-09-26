@@ -30,8 +30,8 @@ interface GameEntry {
 function ParticipantChip({ name, code }: { name: string; code: string }) {
   return (
     <div>
-      <p className="font-semibold text-black">{name}</p>
-      <p className="text-xs text-default-400">{code}</p>
+      <p className="font-medium text-black">{name}</p>
+      <p className="text-xs text-slate-400">{code}</p>
     </div>
   );
 }

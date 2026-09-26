@@ -182,7 +182,7 @@ export default function MarathonPointsCard({
               className={`rounded-xl border p-3 text-left transition ${
                 isActive
                   ? "border-primary bg-primary/10"
-                  : "border-default-200 hover:border-primary/50 hover:bg-default-50"
+                  : "border-slate-200 hover:border-primary/50 hover:bg-default-50"
               }`}
             >
               <div className="font-semibold text-black">{team.teamName}</div>
@@ -201,7 +201,7 @@ export default function MarathonPointsCard({
       </div>
 
       {selectedTeam && (
-        <Card className="border border-default-200 p-5">
+        <Card className="border border-slate-200 p-5">
           <div className="mb-5 flex items-center justify-between">
             <div>
               <h4 className="text-xl font-semibold text-black">
@@ -227,7 +227,7 @@ export default function MarathonPointsCard({
               {selectedTeam.employees.map((employee) => (
                 <div
                   key={employee.id}
-                  className="rounded-xl border border-default-200 p-3 transition hover:border-primary hover:bg-default-50"
+                  className="rounded-xl border border-slate-200 p-3 transition hover:border-primary hover:bg-default-50"
                 >
                   <Checkbox
                     isSelected={selectedTeam.selectedEmployees.includes(

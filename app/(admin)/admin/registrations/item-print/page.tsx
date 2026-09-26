@@ -22,7 +22,17 @@ interface GameEntry {
   gameId: string;
   gameName: string;
   type: string;
-  participants: string[];
+
+  teams: Record<
+    string,
+    {
+      individuals: string[];
+      groups: {
+        groupName: string;
+        members: string[];
+      }[];
+    }
+  >;
 }
 
 interface CategoryEntry {
@@ -121,7 +131,7 @@ export default function ItemPrintPage() {
           <Spinner>Loading...</Spinner>
         </div>
       ) : !currentCategory ? (
-        <div className="text-center text-default-500">
+        <div className="text-center text-slate-500">
           No registrations found.
         </div>
       ) : (
@@ -130,7 +140,7 @@ export default function ItemPrintPage() {
             {currentCategory.category} Items
           </h1>
 
-          <p className="mb-6 text-sm text-default-500 print:hidden">
+          <p className="mb-6 text-sm text-slate-500 print:hidden">
             Item-wise registration report
           </p>
 
@@ -162,34 +172,57 @@ export default function ItemPrintPage() {
                         <div className="pt-1">{game.gameName}</div>
                       </TableCell>
 
-                      <TableCell className="participants-cell">
-                        {game.participants.length ? (
-                          game.type === "Individual" ? (
-                            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                              {game.participants.map((participant, index) => (
-                                <div
-                                  key={index}
-                                  className="rounded-md border border-default-200 p-2 text-xs leading-5"
-                                >
-                                  {participant}
+                      <TableCell className="align-top">
+                        <div className="space-y-4">
+                          {Object.entries(game.teams).map(
+                            ([teamName, teamData]) => (
+                              <div
+                                key={teamName}
+                                className="rounded-lg border border-slate-200 p-3"
+                              >
+                                <div className="mb-3 border-b pb-2 text-sm font-semibold text-slate-700">
+                                  {teamName}
                                 </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="space-y-3">
-                              {game.participants.map((participant, index) => (
-                                <div
-                                  key={index}
-                                  className="rounded-md border border-default-200 p-2 text-sm leading-6"
-                                >
-                                  {participant}
-                                </div>
-                              ))}
-                            </div>
-                          )
-                        ) : (
-                          "-"
-                        )}
+
+                                {game.type === "Individual" ? (
+                                  <div className="grid grid-cols-3 gap-2">
+                                    {teamData.individuals.map(
+                                      (member, index) => (
+                                        <div
+                                          key={index}
+                                          className="rounded border border-slate-200 bg-slate-50 p-2 text-xs"
+                                        >
+                                          {member}
+                                        </div>
+                                      ),
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="space-y-4">
+                                    {teamData.groups.map((group, index) => (
+                                      <div key={index}>
+                                        <div className="mb-2 text-sm font-medium">
+                                          {group.groupName}
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-2">
+                                          {group.members.map((member, i) => (
+                                            <div
+                                              key={i}
+                                              className="rounded border border-slate-200 bg-default-50 p-2 text-xs"
+                                            >
+                                              {member}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ),
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

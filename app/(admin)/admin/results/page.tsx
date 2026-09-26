@@ -786,7 +786,7 @@ export default function AdminResultsPage() {
                     </span>
                   </div>
                 ) : filteredGames.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-default-300 p-5 text-sm text-slate-300">
+                  <div className="rounded-lg border border-dashed border-slate-300 p-5 text-sm text-slate-300">
                     No active {selectedType.toLowerCase()} games found.
                   </div>
                 ) : (
@@ -832,7 +832,7 @@ export default function AdminResultsPage() {
                     <Spinner />
                   </div>
                 ) : groupItems.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
+                  <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center text-slate-300">
                     No groups are registered for this game.
                   </div>
                 ) : (
@@ -843,7 +843,7 @@ export default function AdminResultsPage() {
                           <Spinner />
                         </div>
                       ) : positions.length === 0 ? (
-                        <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
+                        <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center text-slate-300">
                           Please add point configuration to game types!.
                         </div>
                       ) : (
@@ -933,7 +933,7 @@ export default function AdminResultsPage() {
                     <Spinner />
                   </div>
                 ) : participants.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
+                  <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center text-slate-300">
                     No employees are registered for this game.
                   </div>
                 ) : (
@@ -944,7 +944,7 @@ export default function AdminResultsPage() {
                           <Spinner />
                         </div>
                       ) : positions.length === 0 ? (
-                        <div className="w-full rounded-lg border border-dashed border-default-300 p-8 text-center text-slate-300">
+                        <div className="w-full rounded-lg border border-dashed border-slate-300 p-8 text-center text-slate-300">
                           Please add point configuration to game types!.
                         </div>
                       ) : (
@@ -1017,7 +1017,7 @@ export default function AdminResultsPage() {
           </div>
 
           {/* ALL RESULTS TABLE */}
-          <div className="border-t border-default-200 pt-6">
+          <div className="border-t border-slate-200 pt-6">
             <div className="mb-4">
               <h2 className="text-lg font-semibold text-black">All Results</h2>
 

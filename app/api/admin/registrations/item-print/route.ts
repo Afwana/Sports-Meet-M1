@@ -6,6 +6,7 @@ import { getCurrentAdmin } from "@/lib/getCurrentAdmin";
 import Games from "@/models/Games";
 import IndividualRegistration from "@/models/IndividualRegistration";
 import GroupRegistration from "@/models/GroupRegistration";
+import Teams from "@/models/Teams";
 
 const CATEGORY_ORDER = ["Sports", "Off Stage", "Stage", "Games"];
 
@@ -15,20 +16,20 @@ export async function GET() {
   try {
     await connectDB();
 
-    const [games, individualRegs, groupRegs] = await Promise.all([
-      //   Teams.find({}).select("_id name").lean(),
+    const [teams, games, individualRegs, groupRegs] = await Promise.all([
+      Teams.find({}).select("_id name").lean(),
       Games.find({}).select("_id name type category").lean(),
       IndividualRegistration.find({})
         .select("employeeCode employeeName teamId games")
         .lean(),
       GroupRegistration.find({})
         .populate("participants", "employeeName employeeCode")
-        .select("game participants")
+        .select("game participants team groupName")
         .lean(),
     ]);
 
     const gameMap = new Map(games.map((g) => [String(g._id), g]));
-    // const teamMap = new Map(teams.map((t) => [String(t._id), t.name]));
+    const teamMap = new Map(teams.map((t) => [String(t._id), t.name]));
 
     const itemMap = new Map<
       string,
@@ -37,7 +38,18 @@ export async function GET() {
         gameName: string;
         category: string;
         type: string;
-        participants: string[];
+
+        teams: Record<
+          string,
+          {
+            individuals: string[];
+
+            groups: {
+              groupName: string;
+              members: string[];
+            }[];
+          }
+        >;
       }
     >();
 
@@ -50,7 +62,7 @@ export async function GET() {
           gameName: game.name,
           category: game.category,
           type: game.type,
-          participants: [],
+          teams: {},
         });
       }
 
@@ -59,12 +71,21 @@ export async function GET() {
 
     // Individual registrations
     for (const reg of individualRegs) {
+      const teamName = teamMap.get(String(reg.teamId)) || "Unknown Team";
+
       for (const g of reg.games || []) {
         const gameId = String(g.gameId);
 
         if (!gameMap.has(gameId)) continue;
 
-        ensureGame(gameId).participants.push(
+        const game = ensureGame(gameId);
+
+        game.teams[teamName] ??= {
+          individuals: [],
+          groups: [],
+        };
+
+        game.teams[teamName].individuals.push(
           `${reg.employeeName} (${reg.employeeCode})`,
         );
       }
@@ -78,13 +99,20 @@ export async function GET() {
 
       const game = ensureGame(gameId);
 
-      const members = (reg.participants || []).map(
-        (p: any) => `${p.employeeName} (${p.employeeCode})`,
-      );
+      const teamName = teamMap.get(String(reg.team)) || "Unknown Team";
 
-      //   const teamName = teamMap.get(String(reg.team)) || "Unknown Team";
+      game.teams[teamName] ??= {
+        individuals: [],
+        groups: [],
+      };
 
-      game.participants.push(`${members.join(", ")}`);
+      game.teams[teamName].groups.push({
+        groupName: reg.groupName || "Group",
+
+        members: (reg.participants || []).map(
+          (p: any) => `${p.employeeName} (${p.employeeCode})`,
+        ),
+      });
     }
 
     const report = CATEGORY_ORDER.map((category) => ({

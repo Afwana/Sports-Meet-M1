@@ -36,13 +36,13 @@ function GameItem({ game, isRegistered }: GameItemProps) {
   const Icon = iconMap[game.icon as keyof typeof iconMap];
 
   return (
-    <div className="flex w-full flex-col gap-1 rounded-lg border border-default-200 bg-default-50 p-2 md:p-4">
+    <div className="flex w-full flex-col gap-1 rounded-lg border border-slate-200 bg-default-50 p-2 md:p-4">
       <div className="flex w-full gap-1 justify-between items-start">
         <div className="flex min-w-0 items-center gap-3">
           {Icon ? (
             <Icon className="shrink-0 text-2xl text-blue-600" />
           ) : (
-            <FaCircle className="shrink-0 text-default-400" />
+            <FaCircle className="shrink-0 text-slate-400" />
           )}
 
           <p className="truncate font-medium">{game.name}</p>
@@ -171,7 +171,7 @@ export default function IndividualGames({
 
               {showType &&
                 (game.type === "Group" ? (
-                  <p className="mt-1 px-1 text-xs text-default-400 flex items-center justify-between gap-5">
+                  <p className="mt-1 px-1 text-xs text-slate-400 flex items-center justify-between gap-5">
                     <span>
                       Players per Group : {game.minParticipants} -{" "}
                       {game.maxParticipants}
@@ -181,7 +181,7 @@ export default function IndividualGames({
                     </span>
                   </p>
                 ) : (
-                  <p className="mt-1 px-1 text-xs text-default-400 flex items-center justify-end gap-5">
+                  <p className="mt-1 px-1 text-xs text-slate-400 flex items-center justify-end gap-5">
                     <span>
                       Max Participants per Team :{" "}
                       {game.maxParticipantsPerTeam ?? "-"}
@@ -215,7 +215,7 @@ export default function IndividualGames({
           </div>
 
           {eligibleGames.length === 0 ? (
-            <div className="rounded-lg border border-default-200 bg-default-50 p-6 text-center">
+            <div className="rounded-lg border border-slate-200 bg-default-50 p-6 text-center">
               <p className="font-medium">No games available.</p>
 
               <p className="mt-1 text-sm text-slate-300">

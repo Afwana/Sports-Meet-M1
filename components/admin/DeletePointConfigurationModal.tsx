@@ -82,7 +82,7 @@ export default function DeletePointConfigurationModal({
 
             <Modal.Body className="p-4">
               <div className="space-y-3">
-                <p className="text-sm text-default-600">
+                <p className="text-sm text-slate-600">
                   Are you sure you want to delete{" "}
                   <span className="font-semibold text-foreground">
                     {configuration?.name}

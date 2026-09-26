@@ -99,7 +99,7 @@ export default function RegistrationsPrintPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold">Registrations Report</h1>
-            <p className="text-sm text-default-500">
+            <p className="text-sm text-slate-500">
               Team-wise registrations, grouped by category, gender and age
               category.
             </p>
@@ -117,7 +117,7 @@ export default function RegistrationsPrintPage() {
           <Spinner size="md">Loading report...</Spinner>
         </div>
       ) : report.length === 0 ? (
-        <div className="rounded-lg border border-dashed py-16 text-center text-default-500 print:hidden">
+        <div className="rounded-lg border border-dashed py-16 text-center text-slate-500 print:hidden">
           No registrations to show.
         </div>
       ) : (
@@ -164,7 +164,7 @@ export default function RegistrationsPrintPage() {
                               each row instead), rather than forcing this
                               whole, often multi-page-tall block onto a
                               single page. */}
-                          <h4 className="break-after-avoid text-sm text-default-600">
+                          <h4 className="break-after-avoid text-sm text-slate-600">
                             {ageEntry.ageCategory}
                           </h4>
 

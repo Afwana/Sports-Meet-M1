@@ -204,7 +204,7 @@ export default function AnnouncementTable({
                               {announcement.link}
                             </Link>
                           ) : (
-                            <span className="text-default-400">—</span>
+                            <span className="text-slate-400">—</span>
                           )}
                         </Table.Cell>
 
@@ -289,7 +289,7 @@ export default function AnnouncementTable({
                         </Pagination.Item>
                       ) : (
                         <Pagination.Item key={`${p}-${idx}`}>
-                          <span className="px-2 text-default-400 select-none">
+                          <span className="px-2 text-slate-400 select-none">
                             …
                           </span>
                         </Pagination.Item>

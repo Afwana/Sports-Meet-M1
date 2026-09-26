@@ -98,7 +98,7 @@ function PositionCell({
   type: "Individual" | "Group";
 }) {
   if (!result) {
-    return <span className="text-default-400">—</span>;
+    return <span className="text-slate-400">—</span>;
   }
 
   /* INDIVIDUAL RESULT */
@@ -313,7 +313,7 @@ export default function ResultsTable({
                 </Pagination.Item>
               ) : (
                 <Pagination.Item key={`${p}-${idx}`}>
-                  <span className="px-2 text-default-400 select-none">…</span>
+                  <span className="px-2 text-slate-400 select-none">…</span>
                 </Pagination.Item>
               ),
             )}

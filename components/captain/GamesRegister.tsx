@@ -21,14 +21,14 @@ function GameItem({ game, onSelect }: GameItemProps) {
       type="button"
       onClick={() => onSelect(game)}
       aria-label={`Select ${game.name} for registration`}
-      className="flex w-full flex-col gap-1 rounded-lg border border-default-200 bg-default-50 p-2 text-left transition-colors hover:border-blue-300 hover:bg-blue-50 md:p-4"
+      className="flex w-full flex-col gap-1 rounded-lg border border-slate-200 bg-default-50 p-2 text-left transition-colors hover:border-blue-300 hover:bg-blue-50 md:p-4"
     >
       <div className="flex w-full gap-1 justify-between items-start">
         <div className="flex min-w-0 items-center gap-3">
           {Icon ? (
             <Icon className="shrink-0 text-2xl text-blue-600" />
           ) : (
-            <FaCircle className="shrink-0 text-default-400" />
+            <FaCircle className="shrink-0 text-slate-400" />
           )}
 
           <p className="truncate font-medium">{game.name}</p>
@@ -38,14 +38,14 @@ function GameItem({ game, onSelect }: GameItemProps) {
         {game.type} | {game.gender} | {game.ageCategory}
       </div>
       {game.type === "Group" ? (
-        <p className="mt-1 flex flex-col gap-1 text-xs text-default-400">
+        <p className="mt-1 flex flex-col gap-1 text-xs text-slate-400">
           <span>
             Players per Group : {game.minParticipants} - {game.maxParticipants}
           </span>
           <span>Groups per Team : {game.maxTeamsPerCompetitionTeam}</span>
         </p>
       ) : (
-        <p className="mt-1 flex flex-col text-xs text-default-400">
+        <p className="mt-1 flex flex-col text-xs text-slate-400">
           <span>
             Maximum Participants per Team : {game.maxParticipantsPerTeam ?? "-"}
           </span>
@@ -136,7 +136,7 @@ export default function GamesRegister() {
             return (
               <div key={group.gender} className="flex flex-col gap-4">
                 {groupIndex > 0 && (
-                  <div className="border-t border-default-200" />
+                  <div className="border-t border-slate-200" />
                 )}
                 <Label className="text-sm font-semibold uppercase text-blue-500">
                   {group.gender}
@@ -185,7 +185,7 @@ export default function GamesRegister() {
           </div>
 
           {games.length === 0 ? (
-            <div className="rounded-lg border border-default-200 bg-default-50 p-6 text-center">
+            <div className="rounded-lg border border-slate-200 bg-default-50 p-6 text-center">
               <p className="font-medium">No games available.</p>
 
               <p className="mt-1 text-sm text-slate-300">

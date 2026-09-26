@@ -168,7 +168,7 @@ export default function AdminRegistrationsPage() {
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Registrations</h1>
 
-            <p className="text-default-500 text-sm">
+            <p className="text-slate-500 text-sm">
               Choose a team and category to see who&apos;s registered.
             </p>
           </div>
@@ -259,11 +259,11 @@ export default function AdminRegistrationsPage() {
               {/* Results */}
               <div className="mt-8">
                 {!selectedTeamId || !selectedCategory ? (
-                  <div className="rounded-lg border border-dashed py-16 text-center text-default-500">
+                  <div className="rounded-lg border border-dashed py-16 text-center text-slate-500">
                     Select a team and category to view registrations.
                   </div>
                 ) : genderSections.length === 0 ? (
-                  <div className="rounded-lg border border-dashed py-16 text-center text-default-500">
+                  <div className="rounded-lg border border-dashed py-16 text-center text-slate-500">
                     No registrations for {selectedTeamName} under{" "}
                     {selectedCategory}.
                   </div>
@@ -282,14 +282,14 @@ export default function AdminRegistrationsPage() {
                               hasGroup,
                             }) => (
                               <div key={ageCategory}>
-                                <h3 className="text-sm font-semibold text-default-600">
+                                <h3 className="text-sm font-semibold text-slate-600">
                                   {ageCategory}
                                 </h3>
 
                                 <div className="mt-2 flex flex-col gap-4">
                                   {hasIndividual && (
                                     <div>
-                                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-default-400">
+                                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-400">
                                         Individual
                                       </p>
                                       <IndividualGamesTable games={games} />
@@ -298,7 +298,7 @@ export default function AdminRegistrationsPage() {
 
                                   {hasGroup && (
                                     <div>
-                                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-default-400">
+                                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-400">
                                         Group
                                       </p>
                                       <GroupGamesTable games={games} />

@@ -54,7 +54,7 @@ const columns = [
 
 function PositionCell({ result }: { result: PositionResult }) {
   if (!result) {
-    return <span className="text-default-400">—</span>;
+    return <span className="text-slate-400">—</span>;
   }
 
   return (
@@ -63,9 +63,7 @@ function PositionCell({ result }: { result: PositionResult }) {
 
       <span className="text-xs text-slate-300">{result.teamName}</span>
 
-      <span className="text-[11px] text-default-400">
-        {result.employeeCode}
-      </span>
+      <span className="text-[11px] text-slate-400">{result.employeeCode}</span>
     </div>
   );
 }
@@ -184,7 +182,7 @@ export default function IndividualResults() {
                           {row.hasResult ? (
                             <PositionCell result={row.positions.first} />
                           ) : (
-                            <span className="text-sm text-default-400">
+                            <span className="text-sm text-slate-400">
                               Result not published
                             </span>
                           )}
@@ -194,7 +192,7 @@ export default function IndividualResults() {
                           {row.hasResult ? (
                             <PositionCell result={row.positions.second} />
                           ) : (
-                            <span className="text-default-400">—</span>
+                            <span className="text-slate-400">—</span>
                           )}
                         </Table.Cell>
 
@@ -202,7 +200,7 @@ export default function IndividualResults() {
                           {row.hasResult ? (
                             <PositionCell result={row.positions.third} />
                           ) : (
-                            <span className="text-default-400">—</span>
+                            <span className="text-slate-400">—</span>
                           )}
                         </Table.Cell>
                       </Table.Row>
@@ -237,7 +235,7 @@ export default function IndividualResults() {
                       </Pagination.Item>
                     ) : (
                       <Pagination.Item key={`${p}-${idx}`}>
-                        <span className="px-2 text-default-400 select-none">
+                        <span className="px-2 text-slate-400 select-none">
                           …
                         </span>
                       </Pagination.Item>

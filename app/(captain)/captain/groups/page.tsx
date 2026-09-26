@@ -231,7 +231,7 @@ export default function CaptainGroupsPage() {
                           </Pagination.Item>
                         ) : (
                           <Pagination.Item key={`${p}-${idx}`}>
-                            <span className="px-2 text-default-400 select-none">
+                            <span className="px-2 text-slate-400 select-none">
                               …
                             </span>
                           </Pagination.Item>

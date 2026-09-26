@@ -459,7 +459,7 @@ export default function AdminDataManagement() {
               <Button
                 variant="primary"
                 onPress={() => {
-                  router.push("/admin/registrations");
+                  router.push("/admin/registrations/item-print");
                 }}
               >
                 <FaPrint />

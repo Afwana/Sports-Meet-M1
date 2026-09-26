@@ -40,7 +40,9 @@ export default function ItemPrintPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/admin/registrations/item-print");
+        const res = await fetch("/api/admin/registrations/item-print", {
+          cache: "no-store",
+        });
         const data = await res.json();
 
         if (!res.ok) {

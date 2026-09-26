@@ -61,7 +61,9 @@ export default function RegistrationsPrintPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/admin/registrations/print");
+        const res = await fetch("/api/admin/registrations/print", {
+          cache: "no-store",
+        });
         const data = await res.json();
 
         if (!res.ok) {

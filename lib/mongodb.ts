@@ -33,7 +33,11 @@ export async function connectDB() {
     });
   }
 
-  cached.conn = await cached.promise;
-
+  try {
+    cached.conn = await cached.promise;
+  } catch (error) {
+    cached.promise = null;
+    throw error;
+  }
   return cached.conn;
 }

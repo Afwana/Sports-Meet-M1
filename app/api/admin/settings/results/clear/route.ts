@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import IndividualResult from "@/models/IndividualResult";
 import GroupResult from "@/models/GroupResult";
+import MarathonResult from "@/models/MarathonResult";
 import { getCurrentAdmin } from "@/lib/getCurrentAdmin";
 
 export async function DELETE() {
@@ -21,17 +22,21 @@ export async function DELETE() {
 
     await connectDB();
 
-    const [individualResults, groupResults] = await Promise.all([
-      IndividualResult.deleteMany({}),
-      GroupResult.deleteMany({}),
-    ]);
+    const [individualResults, groupResults, marathonResults] =
+      await Promise.all([
+        IndividualResult.deleteMany({}),
+        GroupResult.deleteMany({}),
+        MarathonResult.deleteMany({}),
+      ]);
 
     return NextResponse.json({
       success: true,
-      message: "All individual and group results cleared successfully.",
+      message:
+        "All individual, group and marathon results cleared successfully.",
       deleted: {
         individualResults: individualResults.deletedCount ?? 0,
         groupResults: groupResults.deletedCount ?? 0,
+        marathonResults: marathonResults.deletedCount ?? 0,
       },
     });
   } catch (error) {

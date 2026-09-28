@@ -5,18 +5,39 @@ import PublicPointsTable from "@/components/PublicPointsTable";
 import { connectDB } from "@/lib/mongodb";
 import Employee from "@/models/Employee";
 import Games from "@/models/Games";
+import GroupResult from "@/models/GroupResult";
+import IndividualResult from "@/models/IndividualResult";
+import MarathonResult from "@/models/MarathonResult";
 import Teams from "@/models/Teams";
 
 export default async function AdminDashboard() {
   await connectDB();
 
-  const [totalEmployees, totalTeams, totalGames] = await Promise.all([
+  const [
+    totalEmployees,
+    totalTeams,
+    totalGames,
+    individualGameIds,
+    groupGameIds,
+    marathonGameIds,
+  ] = await Promise.all([
     Employee.countDocuments({}),
     Teams.countDocuments({}),
     Games.countDocuments({}),
+    IndividualResult.distinct("game"),
+    GroupResult.distinct("game"),
+    MarathonResult.distinct("game"),
   ]);
 
-  const resultPositions = 0;
+  const resultGameIds = [
+    ...new Set(
+      [...individualGameIds, ...groupGameIds, ...marathonGameIds].map(String),
+    ),
+  ];
+
+  const completedGames = await Games.countDocuments({
+    _id: { $in: resultGameIds },
+  });
 
   return (
     <div className="min-h-[calc(100vh-66px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-6 dark:bg-black text-black">
@@ -33,7 +54,7 @@ export default async function AdminDashboard() {
           totalEmployees={totalEmployees}
           totalTeams={totalTeams}
           totalGames={totalGames}
-          resultPositions={resultPositions}
+          completedGames={completedGames}
         />
 
         <AdminDataManagement />

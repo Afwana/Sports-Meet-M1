@@ -2,21 +2,21 @@
 
 import { Card } from "@heroui/react";
 import { BsMicrosoftTeams } from "react-icons/bs";
-import { FaMedal, FaUsers } from "react-icons/fa";
+import { FaCheckCircle, FaUsers } from "react-icons/fa";
 import { IoGameController } from "react-icons/io5";
 
 interface AdminKPICardsProps {
   totalEmployees: number;
   totalTeams: number;
   totalGames: number;
-  resultPositions: number;
+  completedGames: number;
 }
 
 export default function AdminKPICards({
   totalEmployees,
   totalTeams,
   totalGames,
-  resultPositions,
+  completedGames,
 }: AdminKPICardsProps) {
   const cards = [
     {
@@ -35,9 +35,9 @@ export default function AdminKPICards({
       icon: <IoGameController size={26} />,
     },
     {
-      label: "Result Positions",
-      value: resultPositions,
-      icon: <FaMedal size={24} />,
+      label: "Completed Games",
+      value: completedGames,
+      icon: <FaCheckCircle size={24} />,
     },
   ];
 

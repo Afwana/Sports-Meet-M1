@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
-  GroupGamesTable,
-  IndividualGamesTable,
-} from "@/components/admin/RegistrationGameTables";
+  CategoryGamesTable,
+  gameLabel,
+  ItemCategoryEntry,
+} from "@/components/admin/ItemRegistrationsList";
 import {
   Button,
   Card,
@@ -13,99 +15,37 @@ import {
   Select,
   Spinner,
 } from "@heroui/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FaPrint } from "react-icons/fa6";
 import { toast } from "sonner";
 
-interface Team {
-  _id: string;
-  name: string;
-}
-
-interface IndividualRow {
-  employeeCode: string;
-  employeeName: string;
-}
-
-interface GroupParticipant {
-  employeeName: string;
-  employeeCode: string;
-}
-
-interface GroupRow {
-  groupName: string;
-  participants: GroupParticipant[];
-}
-
-interface GameEntry {
-  gameId: string;
-  gameName: string;
-  type: "Individual" | "Group";
-  individual: IndividualRow[];
-  group: GroupRow[];
-}
-
-interface AgeCategoryEntry {
-  ageCategory: string;
-  games: GameEntry[];
-}
-
-interface GenderEntry {
-  gender: string;
-  ageCategories: AgeCategoryEntry[];
-}
-
-interface CategoryEntry {
-  category: string;
-  genders: GenderEntry[];
-}
-
-interface TeamEntry {
-  teamId: string;
-  teamName: string;
-  categories: CategoryEntry[];
-}
-
-const CATEGORY_OPTIONS = ["Sports", "Off Stage", "Stage", "Games"];
-const GENDER_ORDER = ["Both", "Male", "Female"];
-const AGE_ORDER = ["Open", "Junior", "Senior"];
+const ALL_GAMES = "all";
 
 export default function AdminRegistrationsPage() {
-  const router = useRouter();
-
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [report, setReport] = useState<TeamEntry[]>([]);
+  const [report, setReport] = useState<ItemCategoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [selectedTeamId, setSelectedTeamId] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedGameId, setSelectedGameId] = useState(ALL_GAMES);
 
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
 
-        const [teamsRes, reportRes] = await Promise.all([
-          fetch("/api/admin/teams"),
-          fetch("/api/admin/registrations/print"),
-        ]);
+        const res = await fetch("/api/admin/registrations/item-print", {
+          cache: "no-store",
+        });
+        const data = await res.json();
 
-        const teamsData = await teamsRes.json();
-        const reportData = await reportRes.json();
-
-        if (!teamsRes.ok) {
-          toast.error(teamsData.message || "Failed to load teams.");
+        if (!res.ok) {
+          toast.error(data.message || "Failed to load registrations.");
           return;
         }
 
-        if (!reportRes.ok) {
-          toast.error(reportData.message || "Failed to load registrations.");
-          return;
-        }
-
-        setTeams(teamsData || []);
-        setReport(reportData.report || []);
+        const rows: ItemCategoryEntry[] = data.report || [];
+        setReport(rows);
+        if (rows.length > 0) setSelectedCategory(rows[0].category);
       } catch (error) {
         console.error(error);
         toast.error("Failed to load registrations.");
@@ -117,69 +57,74 @@ export default function AdminRegistrationsPage() {
     load();
   }, []);
 
-  const selectedTeamName = teams.find((t) => t._id === selectedTeamId)?.name;
+  const currentCategory = useMemo(
+    () => report.find((r) => r.category === selectedCategory) || null,
+    [report, selectedCategory],
+  );
 
-  // The category selected for the currently selected team, if it has any
-  // registrations at all under that category.
-  const categoryEntry: CategoryEntry | null = useMemo(() => {
-    if (!selectedTeamId || !selectedCategory) return null;
-
-    const teamEntry = report.find((t) => t.teamId === selectedTeamId);
-    if (!teamEntry) return null;
-
-    return (
-      teamEntry.categories.find((c) => c.category === selectedCategory) || null
+  const visibleGames = useMemo(() => {
+    if (!currentCategory) return [];
+    if (selectedGameId === ALL_GAMES) return currentCategory.games;
+    return currentCategory.games.filter(
+      (g: any) => g.gameId === selectedGameId,
     );
-  }, [report, selectedTeamId, selectedCategory]);
+  }, [currentCategory, selectedGameId]);
 
-  // Gender -> AgeCategory -> games in that bucket, in the fixed display
-  // order, dropping any bucket that has no individual/group data at all.
-  const genderSections = useMemo(() => {
-    return GENDER_ORDER.map((gender) => {
-      const genderEntry = categoryEntry?.genders.find(
-        (g) => g.gender === gender,
-      );
+  const openPrint = (params: Record<string, string>) => {
+    const query = new URLSearchParams(params).toString();
+    window.open(`/admin/registrations/item-print?${query}`, "_blank");
+  };
 
-      const ageSections = AGE_ORDER.map((ageCategory) => {
-        const ageEntry = genderEntry?.ageCategories.find(
-          (a) => a.ageCategory === ageCategory,
-        );
-
-        const games = ageEntry?.games || [];
-
-        const hasIndividual = games.some(
-          (g) => g.type === "Individual" && g.individual.length > 0,
-        );
-        const hasGroup = games.some(
-          (g) => g.type === "Group" && g.group.length > 0,
-        );
-
-        return { ageCategory, games, hasIndividual, hasGroup };
-      }).filter((a) => a.hasIndividual || a.hasGroup);
-
-      return { gender, ageSections };
-    }).filter((g) => g.ageSections.length > 0);
-  }, [categoryEntry]);
+  const gameSelected = !!currentCategory && selectedGameId !== ALL_GAMES;
 
   return (
     <div className="min-h-[calc(100vh-110px)] bg-linear-to-b from-blue-100/55 via-blue-100/80 to-blue-100/90 p-3 md:p-6 dark:bg-black">
       <Card className="w-full min-h-[calc(100vh-115px)] p-5">
-        <Card.Header className="flex flex-col gap-3 md:flex-row md:justify-between">
-          <div className="mb-6">
+        <Card.Header className="flex flex-col lg:flex-row lg:justify-between gap-3">
+          <div>
             <h1 className="text-2xl font-bold">Registrations</h1>
 
             <p className="text-slate-500 text-sm">
-              Choose a team and category to see who&apos;s registered.
+              All games with their registered participants.
             </p>
           </div>
 
-          <Button
-            variant="primary"
-            onPress={() => router.push("/admin/registrations/print")}
-          >
-            <FaPrint />
-            Print Registrations
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="primary"
+              isDisabled={!currentCategory}
+              onPress={() =>
+                openPrint({ mode: "category", category: selectedCategory })
+              }
+            >
+              <FaPrint />
+              Print {selectedCategory || "Category"} Registrations
+            </Button>
+
+            <Button
+              variant="primary"
+              isDisabled={report.length === 0}
+              onPress={() => openPrint({ mode: "all" })}
+            >
+              <FaPrint />
+              Print All Registrations
+            </Button>
+
+            <Button
+              variant="secondary"
+              isDisabled={!gameSelected}
+              onPress={() =>
+                openPrint({
+                  mode: "game",
+                  category: selectedCategory,
+                  gameId: selectedGameId,
+                })
+              }
+            >
+              <FaPrint />
+              Print Selected Game
+            </Button>
+          </div>
         </Card.Header>
 
         <Card.Content>
@@ -187,42 +132,14 @@ export default function AdminRegistrationsPage() {
             <div className="flex justify-center py-16">
               <Spinner size="md">Loading registrations...</Spinner>
             </div>
+          ) : report.length === 0 ? (
+            <div className="rounded-lg border border-dashed py-16 text-center text-slate-500">
+              No registrations yet.
+            </div>
           ) : (
             <>
               {/* Filters */}
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:max-w-xl">
-                <div>
-                  <Label className="mb-2">Team</Label>
-
-                  <Select
-                    aria-label="select team"
-                    value={selectedTeamId}
-                    onChange={(value: Key | null) => {
-                      if (!value) return;
-                      setSelectedTeamId(String(value));
-                    }}
-                  >
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-
-                    <Select.Popover>
-                      <ListBox>
-                        {teams.map((team) => (
-                          <ListBox.Item
-                            key={team._id}
-                            id={team._id}
-                            textValue={team.name}
-                          >
-                            {team.name}
-                          </ListBox.Item>
-                        ))}
-                      </ListBox>
-                    </Select.Popover>
-                  </Select>
-                </div>
-
                 <div>
                   <Label className="mb-2">Category</Label>
 
@@ -232,6 +149,7 @@ export default function AdminRegistrationsPage() {
                     onChange={(value: Key | null) => {
                       if (!value) return;
                       setSelectedCategory(String(value));
+                      setSelectedGameId(ALL_GAMES);
                     }}
                   >
                     <Select.Trigger>
@@ -241,13 +159,53 @@ export default function AdminRegistrationsPage() {
 
                     <Select.Popover>
                       <ListBox>
-                        {CATEGORY_OPTIONS.map((category) => (
+                        {report.map((c) => (
                           <ListBox.Item
-                            key={category}
-                            id={category}
-                            textValue={category}
+                            key={c.category}
+                            id={c.category}
+                            textValue={c.category}
                           >
-                            {category}
+                            {c.category}
+                          </ListBox.Item>
+                        ))}
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label className="mb-2">Game</Label>
+
+                  <Select
+                    aria-label="select game"
+                    value={selectedGameId}
+                    onChange={(value: Key | null) => {
+                      if (!value) return;
+                      setSelectedGameId(String(value));
+                    }}
+                  >
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+
+                    <Select.Popover>
+                      <ListBox>
+                        <ListBox.Item
+                          key={ALL_GAMES}
+                          id={ALL_GAMES}
+                          textValue="All games"
+                        >
+                          All games
+                        </ListBox.Item>
+
+                        {(currentCategory?.games || []).map((game: any) => (
+                          <ListBox.Item
+                            key={game.gameId}
+                            id={game.gameId}
+                            textValue={gameLabel(game)}
+                          >
+                            {gameLabel(game)}
                           </ListBox.Item>
                         ))}
                       </ListBox>
@@ -257,61 +215,13 @@ export default function AdminRegistrationsPage() {
               </div>
 
               {/* Results */}
-              <div className="mt-8">
-                {!selectedTeamId || !selectedCategory ? (
+              <div className="mt-8 overflow-x-auto">
+                {visibleGames.length === 0 ? (
                   <div className="rounded-lg border border-dashed py-16 text-center text-slate-500">
-                    Select a team and category to view registrations.
-                  </div>
-                ) : genderSections.length === 0 ? (
-                  <div className="rounded-lg border border-dashed py-16 text-center text-slate-500">
-                    No registrations for {selectedTeamName} under{" "}
-                    {selectedCategory}.
+                    No registrations under {selectedCategory}.
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-8">
-                    {genderSections.map(({ gender, ageSections }) => (
-                      <div key={gender}>
-                        <h2 className="text-lg font-bold">{gender}</h2>
-
-                        <div className="mt-3 flex flex-col gap-5 pl-2">
-                          {ageSections.map(
-                            ({
-                              ageCategory,
-                              games,
-                              hasIndividual,
-                              hasGroup,
-                            }) => (
-                              <div key={ageCategory}>
-                                <h3 className="text-sm font-semibold text-slate-600">
-                                  {ageCategory}
-                                </h3>
-
-                                <div className="mt-2 flex flex-col gap-4">
-                                  {hasIndividual && (
-                                    <div>
-                                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-400">
-                                        Individual
-                                      </p>
-                                      <IndividualGamesTable games={games} />
-                                    </div>
-                                  )}
-
-                                  {hasGroup && (
-                                    <div>
-                                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-400">
-                                        Group
-                                      </p>
-                                      <GroupGamesTable games={games} />
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <CategoryGamesTable games={visibleGames} />
                 )}
               </div>
             </>

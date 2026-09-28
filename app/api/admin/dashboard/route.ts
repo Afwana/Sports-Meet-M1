@@ -5,6 +5,9 @@ import Employee from "@/models/Employee";
 import Teams from "@/models/Teams";
 import { getCurrentAdmin } from "@/lib/getCurrentAdmin";
 import Games from "@/models/Games";
+import IndividualResult from "@/models/IndividualResult";
+import GroupResult from "@/models/GroupResult";
+import MarathonResult from "@/models/MarathonResult";
 
 export async function GET() {
   try {
@@ -12,20 +15,39 @@ export async function GET() {
 
     await getCurrentAdmin();
 
-    const [totalEmployees, totalTeams, totalGames] = await Promise.all([
+    const [
+      totalEmployees,
+      totalTeams,
+      totalGames,
+      individualGameIds,
+      groupGameIds,
+      marathonGameIds,
+    ] = await Promise.all([
       Employee.countDocuments({}),
       Teams.countDocuments({}),
       Games.countDocuments({}),
+      IndividualResult.distinct("game"),
+      GroupResult.distinct("game"),
+      MarathonResult.distinct("game"),
     ]);
 
-    const resultPositions = 0;
+    // A game is "completed" once a result has been added for it.
+    const resultGameIds = [
+      ...new Set(
+        [...individualGameIds, ...groupGameIds, ...marathonGameIds].map(String),
+      ),
+    ];
+
+    const completedGames = await Games.countDocuments({
+      _id: { $in: resultGameIds },
+    });
 
     return NextResponse.json({
       success: true,
       totalEmployees,
       totalTeams,
       totalGames,
-      resultPositions,
+      completedGames,
     });
   } catch (error) {
     console.error("Admin dashboard error:", error);

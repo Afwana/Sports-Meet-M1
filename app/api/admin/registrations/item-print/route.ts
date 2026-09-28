@@ -18,7 +18,7 @@ export async function GET() {
 
     const [teams, games, individualRegs, groupRegs] = await Promise.all([
       Teams.find({}).select("_id name").lean(),
-      Games.find({}).select("_id name type category").lean(),
+      Games.find({}).select("_id name type category gender ageCategory").lean(),
       IndividualRegistration.find({})
         .select("employeeCode employeeName teamId games")
         .lean(),
@@ -38,6 +38,8 @@ export async function GET() {
         gameName: string;
         category: string;
         type: string;
+        gender: string;
+        ageCategory: string;
 
         teams: Record<
           string,
@@ -62,6 +64,8 @@ export async function GET() {
           gameName: game.name,
           category: game.category,
           type: game.type,
+          gender: game.gender,
+          ageCategory: game.ageCategory || "Open",
           teams: {},
         });
       }
@@ -119,7 +123,12 @@ export async function GET() {
       category,
       games: [...itemMap.values()]
         .filter((g) => g.category === category)
-        .sort((a, b) => a.gameName.localeCompare(b.gameName)),
+        .sort(
+          (a, b) =>
+            a.gameName.localeCompare(b.gameName) ||
+            a.gender.localeCompare(b.gender) ||
+            a.ageCategory.localeCompare(b.ageCategory),
+        ),
     })).filter((c) => c.games.length);
 
     return NextResponse.json({

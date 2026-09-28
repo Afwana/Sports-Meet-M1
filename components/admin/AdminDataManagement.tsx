@@ -2,26 +2,36 @@
 
 import { Button, Card, Switch } from "@heroui/react";
 import { useEffect, useRef, useState } from "react";
-import { FaFileExcel, FaGear, FaTrash } from "react-icons/fa6";
+import { FaFileExcel, FaGear, FaPlus, FaTrash } from "react-icons/fa6";
 import { toast } from "sonner";
 
 import SettingsModal from "./SettingsModal";
+import TeamFormModal from "./TeamFormModal";
+import { Team } from "@/types/team";
 import { useRouter } from "next/navigation";
-import { FaPrint } from "react-icons/fa";
+
+const newTeam: Team = {
+  _id: "",
+  name: "",
+  color: "#2563EB",
+  logo: "",
+  captain: null,
+  isActive: true,
+};
 
 export default function AdminDataManagement() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [creatingTeam, setCreatingTeam] = useState<Team | null>(null);
 
   const [importing, setImporting] = useState(false);
 
   const [clearingTeams, setClearingTeams] = useState(false);
   const [clearingEmployees, setClearingEmployees] = useState(false);
   const [clearingResults, setClearingResults] = useState(false);
-  const [clearingIndividuals, setClearingIndividuals] = useState(false);
-  const [clearingGroups, setClearingGroups] = useState(false);
+  const [clearingRegistrations, setClearingRegistrations] = useState(false);
   const [registrationOpen, setRegistrationOpen] = useState(false);
   const [loadingRegistration, setLoadingRegistration] = useState(true);
   const [updatingRegistration, setUpdatingRegistration] = useState(false);
@@ -193,7 +203,7 @@ export default function AdminDataManagement() {
 
   const handleClearResults = async () => {
     const confirmed = window.confirm(
-      "This will permanently delete all individual and group results. The point table will also become empty. Registrations will remain. Continue?",
+      "This will permanently delete all individual, group and marathon results. The point table will also become empty. Registrations will remain. Continue?",
     );
 
     if (!confirmed) return;
@@ -223,77 +233,35 @@ export default function AdminDataManagement() {
     }
   };
 
-  const handleClearIndividuals = async () => {
+  const handleClearRegistrations = async () => {
     const confirmed = window.confirm(
-      "This will permanently delete all individual game registrations and reset employee registration status. Employee and team data will remain. Continue?",
+      "This will permanently delete all individual and group registrations and reset employee registration status. Employee and team data will remain. Continue?",
     );
 
     if (!confirmed) return;
 
     try {
-      setClearingIndividuals(true);
+      setClearingRegistrations(true);
 
-      const res = await fetch(
-        "/api/admin/settings/registrations/individual/clear",
-        {
-          method: "DELETE",
-        },
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(
-          data.message || "Failed to clear individual registrations.",
-        );
-        return;
-      }
-
-      toast.success(
-        data.message ||
-          "All individual registrations are cleared successfully.",
-      );
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-
-      toast.error("Failed to clear individual registrations.");
-    } finally {
-      setClearingIndividuals(false);
-    }
-  };
-
-  const handleClearGroups = async () => {
-    const confirmed = window.confirm(
-      "This will permanently delete all group registrations and groups. Employee, team and individual registration data will remain. Continue?",
-    );
-
-    if (!confirmed) return;
-
-    try {
-      setClearingGroups(true);
-
-      const res = await fetch("/api/admin/settings/registrations/group/clear", {
+      const res = await fetch("/api/admin/settings/registrations/clear", {
         method: "DELETE",
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.message || "Failed to clear group registrations.");
+        toast.error(data.message || "Failed to clear registrations.");
         return;
       }
 
-      toast.success(
-        data.message || "All group registrations cleared successfully.",
-      );
+      toast.success(data.message || "All registrations cleared successfully.");
       router.refresh();
     } catch (error) {
       console.error(error);
 
-      toast.error("Failed to clear group registrations.");
+      toast.error("Failed to clear registrations.");
     } finally {
-      setClearingGroups(false);
+      setClearingRegistrations(false);
     }
   };
 
@@ -315,18 +283,20 @@ export default function AdminDataManagement() {
           </Card.Header>
 
           <Card.Content>
-            <Button variant="outline" onPress={() => setSettingsOpen(true)}>
-              <FaGear />
-              Company Settings
-            </Button>
-            <Button
-              variant="danger"
-              onPress={handleClearResults}
-              isDisabled={clearingResults}
-            >
-              <FaTrash />
-              {clearingResults ? "Clearing..." : "Clear Results"}
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" onPress={() => setSettingsOpen(true)}>
+                <FaGear />
+                Company Settings
+              </Button>
+              <Button
+                variant="danger"
+                onPress={handleClearResults}
+                isDisabled={clearingResults}
+              >
+                <FaTrash />
+                {clearingResults ? "Clearing..." : "Clear Results"}
+              </Button>
+            </div>
           </Card.Content>
         </Card>
 
@@ -337,7 +307,7 @@ export default function AdminDataManagement() {
               <Card.Title className="text-black">Employee Data</Card.Title>
 
               <Card.Description>
-                Import, export and reset employee information.
+                Import and reset employee information.
               </Card.Description>
             </div>
           </Card.Header>
@@ -366,7 +336,6 @@ export default function AdminDataManagement() {
 
                 {importing ? "Importing..." : "Import Excel"}
               </Button>
-
               <Button
                 variant="outline"
                 onPress={() => {
@@ -396,22 +365,34 @@ export default function AdminDataManagement() {
               <Card.Title className="text-black">Team Data</Card.Title>
 
               <Card.Description>
-                Remove all competition teams and their registrations.
+                Add a team or remove all competition teams and their
+                registrations.
               </Card.Description>
             </div>
           </Card.Header>
 
           <Card.Content>
-            <Button
-              variant="danger"
-              onPress={handleClearTeams}
-              isDisabled={clearingTeams}
-            >
-              <FaTrash />
-              {clearingTeams ? "Clearing..." : "Clear Teams"}
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="primary"
+                onPress={() => setCreatingTeam(newTeam)}
+              >
+                <FaPlus />
+                Add Team
+              </Button>
+
+              <Button
+                variant="danger"
+                onPress={handleClearTeams}
+                isDisabled={clearingTeams}
+              >
+                <FaTrash />
+                {clearingTeams ? "Clearing..." : "Clear Teams"}
+              </Button>
+            </div>
           </Card.Content>
         </Card>
+
         {/* REGISTRATIONS */}
         <Card className="p-5">
           <Card.Header>
@@ -419,7 +400,7 @@ export default function AdminDataManagement() {
               <Card.Title className="text-black">Registrations Data</Card.Title>
 
               <Card.Description>
-                Remove all Individuals and Group Registrations.
+                Remove all individual and group registrations.
               </Card.Description>
             </div>
           </Card.Header>
@@ -448,45 +429,29 @@ export default function AdminDataManagement() {
                 </Switch.Content>
               </Switch>
             </div>
-            <div className="grid grdi-cols-1 md:grid-cols-2 gap-3 mt-2">
-              <Button
-                variant="outline"
-                onPress={() => router.push("/api/admin/registrations/export")}
-              >
-                <FaFileExcel />
-                Export Registrations
-              </Button>
-              <Button
-                variant="primary"
-                onPress={() => {
-                  router.push("/admin/registrations/item-print");
-                }}
-              >
-                <FaPrint />
-                Print Registrations
-              </Button>
-              <Button
-                variant="danger"
-                onPress={handleClearIndividuals}
-                isDisabled={clearingIndividuals}
-              >
-                <FaTrash />
-                {clearingIndividuals ? "Clearing..." : "Clear Individuals"}
-              </Button>
-              <Button
-                variant="danger"
-                onPress={handleClearGroups}
-                isDisabled={clearingGroups}
-              >
-                <FaTrash />
-                {clearingGroups ? "Clearing..." : "Clear Groups"}
-              </Button>
-            </div>
+            <Button
+              className="mt-2"
+              variant="danger"
+              onPress={handleClearRegistrations}
+              isDisabled={clearingRegistrations}
+            >
+              <FaTrash />
+              {clearingRegistrations ? "Clearing..." : "Clear Registrations"}
+            </Button>
           </Card.Content>
         </Card>
       </div>
 
       <SettingsModal isOpen={settingsOpen} onOpenChange={setSettingsOpen} />
+
+      <TeamFormModal
+        team={creatingTeam}
+        onClose={() => setCreatingTeam(null)}
+        onSaved={() => {
+          setCreatingTeam(null);
+          router.refresh();
+        }}
+      />
     </>
   );
 }

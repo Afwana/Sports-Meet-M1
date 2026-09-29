@@ -221,7 +221,7 @@ export default function AdminRegistrationsPage() {
                     No registrations under {selectedCategory}.
                   </div>
                 ) : (
-                  <CategoryGamesTable games={visibleGames} />
+                  <CategoryGamesTable games={visibleGames} showActions />
                 )}
               </div>
             </>

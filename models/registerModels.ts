@@ -1,0 +1,12 @@
+import "./Admin";
+import "./Announcement";
+import "./Employee";
+import "./Games";
+import "./GroupRegistration";
+import "./GroupResult";
+import "./IndividualRegistration";
+import "./IndividualResult";
+import "./MarathonResult";
+import "./PointConfiguration";
+import "./Settings";
+import "./Teams";

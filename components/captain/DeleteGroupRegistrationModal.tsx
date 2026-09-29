@@ -18,6 +18,8 @@ interface DeleteGroupRegistrationModalProps {
   game: Game | null;
   registration: IndividualRegistration | GroupRegistration | null;
   onDeleted: (id: string) => void;
+  /** Base for the registration endpoints. Defaults to the captain API. */
+  apiBase?: string;
 }
 
 export default function DeleteGroupRegistrationModal({
@@ -26,6 +28,7 @@ export default function DeleteGroupRegistrationModal({
   game,
   registration,
   onDeleted,
+  apiBase = "/api/captain",
 }: DeleteGroupRegistrationModalProps) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
@@ -38,8 +41,8 @@ export default function DeleteGroupRegistrationModal({
 
       const endpoint =
         game.type === "Group"
-          ? `/api/captain/group-registrations/${registration._id}`
-          : `/api/captain/individual-registrations/${registration._id}`;
+          ? `${apiBase}/group-registrations/${registration._id}`
+          : `${apiBase}/individual-registrations/${registration._id}`;
 
       const res = await fetch(endpoint, {
         method: "DELETE",

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongodb";
 import { getCurrentAdmin } from "@/lib/getCurrentAdmin";
@@ -10,15 +10,21 @@ import Teams from "@/models/Teams";
 
 const CATEGORY_ORDER = ["Sports", "Off Stage", "Stage", "Games"];
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   await getCurrentAdmin();
+
+  const includeAll = req.nextUrl.searchParams.get("includeAll") === "1";
 
   try {
     await connectDB();
 
     const [teams, games, individualRegs, groupRegs] = await Promise.all([
       Teams.find({}).select("_id name").lean(),
-      Games.find({}).select("_id name type category gender ageCategory").lean(),
+      Games.find({})
+        .select(
+          "_id name type category gender ageCategory isActive minParticipants maxParticipants maxParticipantsPerTeam maxTeamsPerCompetitionTeam",
+        )
+        .lean(),
       IndividualRegistration.find({})
         .select("employeeCode employeeName teamId games")
         .lean(),
@@ -40,6 +46,10 @@ export async function GET() {
         type: string;
         gender: string;
         ageCategory: string;
+        minParticipants: number;
+        maxParticipants: number | null;
+        maxParticipantsPerTeam: number | null;
+        maxTeamsPerCompetitionTeam: number;
 
         teams: Record<
           string,
@@ -66,6 +76,10 @@ export async function GET() {
           type: game.type,
           gender: game.gender,
           ageCategory: game.ageCategory || "Open",
+          minParticipants: game.minParticipants ?? 1,
+          maxParticipants: game.maxParticipants ?? null,
+          maxParticipantsPerTeam: game.maxParticipantsPerTeam ?? null,
+          maxTeamsPerCompetitionTeam: game.maxTeamsPerCompetitionTeam ?? 1,
           teams: {},
         });
       }
@@ -117,6 +131,12 @@ export async function GET() {
           (p: any) => `${p.employeeName} (${p.employeeCode})`,
         ),
       });
+    }
+
+    if (includeAll) {
+      for (const game of games) {
+        if (game.isActive !== false) ensureGame(String(game._id));
+      }
     }
 
     const report = CATEGORY_ORDER.map((category) => ({

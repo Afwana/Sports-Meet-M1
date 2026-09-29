@@ -27,6 +27,10 @@ interface AddGroupRegistrationModalProps {
   game: Game | null;
   existingGroups: GroupRegistration[];
   onSaved: (registration: GroupRegistration) => void;
+  /** Base for the registration endpoints. Defaults to the captain API. */
+  apiBase?: string;
+  /** Admin flow only: the team the registration is being made for. */
+  teamId?: string;
 }
 
 export default function AddGroupRegistrationModal({
@@ -35,6 +39,8 @@ export default function AddGroupRegistrationModal({
   game,
   existingGroups,
   onSaved,
+  apiBase = "/api/captain",
+  teamId,
 }: AddGroupRegistrationModalProps) {
   const router = useRouter();
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -55,8 +61,8 @@ export default function AddGroupRegistrationModal({
 
         const res = await fetch(
           game.type === "Group"
-            ? `/api/captain/group-registrations/available-employees?gameId=${game._id}`
-            : `/api/captain/individual-registrations/available-employees?gameId=${game._id}`,
+            ? `${apiBase}/group-registrations/available-employees?gameId=${game._id}${teamId ? `&teamId=${teamId}` : ""}`
+            : `${apiBase}/individual-registrations/available-employees?gameId=${game._id}${teamId ? `&teamId=${teamId}` : ""}`,
         );
 
         const data = await res.json();
@@ -78,7 +84,7 @@ export default function AddGroupRegistrationModal({
     };
 
     loadEmployees();
-  }, [isOpen, game]);
+  }, [isOpen, game, apiBase, teamId]);
 
   const handleSave = async () => {
     if (!game) {
@@ -129,8 +135,8 @@ export default function AddGroupRegistrationModal({
 
       const res = await fetch(
         game.type === "Group"
-          ? "/api/captain/group-registrations"
-          : "/api/captain/individual-registrations",
+          ? `${apiBase}/group-registrations`
+          : `${apiBase}/individual-registrations`,
         {
           method: "POST",
           headers: {
@@ -138,6 +144,7 @@ export default function AddGroupRegistrationModal({
           },
           body: JSON.stringify({
             gameId: game._id,
+            ...(teamId ? { teamId } : {}),
             participants: selectedEmployees,
           }),
         },

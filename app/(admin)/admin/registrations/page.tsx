@@ -5,7 +5,9 @@ import {
   CategoryGamesTable,
   gameLabel,
   ItemCategoryEntry,
+  ItemGameEntry,
 } from "@/components/admin/ItemRegistrationsList";
+import ManageRegistrationsModal from "@/components/admin/ManageRegistrationsModal";
 import {
   Button,
   Card,
@@ -15,7 +17,7 @@ import {
   Select,
   Spinner,
 } from "@heroui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaPrint } from "react-icons/fa6";
 import { toast } from "sonner";
 
@@ -28,34 +30,49 @@ export default function AdminRegistrationsPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedGameId, setSelectedGameId] = useState(ALL_GAMES);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
+  const [manageGameId, setManageGameId] = useState<string | null>(null);
+  const [isManageOpen, setIsManageOpen] = useState(false);
 
-        const res = await fetch("/api/admin/registrations/item-print", {
+  const loadReport = useCallback(async (silent = false) => {
+    try {
+      if (!silent) setLoading(true);
+
+      const res = await fetch(
+        "/api/admin/registrations/item-print?includeAll=1",
+        {
           cache: "no-store",
-        });
-        const data = await res.json();
+        },
+      );
+      const data = await res.json();
 
-        if (!res.ok) {
-          toast.error(data.message || "Failed to load registrations.");
-          return;
-        }
-
-        const rows: ItemCategoryEntry[] = data.report || [];
-        setReport(rows);
-        if (rows.length > 0) setSelectedCategory(rows[0].category);
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to load registrations.");
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        toast.error(data.message || "Failed to load registrations.");
+        return;
       }
-    };
 
-    load();
+      const rows: ItemCategoryEntry[] = data.report || [];
+      setReport(rows);
+
+      if (!silent && rows.length > 0) setSelectedCategory(rows[0].category);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load registrations.");
+    } finally {
+      if (!silent) setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadReport();
+  }, [loadReport]);
+
+  const allGames = useMemo(() => report.flatMap((c) => c.games), [report]);
+
+  const openManage = (game: ItemGameEntry) => {
+    setManageGameId(game.gameId);
+    setIsManageOpen(true);
+  };
 
   const currentCategory = useMemo(
     () => report.find((r) => r.category === selectedCategory) || null,
@@ -134,7 +151,7 @@ export default function AdminRegistrationsPage() {
             </div>
           ) : report.length === 0 ? (
             <div className="rounded-lg border border-dashed py-16 text-center text-slate-500">
-              No registrations yet.
+              No games found.
             </div>
           ) : (
             <>
@@ -221,13 +238,25 @@ export default function AdminRegistrationsPage() {
                     No registrations under {selectedCategory}.
                   </div>
                 ) : (
-                  <CategoryGamesTable games={visibleGames} showActions />
+                  <CategoryGamesTable
+                    games={visibleGames}
+                    showActions
+                    onManageRegistrations={openManage}
+                  />
                 )}
               </div>
             </>
           )}
         </Card.Content>
       </Card>
+
+      <ManageRegistrationsModal
+        isOpen={isManageOpen}
+        onOpenChange={setIsManageOpen}
+        games={allGames}
+        initialGameId={manageGameId}
+        onChanged={() => loadReport(true)}
+      />
     </div>
   );
 }

@@ -25,8 +25,6 @@ interface GameEntry {
   group: GroupRow[];
 }
 
-// Name-on-top / code-below chip, used inside the Participants cell of both
-// tables below.
 function ParticipantChip({ name, code }: { name: string; code: string }) {
   return (
     <div>
@@ -42,8 +40,6 @@ const individualColumns = [
   { id: "participants", name: "Participants" },
 ];
 
-// One row per game — every individually-registered participant for that
-// game is packed into the Participants cell as a wrapping grid of chips.
 export function IndividualGamesTable({ games }: { games: GameEntry[] }) {
   const rows = games
     .filter((g) => g.type === "Individual" && g.individual.length > 0)
@@ -113,9 +109,6 @@ const groupColumns = [
   { id: "participants", name: "Participants" },
 ];
 
-// One row per group registration. SL. NO and Game Name are only shown on
-// the first group belonging to a given game — later groups for the same
-// game leave those two cells blank, matching the reference layout.
 export function GroupGamesTable({ games }: { games: GameEntry[] }) {
   const rows: {
     key: string;

@@ -27,6 +27,8 @@ interface EditGroupRegistrationModalProps {
   game: Game | null;
   group: GroupRegistration | null;
   onSaved: (registration: GroupRegistration) => void;
+  /** Base for the registration endpoints. Defaults to the captain API. */
+  apiBase?: string;
 }
 
 export default function EditGroupRegistrationModal({
@@ -35,6 +37,7 @@ export default function EditGroupRegistrationModal({
   game,
   group,
   onSaved,
+  apiBase = "/api/captain",
 }: EditGroupRegistrationModalProps) {
   const router = useRouter();
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -55,8 +58,8 @@ export default function EditGroupRegistrationModal({
 
         const res = await fetch(
           game.type === "Group"
-            ? `/api/captain/group-registrations/available-employees?gameId=${game._id}&editGroupId=${group._id}`
-            : `/api/captain/individual-registrations/available-employees?gameId=${game._id}&editGroupId=${group._id}`,
+            ? `${apiBase}/group-registrations/available-employees?gameId=${game._id}&editGroupId=${group._id}`
+            : `${apiBase}/individual-registrations/available-employees?gameId=${game._id}&editGroupId=${group._id}`,
         );
 
         const data = await res.json();
@@ -81,7 +84,7 @@ export default function EditGroupRegistrationModal({
     };
 
     loadEmployees();
-  }, [isOpen, game, group]);
+  }, [isOpen, game, group, apiBase]);
 
   const handleSave = async () => {
     if (!game || !group) {
@@ -125,8 +128,8 @@ export default function EditGroupRegistrationModal({
 
       const res = await fetch(
         game.type === "Group"
-          ? `/api/captain/group-registrations/${group._id}`
-          : `/api/captain/individual-registrations/${group._id}`,
+          ? `${apiBase}/group-registrations/${group._id}`
+          : `${apiBase}/individual-registrations/${group._id}`,
         {
           method: "PATCH",
           headers: {

@@ -31,8 +31,6 @@ export async function GET() {
 
     const gameMap = new Map(games.map((g) => [String(g._id), g]));
 
-    // gameId -> rows registered under that game, per team
-    // teamId -> gameId -> { individual: [...], group: [...] }
     const teamGameRows = new Map<
       string,
       Map<

@@ -27,6 +27,8 @@ interface Props {
   game: Game | null;
   registration: IndividualRegistration | null;
   onSaved: (registration: IndividualRegistration) => void;
+  /** Base for the registration endpoints. Defaults to the captain API. */
+  apiBase?: string;
 }
 
 export default function EditIndividualRegistrationModal({
@@ -35,6 +37,7 @@ export default function EditIndividualRegistrationModal({
   game,
   registration,
   onSaved,
+  apiBase = "/api/captain",
 }: Props) {
   const router = useRouter();
 
@@ -53,7 +56,7 @@ export default function EditIndividualRegistrationModal({
         setLoadingEmployees(true);
 
         const res = await fetch(
-          `/api/captain/individual-registrations/available-employees?gameId=${game._id}&editRegistrationId=${registration._id}`,
+          `${apiBase}/individual-registrations/available-employees?gameId=${game._id}&editRegistrationId=${registration._id}`,
         );
 
         const data = await res.json();
@@ -74,7 +77,7 @@ export default function EditIndividualRegistrationModal({
     };
 
     loadEmployees();
-  }, [isOpen, game, registration]);
+  }, [isOpen, game, registration, apiBase]);
 
   const handleSave = async () => {
     if (!game || !registration) return;
@@ -95,7 +98,7 @@ export default function EditIndividualRegistrationModal({
       setSaving(true);
 
       const res = await fetch(
-        `/api/captain/individual-registrations/${registration._id}`,
+        `${apiBase}/individual-registrations/${registration._id}`,
         {
           method: "PATCH",
           headers: {

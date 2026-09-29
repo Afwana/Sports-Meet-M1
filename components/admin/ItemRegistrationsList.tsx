@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Table } from "@heroui/react";
-import { Plus } from "lucide-react";
+import { ClipboardList, Plus } from "lucide-react";
 import { useState } from "react";
 import InlineResultForm from "./InlineResultForm";
 
@@ -12,6 +12,11 @@ export interface ItemGameEntry {
   type: string;
   gender: string;
   ageCategory: string;
+  // Game limits — only present in the admin registrations report.
+  minParticipants?: number;
+  maxParticipants?: number | null;
+  maxParticipantsPerTeam?: number | null;
+  maxTeamsPerCompetitionTeam?: number;
   teams: Record<
     string,
     {
@@ -36,10 +41,12 @@ export function gameLabel(game: ItemGameEntry) {
 interface CategoryGamesTableProps {
   games: ItemGameEntry[];
   showActions?: boolean;
+  onManageRegistrations?: (game: ItemGameEntry) => void;
 }
 export function CategoryGamesTable({
   games,
   showActions = false,
+  onManageRegistrations,
 }: CategoryGamesTableProps) {
   const [expandedGameId, setExpandedGameId] = useState<string | null>(null);
 
@@ -85,6 +92,11 @@ export function CategoryGamesTable({
                   </Table.Cell>
 
                   <Table.Cell className="align-top text-black">
+                    {Object.keys(game.teams).length === 0 && (
+                      <p className="py-1 text-sm text-slate-400">
+                        No registrations yet.
+                      </p>
+                    )}
                     <div className="flex flex-col gap-3 py-1">
                       {Object.entries(game.teams)
                         .sort(([a], [b]) => a.localeCompare(b))
@@ -129,16 +141,29 @@ export function CategoryGamesTable({
 
                   {showActions ? (
                     <Table.Cell className="align-top">
-                      <Button
-                        size="sm"
-                        variant={isExpanded ? "tertiary" : "primary"}
-                        onPress={() =>
-                          setExpandedGameId(isExpanded ? null : game.gameId)
-                        }
-                      >
-                        {!isExpanded && <Plus size={16} />}
-                        {isExpanded ? "Close" : "Add Result"}
-                      </Button>
+                      <div className="flex flex-col items-start gap-2">
+                        {onManageRegistrations && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onPress={() => onManageRegistrations(game)}
+                          >
+                            <ClipboardList size={16} />
+                            Manage Registrations
+                          </Button>
+                        )}
+
+                        <Button
+                          size="sm"
+                          variant={isExpanded ? "tertiary" : "primary"}
+                          onPress={() =>
+                            setExpandedGameId(isExpanded ? null : game.gameId)
+                          }
+                        >
+                          {!isExpanded && <Plus size={16} />}
+                          {isExpanded ? "Close" : "Add Result"}
+                        </Button>
+                      </div>
                     </Table.Cell>
                   ) : null}
                 </Table.Row>

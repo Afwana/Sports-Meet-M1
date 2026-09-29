@@ -85,8 +85,6 @@ export default function RegistrationsPrintPage() {
 
   return (
     <div className="min-h-screen bg-white px-6 py-8 text-black print:p-0">
-      {/* Consistent page size/margins regardless of the browser's own
-          print defaults. Doesn't affect on-screen rendering. */}
       <style>{`
         @page {
           size: A4;
@@ -158,12 +156,6 @@ export default function RegistrationsPrintPage() {
 
                       return (
                         <div key={ageEntry.ageCategory} className="mt-2 pl-3">
-                          {/* Age Category — kept with whatever follows it;
-                              the tables below are free to break across
-                              pages between rows (see break-inside-avoid on
-                              each row instead), rather than forcing this
-                              whole, often multi-page-tall block onto a
-                              single page. */}
                           <h4 className="break-after-avoid text-sm text-slate-600">
                             {ageEntry.ageCategory}
                           </h4>

@@ -33,6 +33,10 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   game: Game | null;
   onSaved: (registrations: IndividualRegistration[]) => void;
+  /** Base for the registration endpoints. Defaults to the captain API. */
+  apiBase?: string;
+  /** Admin flow only: the team the registration is being made for. */
+  teamId?: string;
 }
 
 export default function AddIndividualRegistrationModal({
@@ -40,6 +44,8 @@ export default function AddIndividualRegistrationModal({
   onOpenChange,
   game,
   onSaved,
+  apiBase = "/api/captain",
+  teamId,
 }: Props) {
   const router = useRouter();
 
@@ -58,7 +64,7 @@ export default function AddIndividualRegistrationModal({
         setLoadingEmployees(true);
 
         const res = await fetch(
-          `/api/captain/individual-registrations/available-employees?gameId=${game._id}`,
+          `${apiBase}/individual-registrations/available-employees?gameId=${game._id}${teamId ? `&teamId=${teamId}` : ""}`,
         );
 
         const data = await res.json();
@@ -79,7 +85,7 @@ export default function AddIndividualRegistrationModal({
     };
 
     loadEmployees();
-  }, [isOpen, game]);
+  }, [isOpen, game, apiBase, teamId]);
 
   const handleSave = async () => {
     if (!game) return;
@@ -102,13 +108,14 @@ export default function AddIndividualRegistrationModal({
     try {
       setSaving(true);
 
-      const res = await fetch("/api/captain/individual-registrations", {
+      const res = await fetch(`${apiBase}/individual-registrations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           gameId: game._id,
+          ...(teamId ? { teamId } : {}),
           participants: selectedEmployees,
         }),
       });

@@ -3,6 +3,7 @@
 import { getAgeCategory } from "@/lib/getAgeCategory";
 import { iconMap } from "@/utils/iconMap";
 import { Card, Spinner } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { toast } from "sonner";
@@ -30,13 +31,19 @@ interface Props {
 interface GameItemProps {
   game: Game;
   isRegistered: boolean;
+  onClick?: () => void;
 }
 
-function GameItem({ game, isRegistered }: GameItemProps) {
+function GameItem({ game, isRegistered, onClick }: GameItemProps) {
   const Icon = iconMap[game.icon as keyof typeof iconMap];
+  const isMobilePhotography =
+    game.name.trim().toLowerCase() === "mobile photography";
 
   return (
-    <div className="flex w-full flex-col gap-1 rounded-lg border border-slate-200 bg-default-50 p-2 md:p-4">
+    <div
+      className={`flex w-full flex-col gap-1 rounded-lg border border-slate-200 bg-default-50 p-2 md:p-4 ${isMobilePhotography ? "cursor-pointer transition hover:border-blue-400 hover:bg-blue-50" : ""}`}
+      onClick={isMobilePhotography ? onClick : undefined}
+    >
       <div className="flex w-full gap-1 justify-between items-start">
         <div className="flex min-w-0 items-center gap-3">
           {Icon ? (
@@ -64,6 +71,7 @@ export default function IndividualGames({
   employeeGender,
   employeeAge,
 }: Props) {
+  const router = useRouter();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [registeredGameIds, setRegisteredGameIds] = useState<string[]>([]);
@@ -167,6 +175,7 @@ export default function IndividualGames({
               <GameItem
                 game={game}
                 isRegistered={registeredGameIds.includes(game._id)}
+                onClick={() => router.push("/photos")}
               />
 
               {showType &&

@@ -7,6 +7,7 @@ import "./GroupResult";
 import "./IndividualRegistration";
 import "./IndividualResult";
 import "./MarathonResult";
+import "./PhotoSubmission";
 import "./PointConfiguration";
 import "./Settings";
 import "./Teams";

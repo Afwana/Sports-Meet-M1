@@ -137,11 +137,6 @@ export default function InlineResultForm({
           setParticipants(data.participants || []);
 
           if (data.result) {
-            // const existing: Record<number, string> = {};
-
-            // data.result.positions.forEach((item: ResultPosition) => {
-            //   existing[item.position] = String(item.employee);
-            // });
             const existing: Record<number, string[]> = {};
             data.result.positions.forEach((item: ResultPosition) => {
               existing[item.position] = [
@@ -181,12 +176,6 @@ export default function InlineResultForm({
   }, [game.gameId, game.type, isMarathon]);
 
   const saveIndividualResult = async () => {
-    // const resultPositions = positionOptions
-    //   .filter((item) => selectedPositions[item.position])
-    //   .map((item) => ({
-    //     position: item.position,
-    //     employeeId: selectedPositions[item.position],
-    //   }));
     const resultPositions = positionOptions.flatMap((item) =>
       (selectedPositions[item.position] ?? []).map((employeeId) => ({
         position: item.position,
@@ -288,11 +277,6 @@ export default function InlineResultForm({
     }
   };
 
-  // const employeeName = useMemo(() => {
-  //   const map = new Map<string, Participant>();
-  //   participants.forEach((p) => map.set(p.employeeId, p));
-  //   return map;
-  // }, [participants]);
   const usedEmployeeIds = new Set(Object.values(selectedPositions).flat());
 
   return (
@@ -329,60 +313,6 @@ export default function InlineResultForm({
           </p>
         ) : (
           <div className="space-y-4">
-            {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {positionOptions.map(({ position, label }) => (
-                <div key={position} className="space-y-2">
-                  <Label className="text-black">{label}</Label>
-
-                  <Select
-                    aria-label={`select participant for ${label}`}
-                    value={selectedPositions[position] || ""}
-                    onChange={(value) => {
-                      if (typeof value === "string") {
-                        setSelectedPositions((current) => ({
-                          ...current,
-                          [position]: value,
-                        }));
-                      }
-                    }}
-                  >
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-
-                    <Select.Popover>
-                      <ListBox className="text-black">
-                        {participants.map((employee) => (
-                          <ListBox.Item
-                            key={employee.employeeId}
-                            id={employee.employeeId}
-                            textValue={`${employee.employeeName} ${employee.employeeCode}`}
-                          >
-                            <div className="flex flex-col">
-                              <span className="font-medium">
-                                {employee.employeeName}
-                              </span>
-                              <span className="text-xs text-slate-500">
-                                {employee.employeeCode} • {employee.team}
-                              </span>
-                            </div>
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
-                        ))}
-                      </ListBox>
-                    </Select.Popover>
-                  </Select>
-
-                  {selectedPositions[position] &&
-                    employeeName.get(selectedPositions[position]) && (
-                      <p className="text-xs text-slate-500">
-                        {employeeName.get(selectedPositions[position])!.team}
-                      </p>
-                    )}
-                </div>
-              ))}
-            </div> */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {positionOptions.map(({ position, label }) => (
                 <PositionMultiSelect

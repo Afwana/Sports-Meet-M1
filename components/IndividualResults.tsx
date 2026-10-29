@@ -13,7 +13,6 @@ type PositionResult = {
   teamName: string;
   points: number;
 };
-// | null;
 
 type IndividualResultRow = {
   gameId: string;
@@ -53,21 +52,6 @@ const columns = [
   },
 ];
 
-// function PositionCell({ result }: { result: PositionResult }) {
-//   if (!result) {
-//     return <span className="text-slate-400">—</span>;
-//   }
-
-//   return (
-//     <div className="flex min-w-40 flex-col">
-//       <span className="font-medium">{result.employeeName}</span>
-
-//       <span className="text-xs text-slate-300">{result.teamName}</span>
-
-//       <span className="text-[11px] text-slate-400">{result.employeeCode}</span>
-//     </div>
-//   );
-// }
 function PositionCell({ results }: { results: PositionResult[] }) {
   if (!results || results.length === 0) {
     return <span className="text-slate-400">—</span>;

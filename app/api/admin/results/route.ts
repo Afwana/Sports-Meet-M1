@@ -80,13 +80,6 @@ export async function GET() {
       if (game.type === "Individual") {
         const result = individualResultMap.get(String(game._id));
 
-        // const positions = {
-        //   first: null as null | IndividualPosition,
-
-        //   second: null as null | IndividualPosition,
-
-        //   third: null as null | IndividualPosition,
-        // };
         const positions = {
           first: [] as IndividualPosition[],
           second: [] as IndividualPosition[],

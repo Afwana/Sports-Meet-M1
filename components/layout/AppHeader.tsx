@@ -56,23 +56,6 @@ export default function AppHeader({ role, user }: Props) {
     <>
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-950/80 backdrop-blur-md print:hidden">
         <div className="flex h-16 max-w-full items-center justify-between px-4">
-          {/* <Link href="/" className="flex items-center gap-3">
-            {settings.companyLogo && (
-              <Image
-                src={settings.companyLogo}
-                alt="Company Logo"
-                width={36}
-                height={36}
-                className="h-9 w-9 object-contain"
-              />
-            )}
-
-            <div className="hidden h-6 w-px bg-white/20 sm:block" />
-
-            <span className="hidden text-lg font-bold text-white sm:block">
-              {settings.programName}
-            </span>
-          </Link> */}
           <Link href="/" className="flex items-center gap-3">
             {settings.companyLogo ? (
               <Image

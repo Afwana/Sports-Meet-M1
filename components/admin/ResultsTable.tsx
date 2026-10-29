@@ -27,11 +27,6 @@ type IndividualResultRow = {
   ageCategory: "Open" | "Junior" | "Senior";
   resultId: string | null;
 
-  // positions: {
-  //   first: IndividualPosition | null;
-  //   second: IndividualPosition | null;
-  //   third: IndividualPosition | null;
-  // };
   positions: {
     first: IndividualPosition[];
     second: IndividualPosition[];
@@ -107,23 +102,6 @@ function PositionCell({
   }
 
   /* INDIVIDUAL RESULT */
-  // if (type === "Individual") {
-  //   const individual = result as IndividualPosition;
-
-  //   return (
-  //     <div className="flex min-w-40 flex-col">
-  //       <span className="font-medium text-black">
-  //         {individual.employeeName}
-  //       </span>
-
-  //       <span className="text-xs text-slate-300">{individual.teamName}</span>
-
-  //       <span className="text-[11px] text-slate-200">
-  //         {individual.employeeCode}
-  //       </span>
-  //     </div>
-  //   );
-  // }
   if (type === "Individual") {
     const individuals = (result ?? []) as IndividualPosition[];
 

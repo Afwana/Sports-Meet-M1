@@ -34,31 +34,6 @@ export async function GET() {
     const data = games.map((game) => {
       const result = resultMap.get(String(game._id));
 
-      // const positions = {
-      //   first: null as null | {
-      //     employeeId: string;
-      //     employeeName: string;
-      //     employeeCode: string;
-      //     teamName: string;
-      //     points: number;
-      //   },
-
-      //   second: null as null | {
-      //     employeeId: string;
-      //     employeeName: string;
-      //     employeeCode: string;
-      //     teamName: string;
-      //     points: number;
-      //   },
-
-      //   third: null as null | {
-      //     employeeId: string;
-      //     employeeName: string;
-      //     employeeCode: string;
-      //     teamName: string;
-      //     points: number;
-      //   },
-      // };
       type PositionValue = {
         employeeId: string;
         employeeName: string;

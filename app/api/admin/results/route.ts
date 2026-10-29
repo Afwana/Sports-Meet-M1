@@ -80,12 +80,17 @@ export async function GET() {
       if (game.type === "Individual") {
         const result = individualResultMap.get(String(game._id));
 
+        // const positions = {
+        //   first: null as null | IndividualPosition,
+
+        //   second: null as null | IndividualPosition,
+
+        //   third: null as null | IndividualPosition,
+        // };
         const positions = {
-          first: null as null | IndividualPosition,
-
-          second: null as null | IndividualPosition,
-
-          third: null as null | IndividualPosition,
+          first: [] as IndividualPosition[],
+          second: [] as IndividualPosition[],
+          third: [] as IndividualPosition[],
         };
 
         if (result?.positions) {
@@ -112,15 +117,13 @@ export async function GET() {
             };
 
             if (item.position === 1) {
-              positions.first = value;
+              positions.first.push(value);
             }
-
             if (item.position === 2) {
-              positions.second = value;
+              positions.second.push(value);
             }
-
             if (item.position === 3) {
-              positions.third = value;
+              positions.third.push(value);
             }
           }
         }

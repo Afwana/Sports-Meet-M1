@@ -329,6 +329,7 @@ export default function TeamFormModal({ team, onClose, onSaved }: Props) {
                           width={80}
                           height={80}
                           objectFit="cover"
+                          className="h-full w-full object-cover"
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center text-xs text-slate-300">

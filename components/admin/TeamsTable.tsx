@@ -126,10 +126,10 @@ export default function TeamsTable({ teams }: Props) {
                               <Image
                                 src={team.logo}
                                 alt={team.name}
-                                className="rounded-full border"
-                                width={60}
-                                height={60}
-                                objectFit="cover"
+                                className="h-15 w-15 shrink-0 rounded-full border object-cover"
+                                width={80}
+                                height={80}
+                                objectFit="contain"
                               />
                             ) : (
                               <div

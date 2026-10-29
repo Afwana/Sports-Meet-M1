@@ -27,10 +27,15 @@ type IndividualResultRow = {
   ageCategory: "Open" | "Junior" | "Senior";
   resultId: string | null;
 
+  // positions: {
+  //   first: IndividualPosition | null;
+  //   second: IndividualPosition | null;
+  //   third: IndividualPosition | null;
+  // };
   positions: {
-    first: IndividualPosition | null;
-    second: IndividualPosition | null;
-    third: IndividualPosition | null;
+    first: IndividualPosition[];
+    second: IndividualPosition[];
+    third: IndividualPosition[];
   };
 };
 
@@ -51,7 +56,7 @@ type GroupResultRow = {
 
 export type ResultRow = IndividualResultRow | GroupResultRow;
 
-type PositionResult = IndividualPosition | GroupPosition | null;
+type PositionResult = IndividualPosition[] | GroupPosition | null;
 
 interface ResultsTableProps {
   results: ResultRow[];
@@ -102,20 +107,45 @@ function PositionCell({
   }
 
   /* INDIVIDUAL RESULT */
+  // if (type === "Individual") {
+  //   const individual = result as IndividualPosition;
+
+  //   return (
+  //     <div className="flex min-w-40 flex-col">
+  //       <span className="font-medium text-black">
+  //         {individual.employeeName}
+  //       </span>
+
+  //       <span className="text-xs text-slate-300">{individual.teamName}</span>
+
+  //       <span className="text-[11px] text-slate-200">
+  //         {individual.employeeCode}
+  //       </span>
+  //     </div>
+  //   );
+  // }
   if (type === "Individual") {
-    const individual = result as IndividualPosition;
+    const individuals = (result ?? []) as IndividualPosition[];
+
+    if (individuals.length === 0) {
+      return <span className="text-slate-400">—</span>;
+    }
 
     return (
-      <div className="flex min-w-40 flex-col">
-        <span className="font-medium text-black">
-          {individual.employeeName}
-        </span>
-
-        <span className="text-xs text-slate-300">{individual.teamName}</span>
-
-        <span className="text-[11px] text-slate-200">
-          {individual.employeeCode}
-        </span>
+      <div className="flex min-w-40 flex-col gap-2">
+        {individuals.map((individual) => (
+          <div key={individual.employeeId} className="flex flex-col">
+            <span className="font-medium text-black">
+              {individual.employeeName}
+            </span>
+            <span className="text-xs text-slate-300">
+              {individual.teamName}
+            </span>
+            <span className="text-[11px] text-slate-200">
+              {individual.employeeCode}
+            </span>
+          </div>
+        ))}
       </div>
     );
   }

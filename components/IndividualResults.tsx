@@ -12,7 +12,8 @@ type PositionResult = {
   employeeCode: string;
   teamName: string;
   points: number;
-} | null;
+};
+// | null;
 
 type IndividualResultRow = {
   gameId: string;
@@ -23,9 +24,9 @@ type IndividualResultRow = {
   ageCategory: "Open" | "Junior" | "Senior";
   hasResult: boolean;
   positions: {
-    first: PositionResult;
-    second: PositionResult;
-    third: PositionResult;
+    first: PositionResult[];
+    second: PositionResult[];
+    third: PositionResult[];
   };
 };
 
@@ -52,18 +53,37 @@ const columns = [
   },
 ];
 
-function PositionCell({ result }: { result: PositionResult }) {
-  if (!result) {
+// function PositionCell({ result }: { result: PositionResult }) {
+//   if (!result) {
+//     return <span className="text-slate-400">—</span>;
+//   }
+
+//   return (
+//     <div className="flex min-w-40 flex-col">
+//       <span className="font-medium">{result.employeeName}</span>
+
+//       <span className="text-xs text-slate-300">{result.teamName}</span>
+
+//       <span className="text-[11px] text-slate-400">{result.employeeCode}</span>
+//     </div>
+//   );
+// }
+function PositionCell({ results }: { results: PositionResult[] }) {
+  if (!results || results.length === 0) {
     return <span className="text-slate-400">—</span>;
   }
 
   return (
-    <div className="flex min-w-40 flex-col">
-      <span className="font-medium">{result.employeeName}</span>
-
-      <span className="text-xs text-slate-300">{result.teamName}</span>
-
-      <span className="text-[11px] text-slate-400">{result.employeeCode}</span>
+    <div className="flex min-w-40 flex-col gap-2">
+      {results.map((result) => (
+        <div key={result.employeeId} className="flex flex-col">
+          <span className="font-medium">{result.employeeName}</span>
+          <span className="text-xs text-slate-300">{result.teamName}</span>
+          <span className="text-[11px] text-slate-400">
+            {result.employeeCode}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -180,7 +200,7 @@ export default function IndividualResults() {
 
                         <Table.Cell className="text-black">
                           {row.hasResult ? (
-                            <PositionCell result={row.positions.first} />
+                            <PositionCell results={row.positions.first} />
                           ) : (
                             <span className="text-sm text-slate-400">
                               Result not published
@@ -190,7 +210,7 @@ export default function IndividualResults() {
 
                         <Table.Cell className="text-black">
                           {row.hasResult ? (
-                            <PositionCell result={row.positions.second} />
+                            <PositionCell results={row.positions.second} />
                           ) : (
                             <span className="text-slate-400">—</span>
                           )}
@@ -198,7 +218,7 @@ export default function IndividualResults() {
 
                         <Table.Cell className="text-black">
                           {row.hasResult ? (
-                            <PositionCell result={row.positions.third} />
+                            <PositionCell results={row.positions.third} />
                           ) : (
                             <span className="text-slate-400">—</span>
                           )}

@@ -56,7 +56,7 @@ export default function AppHeader({ role, user }: Props) {
     <>
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-950/80 backdrop-blur-md print:hidden">
         <div className="flex h-16 max-w-full items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-3">
+          {/* <Link href="/" className="flex items-center gap-3">
             {settings.companyLogo && (
               <Image
                 src={settings.companyLogo}
@@ -72,6 +72,21 @@ export default function AppHeader({ role, user }: Props) {
             <span className="hidden text-lg font-bold text-white sm:block">
               {settings.programName}
             </span>
+          </Link> */}
+          <Link href="/" className="flex items-center gap-3">
+            {settings.companyLogo ? (
+              <Image
+                src={settings.companyLogo}
+                alt={settings.programName}
+                width={200}
+                height={48}
+                className="h-10 w-auto max-w-45 object-contain"
+              />
+            ) : (
+              <span className="text-lg font-bold text-white">
+                {settings.programName}
+              </span>
+            )}
           </Link>
 
           <nav className="hidden items-center gap-3 xl:gap-6 md:flex">

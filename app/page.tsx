@@ -7,16 +7,40 @@ import { Button } from "@heroui/react";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const [companyLogo, setCompanyLogo] = useState("");
+  const [programName, setProgramName] = useState("Sports Meet 2026");
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings", { cache: "no-store" });
+        const data = await res.json();
+
+        if (data.success) {
+          setCompanyLogo(data.settings.companyLogo || "");
+          setProgramName(data.settings.programName || "Sports Meet 2026");
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      } finally {
+        setSettingsLoaded(true);
+      }
+    }
+
+    loadSettings();
+  }, []);
 
   return (
     <div className="relative min-h-screen">
       {/* Background */}
       <div className="fixed inset-0 -z-10">
         <Image
-          src="/images/mediaone.jpg"
+          src="/images/mediaone_bg.jpg"
           alt="Sports Meet Background"
           fill
           priority
@@ -31,13 +55,32 @@ export default function Home() {
         {/* Hero */}
         <div className="flex flex-1 flex-col items-center justify-center gap-8 px-5 py-14 text-center text-white md:gap-10 md:py-20">
           <div>
-            <h1 className="text-3xl font-extrabold md:text-5xl lg:text-6xl">
+            {/* <h1 className="text-3xl font-extrabold md:text-5xl lg:text-6xl">
               Sports Meet <span className="text-blue-500">2026</span>
-            </h1>
+            </h1> */}
+            {!settingsLoaded ? (
+              <div className="h-20 md:h-36" />
+            ) : companyLogo ? (
+              <>
+                <h1 className="sr-only">{programName}</h1>
+                <Image
+                  src={companyLogo}
+                  alt={programName}
+                  width={600}
+                  height={200}
+                  priority
+                  className="mx-auto h-20 w-auto max-w-[80vw] object-contain md:h-36"
+                />
+              </>
+            ) : (
+              <h1 className="text-3xl font-extrabold md:text-5xl lg:text-6xl">
+                Sports Meet <span className="text-blue-500">2026</span>
+              </h1>
+            )}
 
-            <p className="mt-3 text-base font-semibold text-blue-300 md:text-xl">
+            {/* <p className="mt-3 text-base font-semibold text-blue-300 md:text-xl">
               Media One Sports Meet
-            </p>
+            </p> */}
 
             <p className="mt-2 text-xs text-slate-300 md:text-sm">
               Stronger Teams &bull; Healthier Minds &bull; A United Media One

@@ -43,7 +43,7 @@ export default function PublicNavbar() {
     <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
         {/* Logo + title */}
-        <Link href="/" className="flex items-center gap-3">
+        {/* <Link href="/" className="flex items-center gap-3">
           {settings.companyLogo && (
             <Image
               src={settings.companyLogo}
@@ -59,6 +59,21 @@ export default function PublicNavbar() {
           <span className="hidden text-lg font-bold text-white sm:block">
             {settings.programName}
           </span>
+        </Link> */}
+        <Link href="/" className="flex items-center gap-3">
+          {settings.companyLogo ? (
+            <Image
+              src={settings.companyLogo}
+              alt={settings.programName}
+              width={200}
+              height={48}
+              className="h-10 w-auto max-w-45 object-contain"
+            />
+          ) : (
+            <span className="text-lg font-bold text-white">
+              {settings.programName}
+            </span>
+          )}
         </Link>
 
         {/* Admin login shortcut, styled as an account avatar */}

@@ -1,11 +1,12 @@
 "use client";
 
 import { Button, Label, ListBox, Select, Spinner } from "@heroui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import MarathonPointsCard from "./MarathonPointsCard";
 import { ItemGameEntry } from "./ItemRegistrationsList";
+import PositionMultiSelect from "./PositionMultiSelect";
 
 interface Participant {
   employeeId: string;
@@ -72,7 +73,7 @@ export default function InlineResultForm({
   // Individual
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [selectedPositions, setSelectedPositions] = useState<
-    Record<number, string>
+    Record<number, string[]>
   >({});
   const [existingResult, setExistingResult] = useState<ExistingResult | null>(
     null,
@@ -136,10 +137,17 @@ export default function InlineResultForm({
           setParticipants(data.participants || []);
 
           if (data.result) {
-            const existing: Record<number, string> = {};
+            // const existing: Record<number, string> = {};
 
+            // data.result.positions.forEach((item: ResultPosition) => {
+            //   existing[item.position] = String(item.employee);
+            // });
+            const existing: Record<number, string[]> = {};
             data.result.positions.forEach((item: ResultPosition) => {
-              existing[item.position] = String(item.employee);
+              existing[item.position] = [
+                ...(existing[item.position] ?? []),
+                String(item.employee),
+              ];
             });
 
             setSelectedPositions(existing);
@@ -173,12 +181,18 @@ export default function InlineResultForm({
   }, [game.gameId, game.type, isMarathon]);
 
   const saveIndividualResult = async () => {
-    const resultPositions = positionOptions
-      .filter((item) => selectedPositions[item.position])
-      .map((item) => ({
+    // const resultPositions = positionOptions
+    //   .filter((item) => selectedPositions[item.position])
+    //   .map((item) => ({
+    //     position: item.position,
+    //     employeeId: selectedPositions[item.position],
+    //   }));
+    const resultPositions = positionOptions.flatMap((item) =>
+      (selectedPositions[item.position] ?? []).map((employeeId) => ({
         position: item.position,
-        employeeId: selectedPositions[item.position],
-      }));
+        employeeId,
+      })),
+    );
 
     if (resultPositions.length === 0) {
       toast.error("Please select at least one position.");
@@ -274,11 +288,12 @@ export default function InlineResultForm({
     }
   };
 
-  const employeeName = useMemo(() => {
-    const map = new Map<string, Participant>();
-    participants.forEach((p) => map.set(p.employeeId, p));
-    return map;
-  }, [participants]);
+  // const employeeName = useMemo(() => {
+  //   const map = new Map<string, Participant>();
+  //   participants.forEach((p) => map.set(p.employeeId, p));
+  //   return map;
+  // }, [participants]);
+  const usedEmployeeIds = new Set(Object.values(selectedPositions).flat());
 
   return (
     <div className="mt-4 rounded-lg border border-slate-300 bg-slate-50 p-4">
@@ -314,7 +329,7 @@ export default function InlineResultForm({
           </p>
         ) : (
           <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {positionOptions.map(({ position, label }) => (
                 <div key={position} className="space-y-2">
                   <Label className="text-black">{label}</Label>
@@ -366,6 +381,23 @@ export default function InlineResultForm({
                       </p>
                     )}
                 </div>
+              ))}
+            </div> */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {positionOptions.map(({ position, label }) => (
+                <PositionMultiSelect
+                  key={position}
+                  label={label}
+                  participants={participants}
+                  selectedIds={selectedPositions[position] ?? []}
+                  usedIds={usedEmployeeIds}
+                  onChange={(ids) =>
+                    setSelectedPositions((current) => ({
+                      ...current,
+                      [position]: ids,
+                    }))
+                  }
+                />
               ))}
             </div>
 

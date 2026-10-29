@@ -34,30 +34,43 @@ export async function GET() {
     const data = games.map((game) => {
       const result = resultMap.get(String(game._id));
 
+      // const positions = {
+      //   first: null as null | {
+      //     employeeId: string;
+      //     employeeName: string;
+      //     employeeCode: string;
+      //     teamName: string;
+      //     points: number;
+      //   },
+
+      //   second: null as null | {
+      //     employeeId: string;
+      //     employeeName: string;
+      //     employeeCode: string;
+      //     teamName: string;
+      //     points: number;
+      //   },
+
+      //   third: null as null | {
+      //     employeeId: string;
+      //     employeeName: string;
+      //     employeeCode: string;
+      //     teamName: string;
+      //     points: number;
+      //   },
+      // };
+      type PositionValue = {
+        employeeId: string;
+        employeeName: string;
+        employeeCode: string;
+        teamName: string;
+        points: number;
+      };
+
       const positions = {
-        first: null as null | {
-          employeeId: string;
-          employeeName: string;
-          employeeCode: string;
-          teamName: string;
-          points: number;
-        },
-
-        second: null as null | {
-          employeeId: string;
-          employeeName: string;
-          employeeCode: string;
-          teamName: string;
-          points: number;
-        },
-
-        third: null as null | {
-          employeeId: string;
-          employeeName: string;
-          employeeCode: string;
-          teamName: string;
-          points: number;
-        },
+        first: [] as PositionValue[],
+        second: [] as PositionValue[],
+        third: [] as PositionValue[],
       };
 
       if (result?.positions) {
@@ -82,15 +95,15 @@ export async function GET() {
           };
 
           if (item.position === 1) {
-            positions.first = value;
+            positions.first.push(value);
           }
 
           if (item.position === 2) {
-            positions.second = value;
+            positions.second.push(value);
           }
 
           if (item.position === 3) {
-            positions.third = value;
+            positions.third.push(value);
           }
         }
       }

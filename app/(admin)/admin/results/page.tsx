@@ -1,6 +1,7 @@
 "use client";
 
 import MarathonPointsCard from "@/components/admin/MarathonPointsCard";
+import PositionMultiSelect from "@/components/admin/PositionMultiSelect";
 import ResultsTable, { type ResultRow } from "@/components/admin/ResultsTable";
 import { Game } from "@/types/game";
 
@@ -82,7 +83,7 @@ export default function AdminResultsPage() {
   const [participants, setParticipants] = useState<Participant[]>([]);
 
   const [selectedPositions, setSelectedPositions] = useState<
-    Record<number, string>
+    Record<number, string[]>
   >({});
 
   const [loadingGames, setLoadingGames] = useState(true);
@@ -243,10 +244,17 @@ export default function AdminResultsPage() {
       setParticipants(data.participants || []);
 
       if (data.result) {
-        const existing: Record<number, string> = {};
+        // const existing: Record<number, string> = {};
 
+        // data.result.positions.forEach((item: ResultPosition) => {
+        //   existing[item.position] = String(item.employee);
+        // });
+        const existing: Record<number, string[]> = {};
         data.result.positions.forEach((item: ResultPosition) => {
-          existing[item.position] = String(item.employee);
+          existing[item.position] = [
+            ...(existing[item.position] ?? []),
+            String(item.employee),
+          ];
         });
 
         setSelectedPositions(existing);
@@ -322,10 +330,16 @@ export default function AdminResultsPage() {
     }
   };
 
-  const handlePositionChange = (position: number, employeeId: string) => {
+  // const handlePositionChange = (position: number, employeeId: string) => {
+  //   setSelectedPositions((current) => ({
+  //     ...current,
+  //     [position]: employeeId,
+  //   }));
+  // };
+  const handlePositionChange = (position: number, employeeIds: string[]) => {
     setSelectedPositions((current) => ({
       ...current,
-      [position]: employeeId,
+      [position]: employeeIds,
     }));
   };
 
@@ -342,12 +356,18 @@ export default function AdminResultsPage() {
       return;
     }
 
-    const resultPositions = positions
-      .filter((item) => selectedPositions[item.position])
-      .map((item) => ({
+    // const resultPositions = positions
+    //   .filter((item) => selectedPositions[item.position])
+    //   .map((item) => ({
+    //     position: item.position,
+    //     employeeId: selectedPositions[item.position],
+    //   }));
+    const resultPositions = positions.flatMap((item) =>
+      (selectedPositions[item.position] ?? []).map((employeeId) => ({
         position: item.position,
-        employeeId: selectedPositions[item.position],
-      }));
+        employeeId,
+      })),
+    );
 
     if (resultPositions.length === 0) {
       toast.error("Please select at least one position.");
@@ -505,18 +525,28 @@ export default function AdminResultsPage() {
     setSelectedGameId(row.gameId);
 
     if (row.type === "Individual") {
-      const existing: Record<number, string> = {};
+      // const existing: Record<number, string> = {};
 
-      if (row.positions.first) {
-        existing[1] = row.positions.first.employeeId;
+      // if (row.positions.first) {
+      //   existing[1] = row.positions.first.employeeId;
+      // }
+
+      // if (row.positions.second) {
+      //   existing[2] = row.positions.second.employeeId;
+      // }
+
+      // if (row.positions.third) {
+      //   existing[3] = row.positions.third.employeeId;
+      // }
+      const existing: Record<number, string[]> = {};
+      if (row.positions.first.length > 0) {
+        existing[1] = row.positions.first.map((item) => item.employeeId);
       }
-
-      if (row.positions.second) {
-        existing[2] = row.positions.second.employeeId;
+      if (row.positions.second.length > 0) {
+        existing[2] = row.positions.second.map((item) => item.employeeId);
       }
-
-      if (row.positions.third) {
-        existing[3] = row.positions.third.employeeId;
+      if (row.positions.third.length > 0) {
+        existing[3] = row.positions.third.map((item) => item.employeeId);
       }
 
       setSelectedPositions(existing);
@@ -949,49 +979,61 @@ export default function AdminResultsPage() {
                         </div>
                       ) : (
                         positions.map(({ position, label }) => (
-                          <div key={position} className="space-y-2">
-                            <Label className="text-black">{label}</Label>
+                          // <div key={position} className="space-y-2">
+                          //   <Label className="text-black">{label}</Label>
 
-                            <Select
-                              aria-label={`select participant for ${label}`}
-                              value={selectedPositions[position] || ""}
-                              onChange={(value) => {
-                                if (typeof value === "string") {
-                                  handlePositionChange(position, value);
-                                }
-                              }}
-                            >
-                              <Select.Trigger>
-                                <Select.Value />
-                                <Select.Indicator />
-                              </Select.Trigger>
+                          //   <Select
+                          //     aria-label={`select participant for ${label}`}
+                          //     value={selectedPositions[position] || ""}
+                          //     onChange={(value) => {
+                          //       if (typeof value === "string") {
+                          //         handlePositionChange(position, value);
+                          //       }
+                          //     }}
+                          //   >
+                          //     <Select.Trigger>
+                          //       <Select.Value />
+                          //       <Select.Indicator />
+                          //     </Select.Trigger>
 
-                              <Select.Popover>
-                                <ListBox className="text-black">
-                                  {participants.map((employee) => (
-                                    <ListBox.Item
-                                      key={employee.employeeId}
-                                      id={employee.employeeId}
-                                      textValue={`${employee.employeeName} ${employee.employeeCode}`}
-                                    >
-                                      <div className="flex flex-col">
-                                        <span className="font-medium">
-                                          {employee.employeeName}
-                                        </span>
+                          //     <Select.Popover>
+                          //       <ListBox className="text-black">
+                          //         {participants.map((employee) => (
+                          //           <ListBox.Item
+                          //             key={employee.employeeId}
+                          //             id={employee.employeeId}
+                          //             textValue={`${employee.employeeName} ${employee.employeeCode}`}
+                          //           >
+                          //             <div className="flex flex-col">
+                          //               <span className="font-medium">
+                          //                 {employee.employeeName}
+                          //               </span>
 
-                                        <span className="text-xs text-slate-300">
-                                          {employee.employeeCode} •{" "}
-                                          {employee.team}
-                                        </span>
-                                      </div>
+                          //               <span className="text-xs text-slate-300">
+                          //                 {employee.employeeCode} •{" "}
+                          //                 {employee.team}
+                          //               </span>
+                          //             </div>
 
-                                      <ListBox.ItemIndicator />
-                                    </ListBox.Item>
-                                  ))}
-                                </ListBox>
-                              </Select.Popover>
-                            </Select>
-                          </div>
+                          //             <ListBox.ItemIndicator />
+                          //           </ListBox.Item>
+                          //         ))}
+                          //       </ListBox>
+                          //     </Select.Popover>
+                          //   </Select>
+                          // </div>
+                          <PositionMultiSelect
+                            key={position}
+                            label={label}
+                            participants={participants}
+                            selectedIds={selectedPositions[position] ?? []}
+                            usedIds={
+                              new Set(Object.values(selectedPositions).flat())
+                            }
+                            onChange={(ids) =>
+                              handlePositionChange(position, ids)
+                            }
+                          />
                         ))
                       )}
                     </div>

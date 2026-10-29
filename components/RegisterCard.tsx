@@ -359,6 +359,7 @@ export function RegisterCard() {
                               width={30}
                               height={30}
                               objectFit="cover"
+                              className="h-7.5 w-7.5 shrink-0 rounded-full border object-cover"
                             />
 
                             {teamItem.name}

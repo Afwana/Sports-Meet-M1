@@ -117,17 +117,17 @@ export async function PUT(
       );
     }
 
-    const resultPositions = positions.map((item) => item.position);
+    // const resultPositions = positions.map((item) => item.position);
 
-    if (new Set(resultPositions).size !== resultPositions.length) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Each position can only be assigned once.",
-        },
-        { status: 400 },
-      );
-    }
+    // if (new Set(resultPositions).size !== resultPositions.length) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Each position can only be assigned once.",
+    //     },
+    //     { status: 400 },
+    //   );
+    // }
 
     const employees = await Employee.find({
       _id: {
@@ -173,27 +173,51 @@ export async function PUT(
       );
     }
 
-    const resultPositionData = employees
-      .map((employee) => {
-        const selected = positions.find(
-          (item) => item.employeeId === employee._id.toString(),
-        );
+    // const resultPositionData = employees
+    //   .map((employee) => {
+    //     const selected = positions.find(
+    //       (item) => item.employeeId === employee._id.toString(),
+    //     );
 
-        if (!selected) {
+    //     if (!selected) {
+    //       return null;
+    //     }
+
+    //     return {
+    //       position: selected.position,
+
+    //       employee: employee._id,
+
+    //       team: employee.teamId,
+
+    //       points: positionMap.get(selected.position) ?? 0,
+    //     };
+    //   })
+    //   .filter((item): item is NonNullable<typeof item> => item !== null);
+
+    const employeeMap = new Map(
+      employees.map((employee) => [employee._id.toString(), employee]),
+    );
+
+    // Several employees may share a position (a tie). Each of them gets the
+    // full points configured for that position.
+    const resultPositionData = positions
+      .map((item) => {
+        const employee = employeeMap.get(item.employeeId);
+
+        if (!employee) {
           return null;
         }
 
         return {
-          position: selected.position,
-
+          position: item.position,
           employee: employee._id,
-
           team: employee.teamId,
-
-          points: positionMap.get(selected.position) ?? 0,
+          points: positionMap.get(item.position) ?? 0,
         };
       })
-      .filter((item): item is NonNullable<typeof item> => item !== null);
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .sort((a, b) => a.position - b.position);
 
     const result = await Result.findOneAndUpdate(
       {

@@ -55,9 +55,6 @@ export default function Home() {
         {/* Hero */}
         <div className="flex flex-1 flex-col items-center justify-center gap-8 px-5 py-14 text-center text-white md:gap-10 md:py-20">
           <div>
-            {/* <h1 className="text-3xl font-extrabold md:text-5xl lg:text-6xl">
-              Sports Meet <span className="text-blue-500">2026</span>
-            </h1> */}
             {!settingsLoaded ? (
               <div className="h-20 md:h-36" />
             ) : companyLogo ? (
@@ -78,10 +75,6 @@ export default function Home() {
               </h1>
             )}
 
-            {/* <p className="mt-3 text-base font-semibold text-blue-300 md:text-xl">
-              Media One Sports Meet
-            </p> */}
-
             <p className="mt-2 text-xs text-slate-300 md:text-sm">
               Stronger Teams &bull; Healthier Minds &bull; A United Media One
             </p>
@@ -101,7 +94,7 @@ export default function Home() {
         </div>
 
         {/* Announcements + Leaderboard */}
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 px-4 pb-6 md:grid-cols-2 md:gap-5 md:px-8 md:pb-8">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 px-4 pb-6 md:grid-cols-2 md:gap-5 md:px-8 md:pb-8 max-md:[&>*:first-child]:order-2">
           <AnnouncementsPanel />
           <LiveLeaderBoard />
         </div>

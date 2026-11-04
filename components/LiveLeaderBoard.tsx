@@ -14,12 +14,6 @@ interface PointTableRow {
   totalPoints: number;
 }
 
-const RANK_BADGE_CLASS: Record<number, string> = {
-  1: "bg-red-500 text-white",
-  2: "bg-slate-500 text-white",
-  3: "bg-amber-600 text-white",
-};
-
 export default function LiveLeaderBoard() {
   const [pointTable, setPointTable] = useState<PointTableRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,9 +85,8 @@ export default function LiveLeaderBoard() {
             >
               <div className="flex items-center">
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg text-sm font-bold ${
-                    RANK_BADGE_CLASS[team.rank] ?? "bg-slate-600 text-white"
-                  }`}
+                  className="flex h-7 w-7 items-center justify-center rounded-lg text-sm font-bold text-white"
+                  style={{ backgroundColor: team.color || "#334155" }}
                 >
                   {team.rank}
                 </span>

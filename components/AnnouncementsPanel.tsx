@@ -71,7 +71,7 @@ export default function AnnouncementsPanel() {
     : announcements.slice(0, PREVIEW_COUNT);
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-4 shadow-xl backdrop-blur-md md:p-5">
+    <div className="hidden md:block rounded-2xl border border-white/10 bg-slate-900/80 p-4 shadow-xl backdrop-blur-md md:p-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">

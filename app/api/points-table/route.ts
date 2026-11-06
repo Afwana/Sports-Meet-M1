@@ -151,10 +151,20 @@ export async function GET() {
       return b.third - a.third;
     });
 
-    const pointTable = sortedTeams.map((team, index) => ({
-      rank: index + 1,
-      ...team,
-    }));
+    // const pointTable = sortedTeams.map((team, index) => ({
+    //   rank: index + 1,
+    //   ...team,
+    // }));
+    const pointTable = sortedTeams.map((team) => {
+      const firstWithSamePoints = sortedTeams.findIndex(
+        (t) => t.totalPoints === team.totalPoints,
+      );
+
+      return {
+        rank: firstWithSamePoints + 1,
+        ...team,
+      };
+    });
 
     return NextResponse.json({
       success: true,

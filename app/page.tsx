@@ -53,7 +53,31 @@ export default function Home() {
 
       <div className="relative flex min-h-[calc(100vh-4rem)] flex-col">
         {/* Hero */}
-        <div className="flex flex-1 flex-col items-center justify-center gap-8 px-5 py-14 text-center text-white md:gap-10 md:py-20">
+        <div className="absolute md:hidden right-4 top-4 z-10 md:right-8 md:top-6">
+          <Button
+            variant="ghost"
+            size="lg"
+            className="rounded-full px-5 text-white hover:bg-slate-800/50"
+            onPress={() => router.push("/register")}
+            isIconOnly
+          >
+            {/* Get Started */}
+            <ChevronRight size={16} />
+          </Button>
+        </div>
+        <div className="absolute hidden md:block right-4 top-4 z-10 md:right-8 md:top-6">
+          <Button
+            variant="primary"
+            size="lg"
+            className="rounded-full px-5 text-white hover:bg-slate-800/50"
+            onPress={() => router.push("/register")}
+            isIconOnly
+          >
+            {/* Get Started */}
+            <ChevronRight size={16} />
+          </Button>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-8 px-5 pt-14 text-center text-white md:gap-10 md:py-20">
           <div>
             {!settingsLoaded ? (
               <div className="h-20 md:h-36" />
@@ -75,22 +99,12 @@ export default function Home() {
               </h1>
             )}
 
-            <p className="mt-2 text-xs text-slate-300 md:text-sm">
+            <p className="hidden md:block mt-2 text-xs text-slate-300 md:text-sm">
               Stronger Teams &bull; Healthier Minds &bull; A United Media One
             </p>
           </div>
 
           <HeroTeamCircles />
-
-          <Button
-            variant="primary"
-            size="lg"
-            className="rounded-full px-6"
-            onPress={() => router.push("/register")}
-          >
-            Get Started
-            <ChevronRight size={16} />
-          </Button>
         </div>
 
         {/* Announcements + Leaderboard */}

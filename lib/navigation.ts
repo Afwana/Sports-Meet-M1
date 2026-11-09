@@ -12,7 +12,7 @@ export const navigation = {
     { label: "Games", href: "/admin/games", icon: IoGameController },
     { label: "Announcements", href: "/admin/announcements", icon: FaBell },
     { label: "Registrations", href: "/admin/registrations", icon: FaListCheck },
-    { label: "Photos", href: "/admin/photos", icon: FaCamera },
+    // { label: "Photos", href: "/admin/photos", icon: FaCamera },
     { label: "Results", href: "/admin/results", icon: FaMedal },
   ],
 
@@ -26,7 +26,7 @@ export const navigation = {
       icon: IoGameController,
     },
     { label: "Group Registrations", href: "/captain/groups", icon: MdGames },
-    { label: "Photos", href: "/captain/photos", icon: FaCamera },
+    // { label: "Photos", href: "/captain/photos", icon: FaCamera },
     { label: "Results", href: "/captain/results", icon: FaMedal },
   ],
 };

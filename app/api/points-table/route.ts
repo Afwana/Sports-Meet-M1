@@ -155,13 +155,27 @@ export async function GET() {
     //   rank: index + 1,
     //   ...team,
     // }));
+    // const pointTable = sortedTeams.map((team) => {
+    //   const firstWithSamePoints = sortedTeams.findIndex(
+    //     (t) => t.totalPoints === team.totalPoints,
+    //   );
+
+    //   return {
+    //     rank: firstWithSamePoints + 1,
+    //     ...team,
+    //   };
+    // });
+    let currentRank = 0;
+    let previousPoints: number | null = null;
+
     const pointTable = sortedTeams.map((team) => {
-      const firstWithSamePoints = sortedTeams.findIndex(
-        (t) => t.totalPoints === team.totalPoints,
-      );
+      if (team.totalPoints !== previousPoints) {
+        currentRank += 1;
+        previousPoints = team.totalPoints;
+      }
 
       return {
-        rank: firstWithSamePoints + 1,
+        rank: currentRank,
         ...team,
       };
     });

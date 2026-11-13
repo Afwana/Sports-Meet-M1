@@ -2,6 +2,7 @@ import "./Admin";
 import "./Announcement";
 import "./Employee";
 import "./Games";
+import "./GalleryPhoto";
 import "./GroupRegistration";
 import "./GroupResult";
 import "./IndividualRegistration";

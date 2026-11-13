@@ -2,8 +2,9 @@
 
 import { getPageRange } from "@/lib/getPageRange";
 import { Button, Input, Pagination, Table } from "@heroui/react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Download, Pencil, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 type IndividualPosition = {
   employeeId: string;
@@ -149,6 +150,22 @@ export default function ResultsTable({
 }: ResultsTableProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    try {
+      setExporting(true);
+
+      // Exports every result (not just the current page / search).
+      const { exportResultsPdf } = await import("@/lib/exportResultsPdf");
+      await exportResultsPdf(results);
+    } catch (error) {
+      console.error("Failed to export results PDF:", error);
+      toast.error("Failed to export PDF.");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const filteredResults = useMemo(() => {
     return results.filter((result) =>
@@ -178,7 +195,7 @@ export default function ResultsTable({
 
   return (
     <Table aria-label="Game results table" className="w-full">
-      <div className="m-2">
+      <div className="m-2 flex items-center gap-2">
         <Input
           aria-label="Search results"
           placeholder="Search results..."
@@ -190,6 +207,15 @@ export default function ResultsTable({
           className="w-full h-10"
           variant="secondary"
         />
+        <Button
+          variant="secondary"
+          className="h-10 shrink-0"
+          onPress={handleExport}
+          isDisabled={exporting || results.length === 0}
+        >
+          <Download size={16} />
+          {exporting ? "Exporting..." : "Export PDF"}
+        </Button>
       </div>
       <Table.ScrollContainer>
         <Table.Content aria-label="label">

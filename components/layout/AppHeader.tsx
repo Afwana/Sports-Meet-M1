@@ -4,12 +4,13 @@ import { navigation } from "@/lib/navigation";
 import { HeaderUser } from "@/types/user";
 import { Button, Dropdown, ScrollShadow, Separator } from "@heroui/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaCrown } from "react-icons/fa";
 import { FaShield } from "react-icons/fa6";
 import LogoutButton from "../LogoutButton";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Images } from "lucide-react";
 
 type Role = "admin" | "captain" | "employee";
 
@@ -25,6 +26,7 @@ interface SiteSettings {
 
 export default function AppHeader({ role, user }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
   const [settings, setSettings] = useState<SiteSettings>({
     programName: "Sports Meet 2026",
     companyLogo: "",
@@ -159,6 +161,23 @@ export default function AppHeader({ role, user }: Props) {
 
                 <Separator />
 
+                {role === "employee" && (
+                  <Dropdown.Item
+                    id="gallery"
+                    textValue="Gallery"
+                    className="p-2"
+                  >
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-black"
+                      onPress={() => router.push("/gallery")}
+                    >
+                      <Images size={16} />
+                      Gallery
+                    </Button>
+                  </Dropdown.Item>
+                )}
+
                 <Dropdown.Item
                   id="logout"
                   textValue="Logout"
@@ -182,7 +201,6 @@ export default function AppHeader({ role, user }: Props) {
               {links.map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
-                console.log(isActive);
 
                 return (
                   <Link
